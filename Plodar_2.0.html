@@ -528,7 +528,8 @@ html:has(dialog[open]){overflow:hidden}
 @media (max-width:719px){.no-js .pin-s{transform:scale(1.9)}.no-js .sk-line{stroke-width:3.4}}
 .no-js .dots{opacity:1}
 .no-js .dots a::before{background:var(--c);box-shadow:0 0 0 2px #fff}
-.no-js .dots-fill{transform:none}
+.no-js .dots-fill{transform:scaleY(0)}
+.no-js .tt-ring{display:none}
 .no-js .totop{opacity:1;visibility:visible;transform:none}
 .no-js .menu-lab{width:44px;height:44px;margin-right:-10px;display:grid;place-content:center;gap:6px;cursor:pointer}
 .no-js .menu-lab span{display:block;width:22px;height:1.5px;background:var(--ink)}
@@ -543,6 +544,7 @@ html:has(dialog[open]){overflow:hidden}
 @supports (animation-timeline:scroll()){
   .no-js .progress span{animation:nvBar linear both;animation-timeline:scroll(root)}
   .no-js .dots-fill{transform:scaleY(0);animation:nvRail linear both;animation-timeline:scroll(root)}
+  .no-js .tt-ring{display:block}
   .no-js .tt-fg{animation:nvRing linear both;animation-timeline:scroll(root)}
 }
 @supports (animation-timeline:view()){
