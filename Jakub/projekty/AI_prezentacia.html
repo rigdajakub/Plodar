@@ -1,0 +1,1646 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Umelá inteligencia 2026</title>
+<meta name="description" content="Prezentácia pre vedenie firiem: ako umelá inteligencia zmení prácu, firmy a svet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@200..800&display=swap">
+<style>
+/* Layout: 1920×1080 stage scaled to the screen; content inside 120 px margins; dark ground, magenta only for emphasis, numbers and light. */
+:root{
+  --ink-0:#08080A;            /* ground */
+  --ink-1:#111015;            /* darkshadow surface */
+  --ink-2:#18161D;            /* raised surface */
+  --fg:#F6F3F6;               /* toned white */
+  --fg-2:#C8C2CB;             /* secondary text */
+  --fg-3:#8F8895;             /* captions, sources */
+  --line:rgba(255,255,255,.10);
+  --line-2:rgba(255,255,255,.18);
+  --mag:#E20074;              /* magenta accent */
+  --mag-hi:#FF3A9C;           /* magenta for small text on dark */
+  --mag-deep:#5A0030;
+  --mag-glow:rgba(226,0,116,.55);
+  --mag-soft:rgba(226,0,116,.14);
+  --f-sans:"Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --f-serif:"Instrument Serif", Georgia, "Times New Roman", serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--ink-0);color:var(--fg)}
+body{font-family:var(--f-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--mag-hi);outline-offset:3px}
+
+/* ============ Viewport & stage ============ */
+.viewport{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px);overflow:hidden;background:var(--ink-0)}
+.stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.slide{position:absolute;inset:0;overflow:hidden;background:linear-gradient(180deg,#09090B 0%,#0B0A0E 100%);opacity:0;visibility:hidden;transform:scale(1.014);
+  transition:opacity .9s var(--ease),transform 1.2s var(--ease-out),visibility 0s linear .9s}
+.slide.is-active{opacity:1;visibility:visible;transform:none;transition:opacity 1s var(--ease) .12s,transform 1.4s var(--ease-out) .12s,visibility 0s}
+.slide.is-leaving{transform:scale(.986)}
+.slide .notes{display:none}
+
+/* ambient light + hairline grid */
+.amb{position:absolute;inset:-12%;pointer-events:none;
+  background:radial-gradient(38% 46% at var(--ax,82%) var(--ay,14%),rgba(226,0,116,.22),transparent 70%),
+             radial-gradient(30% 36% at var(--bx,8%) var(--by,96%),rgba(226,0,116,.08),transparent 70%)}
+.slide.is-active .amb{animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-46px,28px,0) scale(1.06)}}
+.slide::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(to right,rgba(255,255,255,.026) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.026) 1px,transparent 1px);
+  background-size:120px 120px;background-position:0 0;
+  -webkit-mask-image:radial-gradient(70% 70% at 78% 18%,#000,transparent 72%);mask-image:radial-gradient(70% 70% at 78% 18%,#000,transparent 72%)}
+
+/* ============ Reveal system ============ */
+.js .slide [data-a]{opacity:0;transition:opacity .7s var(--ease),transform .9s var(--ease-out)}
+.js .slide [data-a="up"]{transform:translate3d(0,28px,0)}
+.js .slide [data-a="left"]{transform:translate3d(-40px,0,0)}
+.js .slide [data-a="right"]{transform:translate3d(40px,0,0)}
+.js .slide [data-a="scale"]{transform:scale(.94)}
+.js .slide.is-built [data-a]{opacity:1;transform:none;
+  transition:opacity 1s var(--ease) calc(var(--d,0) * 120ms + 260ms),transform 1.25s var(--ease-out) calc(var(--d,0) * 120ms + 260ms)}
+.js .slide.is-static [data-a]{opacity:1;transform:none;transition:none}
+
+/* icons: line drawing */
+.ico{width:48px;height:48px;flex:none;color:var(--mag);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 10px rgba(226,0,116,.45))}
+.js .slide .ico{stroke-dasharray:1 1;stroke-dashoffset:1}
+.js .slide.is-built .ico{stroke-dashoffset:0;transition:stroke-dashoffset 1.8s var(--ease) calc(var(--d,0) * 120ms + 520ms)}
+.js .slide.is-static .ico{stroke-dashoffset:0;transition:none}
+
+/* glow */
+.glow{color:var(--mag);text-shadow:0 0 34px rgba(226,0,116,.55),0 0 2px rgba(226,0,116,.5)}
+.slide.is-built .glow{animation:breathe 6.5s ease-in-out 2.2s infinite}
+@keyframes breathe{0%,100%{text-shadow:0 0 30px rgba(226,0,116,.45),0 0 2px rgba(226,0,116,.5)}50%{text-shadow:0 0 54px rgba(226,0,116,.8),0 0 4px rgba(226,0,116,.7)}}
+
+/* ============ Shared type ============ */
+.frame{position:absolute;left:120px;right:120px;top:88px;bottom:124px;display:flex;flex-direction:column;gap:46px}
+.hd{display:flex;flex-direction:column;gap:22px}
+.bd{flex:1;min-height:0;display:flex;flex-direction:column;gap:34px}
+.bd.center{justify-content:center;gap:64px}
+.eyebrow{display:flex;align-items:center;gap:18px;margin:0;font:700 17px/1 var(--f-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--mag-hi)}
+.eyebrow::before{content:"";width:46px;height:2px;border-radius:2px;background:var(--mag);box-shadow:0 0 12px var(--mag-glow)}
+.h2{margin:0;max-width:1500px;font:600 64px/1.08 var(--f-sans);letter-spacing:-.025em;text-wrap:balance}
+.h2 em,.h1 em,.end-h em{font-family:var(--f-serif);font-style:italic;font-weight:400;letter-spacing:-.005em;color:var(--mag);font-size:1.12em;line-height:.9}
+.lead{margin:0;max-width:1180px;font:400 26px/1.5 var(--f-sans);color:var(--fg-2)}
+.kicker{margin:0;font:700 16px/1.3 var(--f-sans);letter-spacing:.2em;text-transform:uppercase;color:var(--fg-3)}
+.foot{position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:flex-end;gap:48px;font:500 15px/1.45 var(--f-sans);color:var(--fg-3)}
+.src{max-width:1480px}
+.pg{flex:none;font-variant-numeric:tabular-nums;letter-spacing:.14em}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ============ Components ============ */
+.card{position:relative;display:flex;flex-direction:column;gap:14px;padding:36px 34px 32px;border-radius:24px;border:1px solid var(--line);
+  background:radial-gradient(120% 80% at 0% 0%,rgba(226,0,116,.13),transparent 55%),rgba(255,255,255,.025)}
+.card h3{margin:8px 0 0;font:600 30px/1.2 var(--f-sans);letter-spacing:-.01em}
+.card p{margin:0;font:400 22px/1.5 var(--f-sans);color:var(--fg-2)}
+.card .ex{margin-top:auto;padding-top:18px;border-top:1px solid var(--line);font-size:20px;color:var(--fg-3)}
+.g4 .card .ex{min-height:calc(2 * 1.5em + 19px)}
+
+.track{display:block;height:8px;border-radius:8px;background:rgba(255,255,255,.07);overflow:hidden}
+.track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,rgba(226,0,116,.3),var(--mag));box-shadow:0 0 18px var(--mag-glow);transform-origin:0 50%;transform:scaleX(var(--v))}
+.track i.muted{background:linear-gradient(90deg,rgba(255,255,255,.12),rgba(255,255,255,.5));box-shadow:none}
+.js .slide .track i{transform:scaleX(0)}
+.js .slide.is-built .track i{transform:scaleX(var(--v));transition:transform 1.9s var(--ease-out) calc(var(--d,0) * 120ms + 620ms)}
+.js .slide.is-static .track i{transform:scaleX(var(--v));transition:none}
+
+.brow{display:grid;grid-template-columns:210px 1fr;column-gap:34px;align-items:end}
+.bval{font:300 64px/1 var(--f-sans);letter-spacing:-.03em}
+.bval small{margin-left:8px;font-size:.42em;font-weight:500;letter-spacing:0;color:var(--fg-2)}
+.bbody{display:flex;flex-direction:column;gap:14px;padding-bottom:10px;min-width:0}
+.blabel{font:400 22px/1.35 var(--f-sans);color:var(--fg-2)}
+.blabel b{font-weight:600;color:var(--fg)}
+
+.srow{display:grid;grid-template-columns:200px 1fr;gap:30px;align-items:center;padding:26px 0;border-top:1px solid var(--line)}
+.srow:last-child{border-bottom:1px solid var(--line)}
+.sn{font:300 76px/1 var(--f-sans);letter-spacing:-.035em}
+.sn small{margin-left:4px;font-size:.45em;font-weight:500;letter-spacing:0;color:var(--fg-2)}
+.sl{font:400 22px/1.45 var(--f-sans);color:var(--fg-2)}
+.sl b{font-weight:600;color:var(--fg)}
+.tag{display:inline-block;margin-left:10px;padding:5px 12px;border-radius:999px;border:1px solid rgba(226,0,116,.5);font:600 15px/1 var(--f-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--mag-hi);vertical-align:3px}
+
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
+.list li{position:relative;padding-left:28px;font:400 23px/1.42 var(--f-sans);color:var(--fg-2)}
+.list li::before{content:"";position:absolute;left:0;top:.6em;width:8px;height:8px;border-radius:50%;background:var(--mag);box-shadow:0 0 10px var(--mag-glow)}
+
+.band{display:flex;align-items:center;gap:56px;padding:26px 40px;border-radius:22px;border:1px solid rgba(226,0,116,.3);
+  background:linear-gradient(90deg,rgba(226,0,116,.18),rgba(226,0,116,.03) 70%)}
+.band .bn{font:300 70px/1 var(--f-sans);letter-spacing:-.03em}
+.band .bt{font:400 22px/1.45 var(--f-sans);color:var(--fg-2);max-width:520px}
+.band .bt b{color:var(--fg);font-weight:600}
+.band .bsep{width:1px;align-self:stretch;background:var(--line-2)}
+
+/* ============ 01 Cover ============ */
+.s-cover .amb{--ax:72%;--ay:48%}
+.globe{position:absolute;right:-170px;top:70px;width:1000px;height:940px}
+.globe-halo{position:absolute;right:10px;top:300px;width:620px;height:520px;border-radius:50%;background:radial-gradient(closest-side,rgba(226,0,116,.32),transparent);filter:blur(30px);pointer-events:none}
+.cover{position:absolute;left:120px;top:0;bottom:0;width:1260px;display:flex;flex-direction:column;justify-content:center;gap:40px}
+.h1{margin:0;display:flex;flex-direction:column;font:600 98px/1.04 var(--f-sans);letter-spacing:-.035em}
+.h1 > span{display:block}
+.cover-lead{margin:0;max-width:820px;font:400 29px/1.5 var(--f-sans);color:var(--fg-2)}
+.agenda{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 0;padding:0;list-style:none}
+.agenda li{padding:12px 20px;border:1px solid var(--line-2);border-radius:999px;font:500 19px/1 var(--f-sans);color:var(--fg-2)}
+.cover-date{position:absolute;left:120px;bottom:56px;font:600 16px/1 var(--f-sans);letter-spacing:.2em;text-transform:uppercase;color:var(--fg-3)}
+
+/* ============ 02 What is AI ============ */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.uses{display:flex;flex-direction:column;align-items:flex-start;gap:18px;margin-top:auto}
+.uses .kicker{flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:12px;list-style:none;margin:0;padding:0}
+.chips li{padding:14px 22px;border-radius:999px;border:1px solid var(--line-2);font:500 21px/1 var(--f-sans);color:var(--fg)}
+
+/* ============ 03 Adoption ============ */
+.s3{display:grid;grid-template-columns:1.22fr 1fr;gap:80px;align-items:start}
+.bars{display:flex;flex-direction:column;gap:30px;margin-top:30px}
+.s3 .eu{margin-top:30px}
+
+/* ============ 04 Work ============ */
+.s4{display:grid;grid-template-columns:1.12fr 1fr;gap:80px;align-items:start}
+.note{margin:34px 0 0;padding-left:24px;border-left:2px solid var(--mag);font:400 22px/1.5 var(--f-sans);color:var(--fg-2);max-width:780px}
+.note b{color:var(--fg);font-weight:600}
+
+/* ============ 05 Tasks ============ */
+.s5{display:grid;grid-template-columns:repeat(3,1fr)}
+.col{display:flex;flex-direction:column;padding:0 50px;border-left:1px solid var(--line)}
+.col:first-child{padding-left:0;border-left:0}
+.col:last-child{padding-right:0}
+.col-h{display:flex;align-items:center;gap:18px}
+.col-h .ico{width:42px;height:42px}
+.col h3{margin:0;font:600 34px/1.15 var(--f-sans);letter-spacing:-.015em}
+.col .sub{margin:12px 0 26px;font:600 17px/1.3 var(--f-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--mag-hi)}
+.s5-band{margin-top:auto}
+
+/* ============ 06 / 07 Risk tiles ============ */
+.s6{display:grid;grid-template-columns:1fr 480px;gap:70px;align-items:stretch}
+.tiles{display:grid;grid-template-columns:1fr 1fr;column-gap:52px;align-content:start}
+.tile{display:grid;grid-template-columns:42px 1fr;gap:22px;padding:24px 0 26px;border-top:1px solid var(--line)}
+.tile .ico{width:40px;height:40px;margin-top:2px}
+.tile h3{margin:0 0 8px;font:600 27px/1.2 var(--f-sans);letter-spacing:-.01em}
+.tile p{margin:0;font:400 21px/1.45 var(--f-sans);color:var(--fg-2)}
+.hlp{display:flex;flex-direction:column;justify-content:center;gap:22px;padding:46px 44px;border-radius:28px;border:1px solid rgba(226,0,116,.32);
+  background:radial-gradient(120% 90% at 100% 0%,rgba(226,0,116,.34),transparent 62%),var(--ink-1)}
+.hlp .hn{font:200 150px/.9 var(--f-sans);letter-spacing:-.05em}
+.hlp .ht{margin:0;font:500 24px/1.45 var(--f-sans);color:var(--fg)}
+.hlp .hs{margin:0;font:400 20px/1.5 var(--f-sans);color:var(--fg-2)}
+.hlp .hq{margin:0;font:400 italic 44px/1.15 var(--f-serif);color:var(--fg)}
+.hlp .hq em{color:var(--mag);font-style:italic}
+
+/* ============ 08 Regulation ============ */
+.s8{display:grid;grid-template-columns:1.02fr 1fr;gap:76px;align-items:start}
+.tl{position:relative;padding-left:46px}
+.tl-line{position:absolute;left:7px;top:16px;bottom:16px;width:2px;background:rgba(255,255,255,.1)}
+.tl-line i{position:absolute;inset:0;background:linear-gradient(var(--mag),rgba(226,0,116,.25));box-shadow:0 0 12px var(--mag-glow);transform-origin:50% 0;transform:scaleY(1)}
+.js .slide .tl-line i{transform:scaleY(0)}
+.js .slide.is-built .tl-line i{transform:scaleY(1);transition:transform 2.6s var(--ease-out) .5s}
+.js .slide.is-static .tl-line i{transform:scaleY(1);transition:none}
+.tl-item{position:relative;display:grid;grid-template-columns:130px 1fr;gap:22px;padding:12px 0}
+.tl-item::before{content:"";position:absolute;left:-46px;top:19px;width:16px;height:16px;border-radius:50%;background:var(--ink-0);border:2px solid var(--mag)}
+.tl-item.past::before{background:var(--mag);box-shadow:0 0 14px var(--mag-glow)}
+.tl-date{font:700 22px/1.4 var(--f-sans);font-variant-numeric:tabular-nums;color:var(--fg)}
+.tl-txt{font:400 21px/1.4 var(--f-sans);color:var(--fg-2)}
+.tl-txt b{color:var(--fg);font-weight:600}
+.tl-now{position:relative;display:flex;align-items:center;gap:14px;margin:4px 0;padding:6px 0;font:700 15px/1 var(--f-sans);letter-spacing:.2em;text-transform:uppercase;color:var(--mag-hi)}
+.tl-now::before{content:"";position:absolute;left:-49px;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:50%;background:rgba(226,0,116,.25);box-shadow:0 0 0 6px rgba(226,0,116,.12),0 0 24px var(--mag-glow)}
+.slide.is-built .tl-now::before{animation:ping 3.2s ease-in-out 2.4s infinite}
+@keyframes ping{0%,100%{box-shadow:0 0 0 4px rgba(226,0,116,.14),0 0 18px rgba(226,0,116,.45)}50%{box-shadow:0 0 0 12px rgba(226,0,116,.05),0 0 34px rgba(226,0,116,.8)}}
+.tl-now::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(226,0,116,.6),transparent)}
+.fine{display:flex;align-items:baseline;gap:18px;margin-top:22px;padding:20px 26px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.fine .fn{font:300 44px/1 var(--f-sans);letter-spacing:-.02em}
+.fine .ft{font:400 20px/1.4 var(--f-sans);color:var(--fg-2)}
+.stack{display:flex;flex-direction:column;gap:26px}
+.approach{display:grid;grid-template-columns:96px 1fr;gap:20px;padding:16px 0;border-top:1px solid var(--line)}
+.approach:first-of-type{border-top:0;padding-top:4px}
+.approach b{font:700 22px/1.4 var(--f-sans);color:var(--fg)}
+.approach span{font:400 21px/1.45 var(--f-sans);color:var(--fg-2)}
+.card.flat{padding:30px 34px}
+.card.flat h3{margin:0 0 6px;font-size:26px}
+.card.row{flex-direction:row;gap:26px;align-items:flex-start}
+.card.row .ico{width:44px;height:44px;margin-top:4px}
+
+/* ============ 09 / 10 Pillars ============ */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+.pillar{display:flex;flex-direction:column;gap:16px;padding:38px 36px 34px;border-radius:26px;border:1px solid var(--line);
+  background:radial-gradient(110% 70% at 50% 0%,rgba(226,0,116,.12),transparent 60%),rgba(255,255,255,.022)}
+.pillar-h{display:flex;align-items:center;gap:16px}
+.pillar-h .ico{width:40px;height:40px}
+.pillar-h h3{margin:0;font:600 28px/1.2 var(--f-sans);letter-spacing:-.01em}
+.pillar .big{margin-top:10px;font:200 104px/1 var(--f-sans);letter-spacing:-.045em}
+.pillar .big small{margin-left:8px;font-size:.34em;font-weight:500;letter-spacing:0;color:var(--fg-2)}
+.pillar .big.serif{font:italic 400 104px/1 var(--f-serif);letter-spacing:-.01em}
+.pillar p{margin:0;font:400 21px/1.48 var(--f-sans);color:var(--fg-2)}
+.pillar p b{color:var(--fg);font-weight:600}
+.pillar .div{height:1px;background:var(--line);margin:6px 0}
+.mini-bars{display:flex;flex-direction:column;gap:14px;margin-top:4px}
+.mb{display:grid;grid-template-columns:96px 1fr 128px;gap:16px;align-items:center;font:500 19px/1 var(--f-sans);color:var(--fg-2)}
+.mb .mv{text-align:right;color:var(--fg);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bottom-line{margin-top:auto;display:flex;align-items:center;gap:22px;font:400 23px/1.45 var(--f-sans);color:var(--fg-2)}
+.bottom-line::before{content:"";flex:none;width:46px;height:2px;background:var(--mag);box-shadow:0 0 12px var(--mag-glow)}
+.bottom-line b{color:var(--fg);font-weight:600}
+
+/* ============ 11 / 12 Grid of six ============ */
+.g6{display:grid;grid-template-columns:repeat(3,1fr);gap:34px 56px}
+.trend{display:flex;flex-direction:column;gap:12px;padding-top:26px;border-top:1px solid var(--line-2)}
+.trend-h{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.trend .ico{width:40px;height:40px}
+.trend .k{font:300 46px/1 var(--f-sans);letter-spacing:-.03em;white-space:nowrap}
+.trend .k.txt{font:600 22px/1.2 var(--f-sans);letter-spacing:.02em}
+.trend h3{margin:4px 0 0;font:600 28px/1.2 var(--f-sans);letter-spacing:-.01em}
+.trend p{margin:0;font:400 21px/1.45 var(--f-sans);color:var(--fg-2)}
+.trend .s{font:500 14px/1.3 var(--f-sans);color:var(--fg-3)}
+.s12-band{margin-top:auto}
+
+/* ============ 13 Employee ============ */
+.s13{display:grid;grid-template-columns:860px 1fr;gap:76px;align-items:start}
+.formula{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:18px 0 28px}
+.formula span{padding:12px 18px;border-radius:12px;border:1px solid rgba(226,0,116,.45);background:rgba(226,0,116,.08);font:600 20px/1 var(--f-sans);color:var(--fg)}
+.formula i{font-style:normal;color:var(--mag-hi);font-weight:600}
+.prompt-box{border-radius:20px;border:1px solid var(--line);background:var(--ink-1);overflow:hidden}
+.prompt-box + .prompt-box{margin-top:18px}
+.pb-h{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--line);font:700 15px/1 var(--f-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--fg-3)}
+.pb-h .ok{color:var(--mag-hi)}
+.pb-t{margin:0;padding:22px 24px 24px;font:400 23px/1.5 var(--f-sans);color:var(--fg)}
+.prompt-box.weak .pb-t{color:var(--fg-3)}
+.prompt-box.strong{border-color:rgba(226,0,116,.45);box-shadow:0 0 40px rgba(226,0,116,.12)}
+.type{position:relative;display:block}
+.type .ghost{display:block}
+.type .typed{position:absolute;inset:0;display:none}
+.type.typing .ghost{visibility:hidden}
+.type.typing .typed{display:block}
+.caret{display:inline-block;width:2px;height:1.05em;margin-left:2px;vertical-align:-3px;background:var(--mag);box-shadow:0 0 10px var(--mag-glow);animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.rules{display:flex;flex-direction:column}
+.rule{display:grid;grid-template-columns:44px 1fr;gap:22px;padding:22px 0;border-top:1px solid var(--line)}
+.rule:last-child{border-bottom:1px solid var(--line)}
+.rule .ico{width:40px;height:40px}
+.rule h3{margin:0 0 6px;font:600 26px/1.25 var(--f-sans)}
+.rule p{margin:0;font:400 21px/1.45 var(--f-sans);color:var(--fg-2)}
+.rule .chip{display:inline-flex;align-items:baseline;gap:10px;margin-top:12px;padding:8px 14px;border-radius:12px;background:rgba(226,0,116,.1);border:1px solid rgba(226,0,116,.35);font:400 18px/1.3 var(--f-sans);color:var(--fg-2)}
+.rule .chip b{font:600 24px/1 var(--f-sans);color:var(--mag-hi)}
+
+/* ============ 14 Company ============ */
+.g4c{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.g4c .card{padding:30px 30px 28px;gap:10px}
+.g4c .card h3{margin:0 0 6px;font-size:27px}
+.g4c .list{gap:10px}
+.g4c .list li{font-size:20px;padding-left:22px}
+.g4c .list li::before{width:6px;height:6px}
+.road{position:relative}
+.road-t{margin:0 0 26px}
+.road-line{position:absolute;left:0;right:0;top:5px;height:2px;background:rgba(255,255,255,.1)}
+.road-line i{position:absolute;inset:0;background:linear-gradient(90deg,var(--mag),rgba(226,0,116,.3));box-shadow:0 0 14px var(--mag-glow);transform-origin:0 50%;transform:scaleX(1)}
+.js .slide .road-line i{transform:scaleX(0)}
+.js .slide.is-built .road-line i{transform:scaleX(1);transition:transform 2.4s var(--ease-out) 1.3s}
+.js .slide.is-static .road-line i{transform:scaleX(1);transition:none}
+.steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.step{position:relative;padding-top:34px}
+.step::before{content:"";position:absolute;left:0;top:-3px;z-index:1;width:18px;height:18px;border-radius:50%;background:var(--mag);box-shadow:0 0 0 6px rgba(226,0,116,.15),0 0 20px var(--mag-glow)}
+.step .when{font:700 16px/1 var(--f-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--mag-hi)}
+.step h3{margin:12px 0 6px;font:600 26px/1.2 var(--f-sans)}
+.step p{margin:0;font:400 20px/1.45 var(--f-sans);color:var(--fg-2)}
+
+/* ============ 15 End ============ */
+.s-end{background:linear-gradient(115deg,#08080A 0%,#0C090C 46%,#26001A 100%)}
+.s-end .amb{--ax:80%;--ay:50%;--bx:10%;--by:0%}
+.s-end .globe{opacity:.75}
+.end{position:absolute;left:120px;top:0;bottom:0;width:1240px;display:flex;flex-direction:column;justify-content:center;gap:34px}
+.end-h{margin:0;display:flex;flex-direction:column;gap:10px;font:600 92px/1.05 var(--f-sans);letter-spacing:-.035em}
+.end-h .sm{font-size:64px;line-height:1.12;font-weight:500;color:var(--fg)}
+.end-h .sm em{font-size:1.14em}
+.cta{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-top:22px}
+.cta .kicker{width:100%;margin-bottom:6px}
+.cta span.st{padding:16px 24px;border-radius:999px;border:1px solid rgba(226,0,116,.55);background:rgba(226,0,116,.1);font:600 22px/1 var(--f-sans)}
+.cta svg{width:26px;height:26px;fill:none;stroke:var(--mag-hi);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.thanks{position:absolute;left:120px;bottom:56px;font:600 16px/1 var(--f-sans);letter-spacing:.2em;text-transform:uppercase;color:var(--fg-3)}
+
+/* ============ HUD, controls, panels ============ */
+.prog{position:fixed;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);height:3px;background:rgba(255,255,255,.06);z-index:5;pointer-events:none}
+.prog i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--mag-deep),var(--mag));box-shadow:0 0 12px var(--mag-glow);transform-origin:0 50%;transform:scaleX(var(--p,0));transition:transform .9s var(--ease-out)}
+.ctrl{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:6;display:flex;align-items:center;gap:4px;padding:6px;border-radius:14px;
+  background:rgba(17,16,21,.82);border:1px solid var(--line);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);opacity:0;transform:translateY(8px);transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.ctrl.show,.ctrl:focus-within,.coarse .ctrl{opacity:1;transform:none}
+.ctrl button{display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:10px;background:transparent;color:var(--fg-2);cursor:pointer}
+.ctrl button:hover{background:rgba(255,255,255,.08);color:var(--fg)}
+.ctrl button[aria-pressed="true"]{color:var(--mag-hi);background:rgba(226,0,116,.14)}
+.ctrl svg,.pv svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ctrl .sep{width:1px;height:22px;margin:0 4px;background:var(--line-2)}
+.ctrl .count{min-width:64px;padding:0 6px;text-align:center;font:600 13px/1 var(--f-sans);letter-spacing:.1em;font-variant-numeric:tabular-nums;color:var(--fg-3)}
+
+.np{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:7;width:min(900px,calc(100vw - 32px));max-height:42vh;display:flex;flex-direction:column;transform:translateX(-50%);
+  border-radius:18px;background:rgba(17,16,21,.94);border:1px solid var(--line-2);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.np-h{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px 12px 22px;border-bottom:1px solid var(--line)}
+.np-t{font:700 13px/1.2 var(--f-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--mag-hi)}
+.np-b{padding:16px 22px 20px;overflow:auto;font:400 17px/1.6 var(--f-sans);color:var(--fg-2)}
+.np-b p{margin:0 0 .8em}
+.np-b p:last-child{margin:0}
+.np-b b{color:var(--fg)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);font:600 14px/1 var(--f-sans);color:var(--fg);cursor:pointer}
+.btn:hover{background:rgba(255,255,255,.09)}
+.btn.primary{border-color:rgba(226,0,116,.6);background:rgba(226,0,116,.16)}
+
+.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:6;max-width:calc(100vw - 32px);padding:12px 18px;border-radius:12px;transform:translateX(-50%);
+  background:rgba(17,16,21,.9);border:1px solid var(--line);font:500 14px/1.4 var(--f-sans);color:var(--fg-2);text-align:center;opacity:0;transition:opacity .8s var(--ease);pointer-events:none}
+.toast.show{opacity:1}
+.toast kbd,.help kbd{display:inline-block;min-width:22px;padding:2px 6px;border-radius:6px;border:1px solid var(--line-2);background:rgba(255,255,255,.05);font:600 12px/1.4 var(--f-sans);color:var(--fg);text-align:center}
+
+.help,.ov{position:fixed;inset:0;z-index:9;display:grid;place-items:center;padding:24px 16px;background:rgba(8,8,10,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.help-card{width:min(560px,100%);padding:28px 30px;border-radius:20px;background:var(--ink-1);border:1px solid var(--line-2)}
+.help-card h2{margin:0 0 18px;font:600 22px/1.2 var(--f-sans)}
+.help-card dl{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;margin:0 0 22px;font:400 15px/1.5 var(--f-sans);color:var(--fg-2)}
+.help-card dt{white-space:nowrap}
+.help-card dd{margin:0}
+.help-card p{margin:0 0 20px;font:400 14px/1.55 var(--f-sans);color:var(--fg-3)}
+
+.ov{place-items:start center;overflow:auto}
+.ov-in{width:min(1500px,100%)}
+.ov-h{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:8px 0 18px}
+.ov-h p{margin:0;font:700 13px/1 var(--f-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--mag-hi)}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.ov-item{display:flex;flex-direction:column;gap:8px;padding:0;border:0;background:none;text-align:left;cursor:pointer}
+.ov-thumb{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;overflow:hidden;border-radius:10px;border:1px solid var(--line);background:var(--ink-0)}
+.ov-item:hover .ov-thumb,.ov-item.cur .ov-thumb{border-color:var(--mag);box-shadow:0 0 0 1px var(--mag),0 0 24px rgba(226,0,116,.35)}
+.ov-cap{font:500 13px/1.3 var(--f-sans);color:var(--fg-2)}
+.ov-cap b{margin-right:8px;color:var(--mag-hi);font-variant-numeric:tabular-nums}
+.mini{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;pointer-events:none}
+.mini .slide{opacity:1;visibility:visible;transform:none;transition:none}
+.mini canvas{display:none}
+
+.black{position:fixed;inset:0;z-index:8;background:#000}
+
+/* presenter mode */
+.pv{position:fixed;top:24px;right:24px;bottom:24px;left:calc(62vw + 12px);z-index:4;display:flex;flex-direction:column;gap:16px;min-width:0}
+.pv-notes{position:fixed;left:24px;width:calc(62vw - 36px);top:calc(24px + (62vw - 36px) * .5625 + 18px);bottom:24px;z-index:4;overflow:auto;padding:20px 26px;border-radius:14px;
+  background:var(--ink-1);border:1px solid var(--line);font:400 20px/1.6 var(--f-sans);color:var(--fg-2)}
+.pv-notes h2{margin:0 0 12px;font:700 13px/1.2 var(--f-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--mag-hi)}
+.pv-notes p{margin:0 0 .8em}
+.pv-notes b{color:var(--fg)}
+body.presenting .viewport{left:24px;top:24px;right:auto;bottom:auto;width:calc(62vw - 36px);height:calc((62vw - 36px) * .5625);border-radius:14px;box-shadow:0 0 0 1px var(--line-2)}
+body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
+.pv-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pv-time{font:200 64px/1 var(--f-sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pv-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font:600 14px/1.2 var(--f-sans);letter-spacing:.12em;color:var(--fg-3);font-variant-numeric:tabular-nums}
+.pv-l{margin:6px 0 0;font:700 12px/1 var(--f-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--fg-3)}
+.pv-next{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;overflow:hidden;border-radius:12px;border:1px solid var(--line);background:var(--ink-0)}
+.pv-next .end-note{position:absolute;inset:0;display:grid;place-items:center;font:500 16px/1 var(--f-sans);color:var(--fg-3)}
+.pv-nt{margin:0;font:600 18px/1.35 var(--f-sans);color:var(--fg)}
+.pv-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto}
+.pv-msg{margin:0;font:400 13px/1.5 var(--f-sans);color:var(--fg-3)}
+
+@media (max-width:700px){
+  .viewport{left:16px;right:16px}
+  .ctrl{right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+  .ctrl .count,.ctrl .sep,.ctrl [data-act="presenter"],.ctrl [data-act="help"]{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .slide,.slide *,.slide *::before,.slide *::after{transition:none!important;animation:none!important}
+  .js .slide [data-a]{opacity:1;transform:none}
+  .js .slide .ico{stroke-dashoffset:0}
+  .js .slide .track i{transform:scaleX(var(--v))}
+  .js .slide .tl-line i,.js .slide .road-line i{transform:none}
+}
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{height:auto;overflow:visible}
+  .viewport{position:static}
+  .stage{position:static;transform:none!important;width:1920px;height:auto}
+  .slide{position:relative;width:1920px;height:1080px;opacity:1!important;visibility:visible!important;transform:none!important;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .slide [data-a]{opacity:1!important;transform:none!important;transition:none!important}
+  .slide .ico{stroke-dashoffset:0!important}
+  .slide .track i{transform:scaleX(var(--v))!important}
+  .slide .tl-line i,.slide .road-line i{transform:none!important}
+  .amb{animation:none!important}
+  .prog,.ctrl,.np,.toast,.help,.ov,.pv,.pv-notes,.black{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path pathLength="1" d="M11 3.5c.6 4 2.6 6 6.5 6.5-3.9.6-5.9 2.6-6.5 6.5-.6-3.9-2.6-5.9-6.5-6.5 3.9-.5 5.9-2.5 6.5-6.5z"/><path pathLength="1" d="M18.5 15c.3 1.7 1.1 2.5 2.7 2.7-1.6.3-2.4 1.1-2.7 2.8-.3-1.7-1.1-2.5-2.7-2.8 1.6-.2 2.4-1 2.7-2.7z"/></symbol>
+    <symbol id="i-agent" viewBox="0 0 24 24"><circle pathLength="1" cx="12" cy="12" r="3"/><circle pathLength="1" cx="5" cy="5" r="2"/><circle pathLength="1" cx="19" cy="5" r="2"/><circle pathLength="1" cx="12" cy="20.5" r="2"/><path pathLength="1" d="M6.5 6.5l3.4 3.4"/><path pathLength="1" d="M17.5 6.5l-3.4 3.4"/><path pathLength="1" d="M12 15v3.5"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24"><path pathLength="1" d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path pathLength="1" d="M4 3.5V8h4.5"/><path pathLength="1" d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path pathLength="1" d="M20 20.5V16h-4.5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path pathLength="1" d="M3.5 3.5v17h17"/><path pathLength="1" d="M7 15.5l4-4.5 3 3 5.5-6.5"/><path pathLength="1" d="M15.5 7.5h4v4"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path pathLength="1" d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/><path pathLength="1" d="M14 2.5V8h5.5"/><path pathLength="1" d="M8.5 13h7"/><path pathLength="1" d="M8.5 17h5"/></symbol>
+    <symbol id="i-headset" viewBox="0 0 24 24"><path pathLength="1" d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect pathLength="1" x="2.5" y="13.5" width="4" height="6" rx="1.5"/><rect pathLength="1" x="17.5" y="13.5" width="4" height="6" rx="1.5"/><path pathLength="1" d="M19.5 19.5c0 1.4-1.4 2-3.5 2h-2"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24"><rect pathLength="1" x="4.5" y="2.5" width="15" height="19" rx="2"/><path pathLength="1" d="M8 7h8"/><path pathLength="1" d="M8 11.5h2M14 11.5h2M8 15h2M14 15h2M8 18.5h2M14 18.5h2"/></symbol>
+    <symbol id="i-lang" viewBox="0 0 24 24"><path pathLength="1" d="M3 5.5h9"/><path pathLength="1" d="M7.5 3v2.5"/><path pathLength="1" d="M10 5.5c-.8 3.3-3 6-6.5 7.5"/><path pathLength="1" d="M5.2 8.5c1 1.8 2.6 3.2 4.8 4.2"/><path pathLength="1" d="M12.5 21l4-10 4 10"/><path pathLength="1" d="M14 17.5h5"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path pathLength="1" d="M8.5 7 3.5 12l5 5"/><path pathLength="1" d="M15.5 7l5 5-5 5"/><path pathLength="1" d="M13.5 4.5l-3 15"/></symbol>
+    <symbol id="i-mega" viewBox="0 0 24 24"><path pathLength="1" d="M3.5 10v4a1 1 0 0 0 1 1H7l6 4.5v-15L7 9H4.5a1 1 0 0 0-1 1z"/><path pathLength="1" d="M16.5 8.5a5 5 0 0 1 0 7"/><path pathLength="1" d="M19 6a8.5 8.5 0 0 1 0 12"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path pathLength="1" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path pathLength="1" d="M20.4 5.6a5 5 0 0 0-7.1 0L12 6.9l-1.3-1.3a5 5 0 0 0-7.1 7.1L12 21l8.4-8.3a5 5 0 0 0 0-7.1z"/><path pathLength="1" d="M6.5 12h3l1.3-2.2 2.2 4.4 1.3-2.2h3.2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle pathLength="1" cx="9" cy="8" r="3.5"/><path pathLength="1" d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/><path pathLength="1" d="M16 4.8a3.5 3.5 0 0 1 0 6.4"/><path pathLength="1" d="M18 13.8c2 .9 3.5 3 3.5 6.2"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle pathLength="1" cx="12" cy="12" r="9"/><path pathLength="1" d="M15.6 8.4l-2 5.2-5.2 2 2-5.2z"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path pathLength="1" d="M12 20.5h8.5"/><path pathLength="1" d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+    <symbol id="i-cap" viewBox="0 0 24 24"><path pathLength="1" d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path pathLength="1" d="M6.5 11v4.5c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V11"/><path pathLength="1" d="M21.5 9v5"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse pathLength="1" cx="12" cy="5.5" rx="7.5" ry="3"/><path pathLength="1" d="M4.5 5.5v13c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-13"/><path pathLength="1" d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path pathLength="1" d="M12 2.5 4.5 5.5v6c0 4.6 3.2 8.3 7.5 10 4.3-1.7 7.5-5.4 7.5-10v-6z"/><path pathLength="1" d="M8.8 12l2.2 2.2 4.2-4.4"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path pathLength="1" d="M12 3.5v17"/><path pathLength="1" d="M7.5 20.5h9"/><path pathLength="1" d="M4.5 7h15"/><path pathLength="1" d="M4.5 7 2 13a2.5 2.5 0 0 0 5 0z"/><path pathLength="1" d="M19.5 7 17 13a2.5 2.5 0 0 0 5 0z"/></symbol>
+    <symbol id="i-process" viewBox="0 0 24 24"><rect pathLength="1" x="2.5" y="3.5" width="7" height="7" rx="1.5"/><rect pathLength="1" x="14.5" y="13.5" width="7" height="7" rx="1.5"/><path pathLength="1" d="M9.5 7H15a3 3 0 0 1 3 3v3.5"/><path pathLength="1" d="M15.5 11l2.5 2.5 2.5-2.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle pathLength="1" cx="10.5" cy="10.5" r="7"/><path pathLength="1" d="M20.5 20.5 15.5 15.5"/><path pathLength="1" d="M7.5 10.5l2 2 3.5-3.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect pathLength="1" x="4.5" y="10.5" width="15" height="10.5" rx="2"/><path pathLength="1" d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><path pathLength="1" d="M12 14.5v2.5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path pathLength="1" d="M12 3.5 2.5 20h19z"/><path pathLength="1" d="M12 10v4.5"/><path pathLength="1" d="M12 17.2v.3"/></symbol>
+    <symbol id="i-window" viewBox="0 0 24 24"><rect pathLength="1" x="2.5" y="4" width="19" height="15" rx="2"/><path pathLength="1" d="M2.5 8.5h19"/><path pathLength="1" d="M13 11.5c.3 1.6 1 2.3 2.5 2.5-1.5.3-2.2 1-2.5 2.5-.3-1.5-1-2.2-2.5-2.5 1.5-.2 2.2-.9 2.5-2.5z"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path pathLength="1" d="M13 2.5 4.5 13.5H12l-1 8 8.5-11H12z"/></symbol>
+    <symbol id="i-chip" viewBox="0 0 24 24"><rect pathLength="1" x="6" y="6" width="12" height="12" rx="2"/><rect pathLength="1" x="9.5" y="9.5" width="5" height="5" rx=".6"/><path pathLength="1" d="M9 2.5v3M15 2.5v3M9 18.5v3M15 18.5v3M2.5 9h3M2.5 15h3M18.5 9h3M18.5 15h3"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><ellipse pathLength="1" cx="9" cy="6.5" rx="6" ry="2.5"/><path pathLength="1" d="M3 6.5v4c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-4"/><path pathLength="1" d="M9 17.5c-3.3 0-6-1.1-6-2.5v-4.5"/><ellipse pathLength="1" cx="15" cy="14.5" rx="6" ry="2.5"/><path pathLength="1" d="M9 14.5v4c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-4"/></symbol>
+    <symbol id="i-dna" viewBox="0 0 24 24"><path pathLength="1" d="M7 2.5c0 5 10 4.5 10 9.5s-10 4.5-10 9.5"/><path pathLength="1" d="M17 2.5c0 5-10 4.5-10 9.5s10 4.5 10 9.5"/><path pathLength="1" d="M8.5 5.5h7"/><path pathLength="1" d="M8.5 18.5h7"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle pathLength="1" cx="12" cy="12" r="9"/><circle pathLength="1" cx="12" cy="12" r="5"/><circle pathLength="1" cx="12" cy="12" r="1.2"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path pathLength="1" d="M2.5 12h1.5"/><path pathLength="1" d="M7 8v8"/><path pathLength="1" d="M10.5 4.5v15"/><path pathLength="1" d="M14 8.5v7"/><path pathLength="1" d="M17.5 6v12"/><path pathLength="1" d="M21 10.5v3"/></symbol>
+    <symbol id="i-trend-down" viewBox="0 0 24 24"><path pathLength="1" d="M3.5 6.5l6 6 4-4 7 7.5"/><path pathLength="1" d="M20.5 11.5v4.5H16"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle pathLength="1" cx="12" cy="12" r="9"/><path pathLength="1" d="M3 12h18"/><path pathLength="1" d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></symbol>
+  </defs>
+</svg>
+
+<div class="viewport" id="viewport">
+<div class="stage" id="stage">
+
+<!-- ===================== 01 · Úvod ===================== -->
+<section class="slide s-cover" data-title="Úvod">
+  <div class="amb"></div>
+  <div class="globe-halo"></div>
+  <canvas class="globe" aria-hidden="true"></canvas>
+  <div class="cover">
+    <p class="eyebrow" data-a="fade" style="--d:0">Strategický prehľad pre vedenie firiem</p>
+    <h1 class="h1">
+      <span data-a="up" style="--d:1">Umelá inteligencia:</span>
+      <span data-a="up" style="--d:2">ako zmení <em>prácu, firmy</em></span>
+      <span data-a="up" style="--d:3"><em>a&nbsp;svet</em></span>
+    </h1>
+    <p class="cover-lead" data-a="up" style="--d:5">Čo musí vedieť každá veľká firma a&nbsp;prečo je správny čas začať práve teraz.</p>
+    <ul class="agenda" aria-label="Obsah prezentácie">
+      <li data-a="fade" style="--d:7">Technológia</li>
+      <li data-a="fade" style="--d:8">Práca</li>
+      <li data-a="fade" style="--d:9">Svet</li>
+      <li data-a="fade" style="--d:10">Firmy a&nbsp;ľudia</li>
+    </ul>
+  </div>
+  <p class="cover-date" data-a="fade" style="--d:11">Október 2026</p>
+  <aside class="notes">
+    <p>Dobrý deň. Dnes nebudeme hovoriť o&nbsp;technológii pre technológiu. Budeme hovoriť o&nbsp;tom, čo umelá inteligencia znamená pre vaše firmy, vašich ľudí a&nbsp;vaše konkurenčné postavenie v&nbsp;najbližších rokoch.</p>
+    <p>Prejdeme štyri bloky: <b>čo je dnes AI</b>, <b>ako mení prácu</b> (ktoré pozície sú ohrozené a&nbsp;ktoré skôr posilnené), <b>ako mení svet</b> (regulácia, medicína, ekonomika a&nbsp;geopolitika) a&nbsp;nakoniec <b>čo z&nbsp;toho vyplýva pre každého zamestnanca a&nbsp;každú veľkú firmu</b>.</p>
+    <p>Všetky čísla pochádzajú z&nbsp;verejných štúdií a&nbsp;reportov (WEF, MMF, OECD, ILO, Eurostat, McKinsey, Stanford HAI, IEA). Zdroj je vždy uvedený malým písmom na spodku slidu.</p>
+    <p>Hlavná myšlienka na úvod: AI už nie je experiment IT oddelenia. Je to téma pre vedenie firmy, podobne ako digitalizácia pred dvadsiatimi rokmi. Rozdiel je v&nbsp;tom, že tentoraz sa všetko deje oveľa rýchlejšie.</p>
+  </aside>
+</section>
+
+<!-- ===================== 02 · Čo je dnes AI ===================== -->
+<section class="slide" data-title="Čo je dnes AI">
+  <div class="amb" style="--ax:88%;--ay:6%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Technológia · Čo je dnes AI</p>
+      <h2 class="h2" data-a="up" style="--d:1">Technológie, ktoré čítajú, píšu, analyzujú a&nbsp;čoraz častejšie aj <em>konajú</em></h2>
+    </header>
+    <div class="bd">
+      <div class="g4">
+        <article class="card" data-a="up" style="--d:3">
+          <svg class="ico" aria-hidden="true"><use href="#i-spark"/></svg>
+          <h3>Generatívna AI</h3>
+          <p>Vytvára text, obraz, kód aj reč podľa zadania v&nbsp;bežnom jazyku.</p>
+          <p class="ex">Návrhy textov, zhrnutia, analýzy, prezentácie</p>
+        </article>
+        <article class="card" data-a="up" style="--d:4">
+          <svg class="ico" aria-hidden="true"><use href="#i-agent"/></svg>
+          <h3>AI agenti</h3>
+          <p>Samostatne plánujú a&nbsp;vykonávajú viackrokové úlohy v&nbsp;systémoch firmy.</p>
+          <p class="ex">Objednávka od e-mailu až po zápis do ERP</p>
+        </article>
+        <article class="card" data-a="up" style="--d:5">
+          <svg class="ico" aria-hidden="true"><use href="#i-flow"/></svg>
+          <h3>Inteligentná automatizácia</h3>
+          <p>Číta dokumenty, triedi požiadavky a&nbsp;riadi procesy podľa pravidiel.</p>
+          <p class="ex">Faktúry, reklamácie, onboarding</p>
+        </article>
+        <article class="card" data-a="up" style="--d:6">
+          <svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg>
+          <h3>Prediktívna AI</h3>
+          <p>Z dát predpovedá dopyt, riziká, poruchy a&nbsp;správanie zákazníkov.</p>
+          <p class="ex">Údržba, cenotvorba, odhaľovanie podvodov</p>
+        </article>
+      </div>
+      <div class="uses">
+        <p class="kicker" data-a="fade" style="--d:8">Kde sa už reálne používa</p>
+        <ul class="chips">
+          <li data-a="up" style="--d:9">Zákaznícky servis</li>
+          <li data-a="up" style="--d:10">Marketing a&nbsp;predaj</li>
+          <li data-a="up" style="--d:11">Vývoj softvéru a&nbsp;IT</li>
+          <li data-a="up" style="--d:12">Financie a&nbsp;reporting</li>
+          <li data-a="up" style="--d:13">HR a&nbsp;nábor</li>
+          <li data-a="up" style="--d:14">Výroba a&nbsp;logistika</li>
+          <li data-a="up" style="--d:15">Právo a&nbsp;compliance</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Prehľad typov AI používaných vo firmách v&nbsp;roku 2026.</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Keď dnes hovoríme o&nbsp;AI, nemyslíme jeden nástroj, ale štyri skupiny technológií, ktoré sa navzájom kombinujú.</p>
+    <p><b>Generatívna AI</b> vytvára obsah: texty, zhrnutia, obrázky, kód, reč. Ovláda sa bežným jazykom, a&nbsp;preto ju môže používať každý zamestnanec, nielen IT.</p>
+    <p><b>AI agenti</b> sú najväčšia zmena posledných dvoch rokov. Agent nielen odpovedá, ale aj koná: dostane cieľ, rozloží ho na kroky a&nbsp;vykoná ich v&nbsp;systémoch firmy. Príklad: prečíta e-mail s&nbsp;objednávkou, overí sklad, založí objednávku v&nbsp;ERP a&nbsp;pripraví potvrdenie. Človek schvaľuje výnimky.</p>
+    <p><b>Inteligentná automatizácia</b> spája AI s&nbsp;procesmi: čítanie faktúr, triedenie reklamácií, onboarding zamestnancov. <b>Prediktívna AI</b> je „staršia sestra“: predpovede dopytu, prediktívna údržba, odhaľovanie podvodov, cenotvorba.</p>
+    <p>Dole vidíte oblasti, kde sa AI vo firmách reálne používa už dnes. Nie je to budúcnosť, je to súčasnosť. Otázka už neznie, či AI používať, ale kde a&nbsp;ako rýchlo.</p>
+  </aside>
+</section>
+
+<!-- ===================== 03 · Stav adopcie ===================== -->
+<section class="slide" data-title="AI vo firmách v číslach">
+  <div class="amb" style="--ax:20%;--ay:10%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Technológia · AI vo firmách v&nbsp;číslach</p>
+      <h2 class="h2" data-a="up" style="--d:1">AI používa takmer každá firma. <em>Hodnotu</em> z&nbsp;nej zatiaľ získava menšina.</h2>
+    </header>
+    <div class="bd">
+      <div class="s3">
+        <div data-a="up" style="--d:3">
+          <p class="kicker">Od používania k&nbsp;hodnote · globálny prieskum firiem</p>
+          <div class="bars">
+            <div class="brow" data-a="fade" style="--d:4">
+              <span class="bval num"><span data-count="88">88</span><small>%</small></span>
+              <span class="bbody"><span class="blabel"><b>používa AI</b> aspoň v&nbsp;jednej oblasti firmy</span><span class="track"><i style="--v:.88"></i></span></span>
+            </div>
+            <div class="brow" data-a="fade" style="--d:5">
+              <span class="bval num"><span data-count="39">39</span><small>%</small></span>
+              <span class="bbody"><span class="blabel">vidí <b>akýkoľvek vplyv na EBIT</b></span><span class="track"><i style="--v:.39"></i></span></span>
+            </div>
+            <div class="brow" data-a="fade" style="--d:6">
+              <span class="bval num">≈&#8239;1/3</span>
+              <span class="bbody"><span class="blabel">už <b>škáluje AI</b> naprieč celou firmou</span><span class="track"><i style="--v:.333"></i></span></span>
+            </div>
+            <div class="brow" data-a="fade" style="--d:7">
+              <span class="bval num glow"><span data-count="6">6</span><small>%</small></span>
+              <span class="bbody"><span class="blabel"><b>„AI lídri“</b> s&nbsp;výrazným vplyvom AI na zisk</span><span class="track"><i style="--v:.06"></i></span></span>
+            </div>
+          </div>
+        </div>
+        <div data-a="up" style="--d:5">
+          <p class="kicker">Európa a&nbsp;Slovensko · firmy s&nbsp;10+ zamestnancami, 2025</p>
+          <div class="eu">
+            <div class="srow" data-a="fade" style="--d:6">
+              <span class="sn num"><span data-count="55">55</span><small>%</small></span>
+              <span class="sl"><b>veľkých firiem v&nbsp;EÚ</b> používa AI</span>
+            </div>
+            <div class="srow" data-a="fade" style="--d:7">
+              <span class="sn num"><span data-count="20">20</span><small>%</small></span>
+              <span class="sl"><b>všetkých firiem v&nbsp;EÚ</b> používa AI, o&nbsp;rok skôr 13,5&nbsp;%</span>
+            </div>
+            <div class="srow" data-a="fade" style="--d:8">
+              <span class="sn num glow"><span data-count="18">18</span><small>%</small></span>
+              <span class="sl"><b>firiem na Slovensku</b> <span class="tag">pod priemerom EÚ</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="bottom-line" data-a="fade" style="--d:10"><span>Rozdiel medzi firmami nerobí to, či AI majú, ale to, či ju dokážu <b>premeniť na výsledky</b>.</span></p>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: McKinsey, The State of AI in 2025 (11/2025); Eurostat, Use of artificial intelligence in enterprises (12/2025); OECD Economic Surveys: Slovak Republic 2026 (údaje Eurostat).</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Toto je možno najdôležitejší slide celej prezentácie, pretože ukazuje rozdiel medzi <b>používaním</b> AI a&nbsp;<b>získavaním hodnoty</b> z&nbsp;AI.</p>
+    <p>Podľa globálneho prieskumu McKinsey (november 2025) <b>88&nbsp;%</b> organizácií pravidelne používa AI aspoň v&nbsp;jednej oblasti, rok predtým to bolo 78&nbsp;%. Stanford AI Index 2026 uvádza rovnaké číslo. No takmer dve tretiny firiem ešte nezačali AI škálovať naprieč celou organizáciou. Len <b>39&nbsp;%</b> pripisuje AI akýkoľvek vplyv na prevádzkový zisk (EBIT), a&nbsp;väčšina z&nbsp;nich menej ako 5&nbsp;%. Skupina „AI lídrov“, ktorí z&nbsp;AI reálne profitujú, tvorí približne <b>6&nbsp;%</b>. Augustové vydanie prieskumu z&nbsp;roku 2026 ukazuje podobný obraz.</p>
+    <p>Európa: podľa Eurostatu používalo AI v&nbsp;roku 2025 <b>20&nbsp;%</b> firiem s&nbsp;10 a&nbsp;viac zamestnancami (2024: 13,5&nbsp;%) a&nbsp;<b>55&nbsp;%</b> veľkých firiem. Lídrom je Dánsko s&nbsp;42&nbsp;%. Slovensko je podľa OECD (Economic Survey 2026) na <b>18&nbsp;%</b>, teda pod priemerom EÚ, najmä v&nbsp;malých a&nbsp;stredných firmách. OECD zároveň odhaduje, že AI môže na Slovensku pridať 0,2 až 0,8 percentuálneho bodu ročného rastu produktivity práce.</p>
+    <p>Pointa pre nás: rozdiel medzi firmami sa nevytvára tým, či AI majú, ale tým, či ju dokážu premeniť na výsledky. Tomu sa budeme venovať na konci.</p>
+  </aside>
+</section>
+
+<!-- ===================== 04 · Budúcnosť práce ===================== -->
+<section class="slide" data-title="Budúcnosť práce">
+  <div class="amb" style="--ax:90%;--ay:30%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Práca · Celkový obraz</p>
+      <h2 class="h2" data-a="up" style="--d:1">AI zmení obsah <em>každej</em> pracovnej pozície</h2>
+    </header>
+    <div class="bd">
+      <div class="s4">
+        <div data-a="up" style="--d:2">
+          <p class="kicker">Pracovné miesta 2025 – 2030 · globálne</p>
+          <div class="bars">
+            <div class="brow" data-a="fade" style="--d:3">
+              <span class="bval num"><span data-count="170">170</span><small>mil.</small></span>
+              <span class="bbody"><span class="blabel"><b>vznikne</b> nových pracovných miest</span><span class="track"><i style="--v:1"></i></span></span>
+            </div>
+            <div class="brow" data-a="fade" style="--d:4">
+              <span class="bval num"><span data-count="92">92</span><small>mil.</small></span>
+              <span class="bbody"><span class="blabel"><b>zanikne</b> alebo bude nahradených</span><span class="track"><i class="muted" style="--v:.541"></i></span></span>
+            </div>
+            <div class="brow" data-a="fade" style="--d:5">
+              <span class="bval num glow">+<span data-count="78">78</span><small>mil.</small></span>
+              <span class="bbody"><span class="blabel"><b>čistý rast</b>, no s&nbsp;inými zručnosťami</span><span class="track"><i style="--v:.459"></i></span></span>
+            </div>
+          </div>
+        </div>
+        <div class="eu" data-a="up" style="--d:4">
+          <div class="srow" data-a="fade" style="--d:5">
+            <span class="sn num glow"><span data-count="39">39</span><small>%</small></span>
+            <span class="sl"><b>kľúčových zručností</b> sa do roku 2030 zmení alebo zastará</span>
+          </div>
+          <div class="srow" data-a="fade" style="--d:6">
+            <span class="sn num"><span data-count="40">40</span><small>%</small></span>
+            <span class="sl"><b>pracovných miest vo svete</b> je vystavených AI, vo vyspelých ekonomikách až <b>60&nbsp;%</b></span>
+          </div>
+          <div class="srow" data-a="fade" style="--d:7">
+            <span class="sn num"><span data-count="85">85</span><small>%</small></span>
+            <span class="sl"><b>zamestnávateľov</b> stavia na preškoľovaní ľudí ako hlavnej stratégii</span>
+          </div>
+        </div>
+      </div>
+      <p class="bottom-line" data-a="fade" style="--d:9"><span>Vystavenie AI neznamená zánik. Približne <b>polovicu</b> dotknutých pozícií vo vyspelých ekonomikách AI skôr posilní.</span></p>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: World Economic Forum, Future of Jobs Report 2025 (prieskum 1&nbsp;000+ zamestnávateľov, 55 ekonomík); MMF, Gen-AI: Artificial Intelligence and the Future of Work, SDN/2024/001.</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Ako AI zmení prácu? Najlepšie dáta máme z&nbsp;dvoch zdrojov.</p>
+    <p><b>World Economic Forum, Future of Jobs Report 2025</b>: prieskum medzi viac ako 1&nbsp;000 zamestnávateľmi, ktorí zastupujú 14 miliónov ľudí v&nbsp;55 ekonomikách. Do roku 2030 vznikne <b>170 miliónov</b> pracovných miest a&nbsp;<b>92 miliónov</b> zanikne. Čistý rast je <b>78 miliónov</b>, no nové miesta budú vyžadovať iné zručnosti. Štrukturálna zmena sa dotkne približne 22&nbsp;% dnešných pracovných miest. Až <b>39&nbsp;%</b> kľúčových zručností sa zmení alebo zastará. Pre <b>85&nbsp;%</b> zamestnávateľov je preškoľovanie hlavnou stratégiou. Zhruba 40&nbsp;% firiem zároveň plánuje znížiť počet ľudí tam, kde AI automatizuje úlohy, a&nbsp;polovica plánuje kvôli AI preorientovať svoj biznis.</p>
+    <p><b>Medzinárodný menový fond (2024)</b>: približne <b>40&nbsp;%</b> pracovných miest vo svete je vystavených AI, vo vyspelých ekonomikách až <b>60&nbsp;%</b>. Dôležitý detail: zhruba polovica týchto pozícií z&nbsp;AI môže profitovať, lebo AI doplní ľudskú prácu. Druhá polovica čelí riziku nižšieho dopytu a&nbsp;tlaku na mzdy.</p>
+    <p>Pre manažéra z&nbsp;toho vyplýva: neplánujte po profesiách, ale po úlohách. Každá pozícia má časť úloh, ktoré AI prevezme, časť, ktorú zrýchli, a&nbsp;časť, ktorá zostane ľudská.</p>
+  </aside>
+</section>
+
+<!-- ===================== 05 · Úlohy ===================== -->
+<section class="slide" data-title="Čo sa automatizuje, zmení a vznikne">
+  <div class="amb" style="--ax:50%;--ay:0%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Práca · Zmena po úlohách</p>
+      <h2 class="h2" data-a="up" style="--d:1">Čo sa <em>automatizuje</em>, čo sa zmení a&nbsp;čo vznikne</h2>
+    </header>
+    <div class="bd">
+      <div class="s5">
+        <div class="col" data-a="up" style="--d:2">
+          <div class="col-h"><svg class="ico" aria-hidden="true"><use href="#i-flow"/></svg><h3>Automatizuje sa</h3></div>
+          <p class="sub">Rutinné a&nbsp;opakované úlohy</p>
+          <ul class="list">
+            <li>Prepis, zadávanie a&nbsp;kontrola údajov</li>
+            <li>Prvé verzie textov, reportov a&nbsp;odpovedí</li>
+            <li>Triedenie e-mailov, požiadaviek a&nbsp;dokumentov</li>
+            <li>Plánovanie, evidencia, jednoduché výpočty</li>
+          </ul>
+        </div>
+        <div class="col" data-a="up" style="--d:4">
+          <div class="col-h"><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg><h3>Mení sa</h3></div>
+          <p class="sub">Človek a&nbsp;AI ako tím</p>
+          <ul class="list">
+            <li>Analýza a&nbsp;rozhodovanie s&nbsp;rýchlejšími podkladmi</li>
+            <li>Predaj a&nbsp;starostlivosť o&nbsp;klienta</li>
+            <li>Programovanie, marketing, právo, financie</li>
+            <li>Manažéri: menej administratívy, viac práce s&nbsp;ľuďmi</li>
+          </ul>
+        </div>
+        <div class="col" data-a="up" style="--d:6">
+          <div class="col-h"><svg class="ico" aria-hidden="true"><use href="#i-spark"/></svg><h3>Vzniká</h3></div>
+          <p class="sub">Nové role a&nbsp;zručnosti</p>
+          <ul class="list">
+            <li>Špecialisti na AI, dáta a&nbsp;kybernetickú bezpečnosť</li>
+            <li>Správcovia AI agentov a&nbsp;automatizovaných procesov</li>
+            <li>AI governance, riziká a&nbsp;súlad s&nbsp;reguláciou</li>
+            <li>Interní školitelia a&nbsp;AI ambasádori v&nbsp;tímoch</li>
+          </ul>
+        </div>
+      </div>
+      <div class="band s5-band" data-a="up" style="--d:9">
+        <span class="bn num glow">+<span data-count="14">14</span>&nbsp;%</span>
+        <span class="bt"><b>vyššia produktivita</b> pracovníkov zákazníckej podpory s&nbsp;AI asistentom</span>
+        <span class="bsep"></span>
+        <span class="bn num">+<span data-count="34">34</span>&nbsp;%</span>
+        <span class="bt">u&nbsp;<b>nováčikov a&nbsp;menej skúsených</b>: AI rýchlo prenáša know-how najlepších</span>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: World Economic Forum, Future of Jobs Report 2025; Brynjolfsson, Li, Raymond: Generative AI at Work, NBER Working Paper 31161 (2023), 5&nbsp;179 pracovníkov podpory.</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Prax ukazuje, že AI nemení prácu po celých profesiách, ale po jednotlivých úlohách. V&nbsp;každej pozícii nájdete tri vrstvy.</p>
+    <p><b>Automatizuje sa</b> rutina: zadávanie a&nbsp;kontrola údajov, prvé verzie textov a&nbsp;reportov, triedenie e-mailov a&nbsp;dokumentov, jednoduché plánovanie.</p>
+    <p><b>Mení sa</b> väčšina znalostnej práce: analytik dostane podklady rýchlejšie, obchodník sa lepšie pripraví na klienta, programátor, marketér či právnik pracuje s&nbsp;AI ako s&nbsp;asistentom. Manažéri by mali mať menej administratívy a&nbsp;viac času na ľudí.</p>
+    <p><b>Vznikajú</b> nové role. Podľa WEF patria medzi najrýchlejšie rastúce pozície špecialisti na veľké dáta, AI a&nbsp;strojové učenie, fintech inžinieri, vývojári softvéru a&nbsp;špecialisti na bezpečnosť. Vo firmách k&nbsp;tomu pribúdajú správcovia AI agentov, ľudia pre AI governance a&nbsp;interní AI ambasádori.</p>
+    <p>Dôkaz z&nbsp;praxe: štúdia Brynjolfssona, Li a&nbsp;Raymonda (NBER, 2023) sledovala 5&nbsp;179 pracovníkov zákazníckej podpory. S&nbsp;AI asistentom vyriešili v&nbsp;priemere o&nbsp;<b>14&nbsp;%</b> viac požiadaviek za hodinu, nováčikovia a&nbsp;menej skúsení dokonca o&nbsp;<b>34&nbsp;%</b>. Zlepšila sa aj spokojnosť zákazníkov a&nbsp;klesla fluktuácia. AI totiž prenáša postupy najlepších ľudí na celý tím.</p>
+  </aside>
+</section>
+
+<!-- ===================== 06 · Ohrozené ===================== -->
+<section class="slide" data-title="Ohrozené odvetvia a pozície">
+  <div class="amb" style="--ax:92%;--ay:60%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Práca · Najvyššie riziko</p>
+      <h2 class="h2" data-a="up" style="--d:1">Kde je riziko nahradenia alebo zmeny <em>najvyššie</em></h2>
+    </header>
+    <div class="bd center">
+      <div class="s6">
+        <div class="tiles">
+          <div class="tile" data-a="up" style="--d:2"><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><div><h3>Administratíva a&nbsp;back-office</h3><p>Zadávanie dát, evidencia a&nbsp;korešpondencia patria medzi úlohy, ktoré AI zvláda najlepšie.</p></div></div>
+          <div class="tile" data-a="up" style="--d:3"><svg class="ico" aria-hidden="true"><use href="#i-headset"/></svg><div><h3>Zákaznícka podpora</h3><p>Opakované otázky nonstop vybavia chatové a&nbsp;hlasové AI agenty.</p></div></div>
+          <div class="tile" data-a="up" style="--d:4"><svg class="ico" aria-hidden="true"><use href="#i-calc"/></svg><div><h3>Účtovníctvo a&nbsp;mzdy</h3><p>Párovanie faktúr, zaúčtovanie a&nbsp;štandardný reporting sa automatizujú.</p></div></div>
+          <div class="tile" data-a="up" style="--d:5"><svg class="ico" aria-hidden="true"><use href="#i-lang"/></svg><div><h3>Preklady a&nbsp;lokalizácia</h3><p>Bežné texty zvládne strojový preklad, človek ostáva pri citlivých a&nbsp;náročných.</p></div></div>
+          <div class="tile" data-a="up" style="--d:6"><svg class="ico" aria-hidden="true"><use href="#i-code"/></svg><div><h3>Časť IT</h3><p>Rutinný kód, testovanie a&nbsp;podpora. Najviac sú zasiahnuté juniorské pozície.</p></div></div>
+          <div class="tile" data-a="up" style="--d:7"><svg class="ico" aria-hidden="true"><use href="#i-mega"/></svg><div><h3>Časť marketingu</h3><p>Texty, vizuály a&nbsp;varianty kampaní vznikajú v&nbsp;sekundách.</p></div></div>
+        </div>
+        <div class="hlp" data-a="scale" style="--d:5">
+          <p class="kicker">Signál z&nbsp;trhu práce · USA</p>
+          <span class="hn num glow">−<span data-count="16">16</span>&nbsp;%</span>
+          <p class="ht">relatívny pokles zamestnanosti 22&nbsp;–&nbsp;25-ročných v&nbsp;profesiách najviac vystavených AI od konca roka 2022</p>
+          <p class="hs">Starší kolegovia v&nbsp;tých istých profesiách prácu nestrácajú. Tlak smeruje na vstupné pozície, kde sa ľudia doteraz učili remeslo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: World Economic Forum, Future of Jobs Report 2025; ILO, Generative AI and Jobs: A Refined Global Index of Occupational Exposure, WP 140 (2025); Brynjolfsson, Chandar, Chen: Canaries in the Coal Mine?, Stanford Digital Economy Lab (11/2025).</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Kde je riziko najvyššie? Spoločný menovateľ: veľa <b>rutinných, digitálnych a&nbsp;textových úloh</b> a&nbsp;málo fyzickej práce či osobného kontaktu.</p>
+    <p><b>Administratíva a&nbsp;back-office</b>: WEF uvádza medzi najrýchlejšie ubúdajúcimi pozíciami úradníkov na zadávanie dát, administratívnych asistentov, sekretárky, pokladníkov a&nbsp;bankových úradníkov. Medzinárodná organizácia práce (ILO, 2025) potvrdzuje, že administratívne profesie majú najvyššiu expozíciu voči generatívnej AI. Globálne je AI vystavené každé štvrté pracovné miesto, v&nbsp;krajinách s&nbsp;vysokými príjmami 34&nbsp;%. ILO zároveň zdôrazňuje, že pravdepodobnejšia je transformácia ako úplné nahradenie.</p>
+    <p><b>Zákaznícka podpora</b>: chatové a&nbsp;hlasové agenty vybavia opakované otázky nonstop. <b>Účtovníctvo a&nbsp;mzdy</b>: účtovní a&nbsp;mzdoví referenti sú tiež v&nbsp;rebríčku WEF. <b>Preklady</b>: bežné texty preloží stroj, človek ostáva pri právnych, marketingových a&nbsp;kultúrne citlivých textoch. <b>IT</b>: rutinný kód a&nbsp;testovanie. Stanford AI Index 2026 uvádza, že zamestnanosť vývojárov softvéru vo veku 22 – 25 rokov v&nbsp;USA klesla od roku 2024 takmer o&nbsp;20&nbsp;%. <b>Marketing</b>: obsah a&nbsp;varianty kampaní, WEF spomína aj grafických dizajnérov.</p>
+    <p>Číslo vpravo pochádza zo Stanford Digital Economy Lab (Brynjolfsson, Chandar, Chen, november 2025, mzdové dáta miliónov pracovníkov v&nbsp;USA): mladí ľudia vo veku 22 – 25 rokov v&nbsp;profesiách najviac vystavených AI zaznamenali <b>relatívny pokles zamestnanosti o&nbsp;16&nbsp;%</b>. Skúsenejší kolegovia v&nbsp;tých istých profesiách nie. Pokles je tam, kde AI prácu automatizuje, nie tam, kde ju dopĺňa.</p>
+    <p>Otázka pre vedenie: ak zrušíme juniorské pozície, odkiaľ budú o&nbsp;päť rokov naši seniori? Talentová pipeline je strategická téma.</p>
+  </aside>
+</section>
+
+<!-- ===================== 07 · Bezpečnejšie ===================== -->
+<section class="slide" data-title="Bezpečnejšie odvetvia a pozície">
+  <div class="amb" style="--ax:8%;--ay:20%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Práca · Kde AI pomáha</p>
+      <h2 class="h2" data-a="up" style="--d:1">Kde AI človeka skôr <em>posilní</em>, ako nahradí</h2>
+    </header>
+    <div class="bd center">
+      <div class="s6">
+        <div class="tiles">
+          <div class="tile" data-a="up" style="--d:2"><svg class="ico" aria-hidden="true"><use href="#i-wrench"/></svg><div><h3>Remeslá a&nbsp;technické profesie</h3><p>Manuálna zručnosť v&nbsp;nepredvídateľnom fyzickom prostredí.</p></div></div>
+          <div class="tile" data-a="up" style="--d:3"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg><div><h3>Zdravotníctvo a&nbsp;starostlivosť</h3><p>AI pomôže s&nbsp;diagnostikou a&nbsp;administratívou, dôvera a&nbsp;dotyk zostávajú ľudské.</p></div></div>
+          <div class="tile" data-a="up" style="--d:4"><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg><div><h3>Vedenie ľudí</h3><p>Motivácia, dôvera, riešenie konfliktov a&nbsp;zodpovednosť za tím.</p></div></div>
+          <div class="tile" data-a="up" style="--d:5"><svg class="ico" aria-hidden="true"><use href="#i-compass"/></svg><div><h3>Strategické rozhodovanie</h3><p>Kontext, etika a&nbsp;zodpovednosť za riziko nesie vždy človek.</p></div></div>
+          <div class="tile" data-a="up" style="--d:6"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg><div><h3>Kreatíva s&nbsp;vlastným rukopisom</h3><p>AI generuje varianty, originálnu myšlienku a&nbsp;vkus prináša človek.</p></div></div>
+          <div class="tile" data-a="up" style="--d:7"><svg class="ico" aria-hidden="true"><use href="#i-cap"/></svg><div><h3>Vzdelávanie a&nbsp;sociálna práca</h3><p>Vzťah, motivácia a&nbsp;individuálny prístup k&nbsp;človeku.</p></div></div>
+        </div>
+        <div class="hlp" data-a="scale" style="--d:5">
+          <p class="kicker">Spoločný menovateľ</p>
+          <p class="hq">Fyzická zručnosť, empatia, <em>zodpovednosť</em> a&nbsp;úsudok.</p>
+          <p class="hs">Najväčší absolútny rast počtu miest do roku 2030 čaká podľa WEF stavebníctvo, doručovanie, predaj, ošetrovateľstvo a&nbsp;sociálnu starostlivosť.</p>
+          <p class="ht">Bezpečnejšie neznamená nedotknuté. AI zmení spôsob práce aj tu.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: World Economic Forum, Future of Jobs Report 2025; ILO, Generative AI and Jobs, WP 140 (2025).</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Na druhej strane sú profesie, kde AI človeka skôr podporí. Spája ich to, čo sa automatizuje najťažšie: <b>fyzická zručnosť v&nbsp;nepredvídateľnom prostredí, empatia a&nbsp;dôvera, zodpovednosť a&nbsp;úsudok</b>.</p>
+    <p><b>Remeslá a&nbsp;technické profesie</b>: elektrikár, servisný technik, stavbár. Každý zásah je iný a&nbsp;roboty sú v&nbsp;takom prostredí stále drahé a&nbsp;nespoľahlivé. AI im však pomôže s&nbsp;diagnostikou, dokumentáciou a&nbsp;plánovaním.</p>
+    <p><b>Zdravotníctvo s&nbsp;ľudským kontaktom</b>: sestry, lekári, opatrovatelia. AI odbremení administratívu a&nbsp;pomôže s&nbsp;diagnostikou, no dôvera pacienta a&nbsp;starostlivosť zostávajú ľudské. WEF uvádza ošetrovateľov, sociálnych pracovníkov a&nbsp;opatrovateľov medzi pozíciami s&nbsp;najväčším rastom.</p>
+    <p><b>Vedenie ľudí a&nbsp;strategické rozhodovanie</b>: AI pripraví scenáre, no rozhodnutie, zodpovednosť a&nbsp;komunikáciu s&nbsp;ľuďmi nesie človek. <b>Kreatíva</b>: AI vytvorí sto variantov, ale originálny nápad a&nbsp;vkus sú ľudské. <b>Vzdelávanie a&nbsp;sociálna práca</b> stoja na vzťahu.</p>
+    <p>Podľa WEF čaká najväčší absolútny rast počtu pracovných miest do roku 2030 tzv. frontline profesie (poľnohospodárstvo, doručovanie, stavebníctvo, predaj, spracovanie potravín) a&nbsp;starostlivosť (ošetrovateľstvo, sociálna práca, osobná asistencia).</p>
+    <p>Dôležité upozornenie: bezpečnejšie neznamená nedotknuté. Aj lekár či remeselník bude o&nbsp;päť rokov pracovať inak ako dnes.</p>
+  </aside>
+</section>
+
+<!-- ===================== 08 · Politika a regulácia ===================== -->
+<section class="slide" data-title="AI a svet: politika a regulácia">
+  <div class="amb" style="--ax:80%;--ay:8%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Svet · Politika a&nbsp;regulácia</p>
+      <h2 class="h2" data-a="up" style="--d:1">Pravidlá hry sa píšu <em>teraz</em></h2>
+    </header>
+    <div class="bd">
+      <div class="s8">
+        <div>
+          <p class="kicker" data-a="fade" style="--d:2">EU AI Act · harmonogram povinností</p>
+          <div class="tl" style="margin-top:22px">
+            <span class="tl-line"><i></i></span>
+            <div class="tl-item past" data-a="left" style="--d:3"><span class="tl-date">08/2024</span><span class="tl-txt"><b>Nariadenie nadobudlo platnosť</b></span></div>
+            <div class="tl-item past" data-a="left" style="--d:4"><span class="tl-date">02/2025</span><span class="tl-txt"><b>Zakázané praktiky</b> a&nbsp;povinnosť budovať <b>AI gramotnosť</b> zamestnancov</span></div>
+            <div class="tl-item past" data-a="left" style="--d:5"><span class="tl-date">08/2025</span><span class="tl-txt">Pravidlá pre <b>všeobecné AI modely</b></span></div>
+            <div class="tl-item past" data-a="left" style="--d:6"><span class="tl-date">08/2026</span><span class="tl-txt"><b>Transparentnosť</b>: označovanie chatbotov a&nbsp;deepfake obsahu</span></div>
+            <div class="tl-now" data-a="fade" style="--d:7">Dnes</div>
+            <div class="tl-item" data-a="left" style="--d:8"><span class="tl-date">12/2027</span><span class="tl-txt"><b>Vysokorizikové systémy</b> (napr. HR, úvery, vzdelávanie)</span></div>
+            <div class="tl-item" data-a="left" style="--d:9"><span class="tl-date">08/2028</span><span class="tl-txt">AI v&nbsp;regulovaných produktoch</span></div>
+          </div>
+          <div class="fine" data-a="up" style="--d:10"><span class="fn num glow">7&nbsp;%</span><span class="ft">celosvetového obratu alebo 35&nbsp;mil.&nbsp;€: maximálna pokuta</span></div>
+        </div>
+        <div class="stack">
+          <div class="card flat" data-a="up" style="--d:5">
+            <h3>Tri prístupy k&nbsp;regulácii</h3>
+            <div class="approach"><b>EÚ</b><span>Pravidlá podľa miery rizika, termíny pre vysoké riziko posunuté v&nbsp;roku 2026</span></div>
+            <div class="approach"><b>USA</b><span>Prednosť má tempo inovácií a&nbsp;export vlastných AI technológií</span></div>
+            <div class="approach"><b>Čína</b><span>Silná štátna kontrola, povinné označovanie AI obsahu od 09/2025</span></div>
+          </div>
+          <div class="card flat row" data-a="up" style="--d:7">
+            <svg class="ico" aria-hidden="true"><use href="#i-wave"/></svg>
+            <div>
+              <h3>Voľby a&nbsp;deepfakes</h3>
+              <p>Slovensko 2023: dva dni pred voľbami sa počas moratória šírila falošná AI nahrávka o&nbsp;údajnej manipulácii volieb. Rovnakou technikou dnes podvodníci napodobňujú hlasy manažérov.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: AI Act, nariadenie (EÚ) 2024/1689; dohoda o&nbsp;Digital Omnibus (05/2026); America’s AI Action Plan (07/2025); pravidlá ČĽR pre označovanie AI obsahu (09/2025); AI Incident Database č.&nbsp;573.</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Prejdime k&nbsp;svetu. Najprv politika a&nbsp;regulácia, ktorá sa vás týka priamo.</p>
+    <p><b>EU AI Act</b> platí od augusta 2024 a&nbsp;zavádza sa postupne. Od februára 2025 platia <b>zákazy</b>, napríklad sociálne skórovanie, manipulatívne techniky alebo rozpoznávanie emócií na pracovisku a&nbsp;v&nbsp;školách. Od toho istého dátumu platí aj povinnosť budovať <b>AI gramotnosť</b> ľudí, ktorí s&nbsp;AI pracujú (článok 4). Digital Omnibus túto povinnosť v&nbsp;roku 2026 zmiernil na prijímanie podporných opatrení, no nezrušil ju. Od augusta 2025 platia pravidlá pre všeobecné AI modely. Od <b>augusta 2026</b> platí transparentnosť: ľudia musia vedieť, že komunikujú s&nbsp;AI, a&nbsp;deepfake obsah musí byť označený.</p>
+    <p>Politická dohoda o&nbsp;<b>Digital Omnibus</b> z&nbsp;mája 2026 posunula povinnosti pre <b>vysokorizikové systémy</b> na <b>december 2027</b> a&nbsp;pre AI v&nbsp;regulovaných produktoch na <b>august 2028</b>. Pozor: vysokorizikové sú napríklad AI pri nábore a&nbsp;hodnotení zamestnancov, pri posudzovaní úverov či vo vzdelávaní. Ak to vaša firma robí, času na prípravu nie je veľa. Pokuty dosahujú až 35 miliónov eur alebo 7&nbsp;% celosvetového obratu pri zakázaných praktikách.</p>
+    <p><b>USA</b> idú cestou rýchlosti: akčný plán pre AI z&nbsp;júla 2025 stavia na deregulácii, infraštruktúre a&nbsp;exporte amerických technológií a&nbsp;prebieha spor o&nbsp;to, či majú mať prednosť federálne alebo štátne pravidlá. <b>Čína</b> kombinuje masívnu podporu so štátnou kontrolou. Od septembra 2025 tam platí povinné označovanie obsahu vytvoreného AI.</p>
+    <p><b>Deepfakes</b>: Slovensko je učebnicový prípad. V&nbsp;septembri 2023, dva dni pred voľbami a&nbsp;počas moratória, sa šírila falošná audionahrávka, v&nbsp;ktorej mal líder opozičnej strany s&nbsp;novinárkou hovoriť o&nbsp;manipulácii volieb. Fact-checkeri ju označili za manipulovanú, no moratórium obmedzilo možnosť reagovať. Pre firmy to platí rovnako: klonovanie hlasu riaditeľa a&nbsp;falošný pokyn na platbu (CEO fraud). Odporúčanie: zaveďte overovanie platobných pokynov spätným volaním.</p>
+  </aside>
+</section>
+
+<!-- ===================== 09 · Zdravie ===================== -->
+<section class="slide" data-title="AI a svet: zdravie a medicína">
+  <div class="amb" style="--ax:50%;--ay:4%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Svet · Zdravie a&nbsp;medicína</p>
+      <h2 class="h2" data-a="up" style="--d:1">Medicína patrí medzi oblasti s&nbsp;<em>najväčším potenciálom</em></h2>
+    </header>
+    <div class="bd">
+      <div class="g3">
+        <article class="pillar" data-a="up" style="--d:2">
+          <div class="pillar-h"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg><h3>Diagnostika</h3></div>
+          <span class="big num glow"><span data-count="1500">1&nbsp;500</span>+</span>
+          <p><b>AI zdravotníckych pomôcok</b> schválených v&nbsp;USA, približne tri štvrtiny v&nbsp;rádiológii</p>
+          <span class="div"></span>
+          <p>Rýchlejšie čítanie snímok, skríning a&nbsp;odhalenie rizika skôr, ako sa prejaví.</p>
+        </article>
+        <article class="pillar" data-a="up" style="--d:4">
+          <div class="pillar-h"><svg class="ico" aria-hidden="true"><use href="#i-dna"/></svg><h3>Vývoj liekov</h3></div>
+          <span class="big num"><span data-count="2024" data-from="2000" data-plain="1">2024</span></span>
+          <p><b>Nobelova cena za chémiu</b> za návrh proteínov a&nbsp;predpoveď ich štruktúry pomocou AI</p>
+          <span class="div"></span>
+          <p>2025: prvé výsledky klinickej štúdie lieku, ktorého cieľ aj molekulu navrhla generatívna AI.</p>
+        </article>
+        <article class="pillar" data-a="up" style="--d:6">
+          <div class="pillar-h"><svg class="ico" aria-hidden="true"><use href="#i-target"/></svg><h3>Personalizovaná liečba</h3></div>
+          <span class="big serif glow">na mieru</span>
+          <p><b>Genetika, snímky a&nbsp;záznamy</b> pacienta spojené do liečby pre konkrétneho človeka</p>
+          <span class="div"></span>
+          <p>WHO vydala pravidlá pre etiku a&nbsp;riadenie veľkých AI modelov v&nbsp;zdravotníctve.</p>
+        </article>
+      </div>
+      <p class="bottom-line" data-a="fade" style="--d:9"><span>Cieľ: <b>viac času lekára pre pacienta</b> a&nbsp;menej administratívy. Rozhodnutie a&nbsp;zodpovednosť zostávajú na lekárovi.</span></p>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: U.S. FDA, AI-Enabled Medical Device List (stav 2026); Nobelova cena za chémiu 2024 (Baker, Hassabis, Jumper); Nature Medicine, 06/2025 (klinická štúdia fázy IIa); WHO, Ethics and governance of AI for health: large multi-modal models (2024).</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Zdravotníctvo je oblasť, kde má AI podľa mnohých odborníkov najväčší pozitívny potenciál.</p>
+    <p><b>Diagnostika</b>: americký regulátor FDA vedie zoznam zdravotníckych pomôcok, ktoré využívajú AI. V&nbsp;roku 2026 ich obsahuje viac ako 1&nbsp;500 (v&nbsp;prvom štvrťroku 2026 približne 1&nbsp;524) a&nbsp;zhruba tri štvrtiny sú v&nbsp;rádiológii. Ročne pribúdajú stovky nových. AI pomáha rýchlejšie čítať snímky, triediť urgentné prípady a&nbsp;skôr zachytiť riziko.</p>
+    <p><b>Vývoj liekov</b>: Nobelova cena za chémiu 2024 bola udelená Davidovi Bakerovi za výpočtový návrh proteínov a&nbsp;Demisovi Hassabisovi a&nbsp;Johnovi Jumperovi za predpoveď štruktúry proteínov pomocou AI. Ich model predpovedal štruktúru prakticky všetkých približne 200 miliónov známych proteínov. V&nbsp;júni 2025 časopis Nature Medicine publikoval výsledky klinickej štúdie fázy IIa (71 pacientov s&nbsp;idiopatickou pľúcnou fibrózou) lieku, ktorého cieľ aj molekulu navrhla generatívna AI. Bezpečnosť bola porovnateľná s&nbsp;placebom a&nbsp;signál účinnosti je sľubný, no potrebné sú väčšie štúdie.</p>
+    <p><b>Personalizovaná liečba</b>: kombinácia genetiky, zobrazovania a&nbsp;zdravotnej dokumentácie umožní liečbu na mieru, najmä v&nbsp;onkológii. Svetová zdravotnícka organizácia v&nbsp;roku 2024 vydala usmernenia k&nbsp;etike a&nbsp;riadeniu veľkých multimodálnych modelov v&nbsp;zdravotníctve s&nbsp;viac ako 40 odporúčaniami.</p>
+    <p>Riziká: kvalita dôkazov, skreslenie dát a&nbsp;otázka zodpovednosti. Preto platí, že rozhodnutie zostáva na lekárovi.</p>
+  </aside>
+</section>
+
+<!-- ===================== 10 · Ekonomika a geopolitika ===================== -->
+<section class="slide" data-title="AI a svet: ekonomika a geopolitika">
+  <div class="amb" style="--ax:12%;--ay:12%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Svet · Ekonomika a&nbsp;geopolitika</p>
+      <h2 class="h2" data-a="up" style="--d:1">AI je nová <em>strategická</em> infraštruktúra</h2>
+    </header>
+    <div class="bd">
+      <div class="g3">
+        <article class="pillar" data-a="up" style="--d:2">
+          <div class="pillar-h"><svg class="ico" aria-hidden="true"><use href="#i-coins"/></svg><h3>Investície</h3></div>
+          <span class="big num glow"><span data-count="581.7" data-dec="1">581,7</span><small>mld. USD</small></span>
+          <p><b>firemné investície do AI</b> vo svete v&nbsp;roku 2025, medziročne +130&nbsp;%</p>
+          <span class="div"></span>
+          <p class="kicker" style="font-size:14px">Súkromné investície 2025</p>
+          <div class="mini-bars">
+            <div class="mb"><span>USA</span><span class="track"><i style="--v:1"></i></span><span class="mv">285,9 mld.</span></div>
+            <div class="mb"><span>Čína</span><span class="track"><i style="--v:.043"></i></span><span class="mv">12,4 mld.*</span></div>
+          </div>
+        </article>
+        <article class="pillar" data-a="up" style="--d:4">
+          <div class="pillar-h"><svg class="ico" aria-hidden="true"><use href="#i-bolt"/></svg><h3>Energetika</h3></div>
+          <span class="big num"><span data-count="945">945</span><small>TWh</small></span>
+          <p><b>spotreba elektriny dátových centier</b> v&nbsp;roku 2030, viac ako dvojnásobok</p>
+          <span class="div"></span>
+          <p class="kicker" style="font-size:14px">Dátové centrá vo svete</p>
+          <div class="mini-bars">
+            <div class="mb"><span>2024</span><span class="track"><i class="muted" style="--v:.439"></i></span><span class="mv">415 TWh</span></div>
+            <div class="mb"><span>2030</span><span class="track"><i style="--v:1"></i></span><span class="mv">≈ 945 TWh</span></div>
+          </div>
+        </article>
+        <article class="pillar" data-a="up" style="--d:6">
+          <div class="pillar-h"><svg class="ico" aria-hidden="true"><use href="#i-chip"/></svg><h3>Čipy a&nbsp;suverenita</h3></div>
+          <span class="big num"><span data-count="200">200</span><small>mld. €</small></span>
+          <p><b>iniciatíva EÚ InvestAI</b> vrátane AI gigatovární</p>
+          <span class="div"></span>
+          <ul class="list" style="gap:10px">
+            <li style="font-size:20px">USA obmedzujú vývoz najvýkonnejších čipov do Číny</li>
+            <li style="font-size:20px">Čína buduje vlastné čipy a&nbsp;dodávateľské reťazce</li>
+          </ul>
+        </article>
+      </div>
+      <p class="bottom-line" data-a="fade" style="--d:9"><span>Generatívna AI môže svetovej ekonomike pridať <b>2,6 – 4,4 bilióna USD ročne</b>. O&nbsp;túto hodnotu súperia štáty aj firmy.</span></p>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: Stanford HAI, AI Index Report 2026 (* bez čínskych štátnych fondov); IEA, Energy and AI (2025); Európska komisia, InvestAI (02/2025); McKinsey, The economic potential of generative AI (2023).</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>AI sa stala strategickou infraštruktúrou, podobne ako energetika alebo telekomunikácie.</p>
+    <p><b>Investície</b>: podľa Stanford AI Index 2026 dosiahli globálne firemné investície do AI v&nbsp;roku 2025 <b>581,7 miliardy USD</b>, o&nbsp;130&nbsp;% viac ako rok predtým. Súkromné investície v&nbsp;USA boli 285,9 miliardy USD, približne 23-krát viac ako v&nbsp;Číne (12,4 miliardy). Čína však významnú časť kapitálu smeruje cez štátne fondy, ktoré tieto čísla nezachytávajú.</p>
+    <p><b>Energetika</b>: podľa Medzinárodnej energetickej agentúry spotrebovali dátové centrá v&nbsp;roku 2024 približne 415 TWh, asi 1,5&nbsp;% svetovej spotreby elektriny. Do roku 2030 sa má spotreba viac ako zdvojnásobiť na približne 945 TWh, teda zhruba 3&nbsp;%. USA a&nbsp;Čína tvoria takmer 80&nbsp;% tohto rastu. Dostupnosť elektriny sa stáva úzkym hrdlom a&nbsp;rozhoduje o&nbsp;tom, kde vzniknú nové kapacity.</p>
+    <p><b>Čipy</b>: najvýkonnejšie AI čipy sú strategická surovina. USA od roku 2022 obmedzujú ich vývoz do Číny a&nbsp;pravidlá priebežne menia, v&nbsp;roku 2026 sa rieši aj prístup cez cloud v&nbsp;tretích krajinách. Čína buduje vlastné čipy. <b>EÚ</b> spustila vo februári 2025 iniciatívu <b>InvestAI</b> s&nbsp;cieľom mobilizovať 200 miliárd eur vrátane AI gigatovární. Výzva na ich výstavbu beží v&nbsp;roku 2026.</p>
+    <p><b>Celkový potenciál</b>: McKinsey (2023) odhaduje, že generatívna AI môže svetovej ekonomike pridať 2,6 až 4,4 bilióna USD ročne. Približne tri štvrtiny tejto hodnoty sú v&nbsp;štyroch oblastiach: zákaznícke operácie, marketing a&nbsp;predaj, vývoj softvéru a&nbsp;výskum a&nbsp;vývoj.</p>
+    <p>Pre firmy z&nbsp;toho vyplývajú praktické otázky: cena výpočtového výkonu, závislosť od dodávateľov mimo EÚ a&nbsp;suverenita dát. Odporúčanie: stratégia s&nbsp;viacerými dodávateľmi.</p>
+  </aside>
+</section>
+
+<!-- ===================== 11 · Trendy 2026 ===================== -->
+<section class="slide" data-title="Trendy 2026">
+  <div class="amb" style="--ax:90%;--ay:90%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Svet · Aktuálne trendy</p>
+      <h2 class="h2" data-a="up" style="--d:1">Šesť trendov, ktoré hýbu svetom AI <em>v&nbsp;roku 2026</em></h2>
+    </header>
+    <div class="bd center">
+      <div class="g6">
+        <div class="trend" data-a="up" style="--d:2">
+          <div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-agent"/></svg><span class="k num glow"><span data-count="40">40</span>&nbsp;%</span></div>
+          <h3>Od asistentov k&nbsp;agentom</h3>
+          <p>Toľko podnikových aplikácií má mať do konca 2026 AI agentov (2025: pod 5&nbsp;%). Pri vyše 40&nbsp;% projektov však hrozí zrušenie.</p>
+          <span class="s">Gartner, 06/2025 a&nbsp;08/2025</span>
+        </div>
+        <div class="trend" data-a="up" style="--d:3">
+          <div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-trend-down"/></svg><span class="k num"><span data-count="280">280</span>×</span></div>
+          <h3>AI rýchlo zlacňuje</h3>
+          <p>Toľkokrát klesla cena za rovnaký výkon AI za dva roky. Pokročilé nasadenia sú dostupné aj stredným firmám.</p>
+          <span class="s">Stanford HAI, AI Index 2025</span>
+        </div>
+        <div class="trend" data-a="up" style="--d:4">
+          <div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-bolt"/></svg><span class="k num">2×</span></div>
+          <h3>Energia ako úzke hrdlo</h3>
+          <p>Spotreba dátových centier sa do 2030 zdvojnásobí. Elektrina rozhoduje, kde vznikne AI kapacita.</p>
+          <span class="s">IEA, Energy and AI, 2025</span>
+        </div>
+        <div class="trend" data-a="up" style="--d:5">
+          <div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-scale"/></svg><span class="k txt">EÚ · USA · Čína</span></div>
+          <h3>Regulácia sa rozchádza</h3>
+          <p>EÚ zjednodušuje a&nbsp;posúva termíny, USA uprednostňujú tempo, Čína kontrolu.</p>
+          <span class="s">Digital Omnibus 2026, akčný plán USA 2025</span>
+        </div>
+        <div class="trend" data-a="up" style="--d:6">
+          <div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-code"/></svg><span class="k num">−<span data-count="20">20</span>&nbsp;%</span></div>
+          <h3>Tlak na vstupné pozície</h3>
+          <p>Takmer o&nbsp;toľko klesla od 2024 zamestnanosť vývojárov vo veku 22&nbsp;–&nbsp;25 rokov v&nbsp;USA.</p>
+          <span class="s">Stanford HAI, AI Index 2026</span>
+        </div>
+        <div class="trend" data-a="up" style="--d:7">
+          <div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-alert"/></svg><span class="k num"><span data-count="362">362</span></span></div>
+          <h3>Viac incidentov a&nbsp;deepfakes</h3>
+          <p>Zdokumentovaných AI incidentov v&nbsp;roku 2025, oproti 233 v&nbsp;roku 2024.</p>
+          <span class="s">Stanford HAI, AI Index 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroje uvedené pri jednotlivých trendoch. Gartner: predikcie z&nbsp;tlačových správ 06/2025 a&nbsp;08/2025.</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Šesť trendov, ktoré v&nbsp;roku 2026 hýbu svetom AI a&nbsp;ktoré by mal poznať každý člen vedenia.</p>
+    <p><b>1. Od asistentov k&nbsp;agentom.</b> Gartner predpovedá, že do konca roka 2026 bude 40&nbsp;% podnikových aplikácií obsahovať AI agentov pre konkrétne úlohy (v&nbsp;roku 2025 menej ako 5&nbsp;%). Ten istý Gartner zároveň varuje, že viac ako 40&nbsp;% projektov agentovej AI bude do konca roka 2027 zrušených pre náklady, nejasný prínos alebo slabé riadenie rizík. Upozorňuje aj na „agent washing“, teda premenovanie bežných chatbotov na agentov. Odporúčanie: začínať tam, kde vieme merať prínos.</p>
+    <p><b>2. AI rýchlo zlacňuje.</b> Podľa Stanford AI Index 2025 klesla cena za výkon na úrovni špičkových modelov z&nbsp;konca roka 2022 za dva roky viac ako 280-krát. Cena už nie je hlavná bariéra, sú ňou ľudia, dáta a&nbsp;procesy.</p>
+    <p><b>3. Energia.</b> Ako sme videli, spotreba dátových centier sa do roku 2030 zdvojnásobí. <b>4. Regulácia sa rozchádza</b>: EÚ cez Digital Omnibus zjednodušuje a&nbsp;posúva termíny, USA stavajú na rýchlosti, Čína na kontrole. Na globálnej úrovni vznikol v&nbsp;rámci OSN nezávislý vedecký panel pre AI a&nbsp;globálny dialóg o&nbsp;jej riadení.</p>
+    <p><b>5. Tlak na vstupné pozície.</b> Stanford AI Index 2026: zamestnanosť vývojárov softvéru vo veku 22 – 25 rokov v&nbsp;USA klesla od roku 2024 takmer o&nbsp;20&nbsp;%. <b>6. Incidenty.</b> Počet zdokumentovaných AI incidentov (chyby, zneužitie, deepfakes) vzrástol z&nbsp;233 v&nbsp;roku 2024 na 362 v&nbsp;roku 2025.</p>
+  </aside>
+</section>
+
+<!-- ===================== 12 · Kde napredovať ===================== -->
+<section class="slide" data-title="Kde treba napredovať">
+  <div class="amb" style="--ax:85%;--ay:12%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Firmy · Priority investícií</p>
+      <h2 class="h2" data-a="up" style="--d:1">Kde musia firmy <em>napredovať</em></h2>
+    </header>
+    <div class="bd">
+      <div class="g6">
+        <div class="trend" data-a="up" style="--d:2"><div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-cap"/></svg></div><h3>Vzdelávanie ľudí</h3><p>AI gramotnosť pre všetkých, hlbšie zručnosti pre kľúčové role. Vyžaduje ju aj AI Act.</p></div>
+        <div class="trend" data-a="up" style="--d:3"><div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-db"/></svg></div><h3>Dáta</h3><p>Kvalitné, prepojené a&nbsp;chránené dáta. Bez nich nefunguje ani najlepší model.</p></div>
+        <div class="trend" data-a="up" style="--d:4"><div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-shield"/></svg></div><h3>Bezpečnosť</h3><p>Schválené nástroje, ochrana pred únikom dát a&nbsp;kontrola „tieňovej AI“.</p></div>
+        <div class="trend" data-a="up" style="--d:5"><div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-scale"/></svg></div><h3>Etika a&nbsp;dôvera</h3><p>Transparentnosť, férovosť a&nbsp;ľudský dohľad nad dôležitými rozhodnutiami.</p></div>
+        <div class="trend" data-a="up" style="--d:6"><div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-process"/></svg></div><h3>Procesy</h3><p>Prínos vzniká prepracovaním celých procesov. Nový nástroj na starý proces nestačí.</p></div>
+        <div class="trend" data-a="up" style="--d:7"><div class="trend-h"><svg class="ico" aria-hidden="true"><use href="#i-compass"/></svg></div><h3>AI stratégia</h3><p>Vlastník vo vedení, jasné priority, rozpočet a&nbsp;merateľné ciele.</p></div>
+      </div>
+      <div class="band s12-band" data-a="up" style="--d:9">
+        <span class="bn num glow"><span data-count="2.8" data-dec="1">2,8</span>×</span>
+        <span class="bt">častejšie <b>AI lídri zásadne prepracovali procesy</b> ako ostatné firmy (55&nbsp;% oproti 20&nbsp;%)</span>
+        <span class="bsep"></span>
+        <span class="bn num"><span data-count="62">62</span>&nbsp;%</span>
+        <span class="bt">priemerná <b>mzdová prémia</b> ľudí s&nbsp;AI zručnosťami. O&nbsp;talenty sa bude súťažiť.</span>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: Nariadenie (EÚ) 2024/1689, čl. 4; McKinsey, The State of AI in 2025 (11/2025); PwC, Global AI Jobs Barometer 2026.</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Kam teda investovať čas a&nbsp;peniaze? Šesť oblastí.</p>
+    <p><b>Vzdelávanie ľudí.</b> Základná AI gramotnosť pre všetkých a&nbsp;hlbšie zručnosti pre kľúčové role. AI Act od februára 2025 vyžaduje, aby firmy budovali AI gramotnosť ľudí, ktorí s&nbsp;AI pracujú. Po úprave Digital Omnibus v&nbsp;roku 2026 ide o&nbsp;povinnosť prijať podporné opatrenia. Odporúčam programy diferencovať: vedenie, manažéri, bežní používatelia, špecialisti.</p>
+    <p><b>Dáta.</b> AI je len taká dobrá ako dáta, ku ktorým má prístup: kvalita, prepojenie systémov, prístupové práva, katalóg dát. <b>Bezpečnosť.</b> „Tieňová AI“ znamená, že zamestnanci používajú súkromné nástroje, pretože firemné nemajú. Riešením nie je zákaz, ale schválené alternatívy, ochrana pred únikom dát a&nbsp;pri agentoch aj ochrana pred manipuláciou cez vstupy (prompt injection).</p>
+    <p><b>Etika a&nbsp;dôvera.</b> Najmä pri HR, úveroch a&nbsp;rozhodnutiach o&nbsp;ľuďoch: skreslenie dát, transparentnosť voči zákazníkom, človek v&nbsp;rozhodovacom procese.</p>
+    <p><b>Procesy.</b> McKinsey (marec 2025) zistil, že spomedzi 25 sledovaných faktorov má na vplyv AI na EBIT najväčší efekt práve prepracovanie procesov. V&nbsp;prieskume z&nbsp;novembra 2025 AI lídri prepracovali procesy 2,8-krát častejšie ako ostatní (55&nbsp;% oproti 20&nbsp;%). Ďalší silný faktor: dohľad generálneho riaditeľa nad riadením AI.</p>
+    <p><b>AI stratégia.</b> Jeden vlastník vo vedení, portfólio prípadov použitia s&nbsp;merateľnými cieľmi a&nbsp;rozpočet.</p>
+    <p>A&nbsp;prečo je to urgentné: podľa PwC Global AI Jobs Barometer 2026 majú ľudia s&nbsp;AI zručnosťami v&nbsp;priemere o&nbsp;<b>62&nbsp;%</b> vyššiu mzdu v&nbsp;pracovných ponukách. O&nbsp;talenty sa bude súťažiť a&nbsp;lacnejšie je vlastných ľudí vzdelať.</p>
+  </aside>
+</section>
+
+<!-- ===================== 13 · Zamestnanec ===================== -->
+<section class="slide" data-title="Čo musí vedieť každý zamestnanec">
+  <div class="amb" style="--ax:10%;--ay:80%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Ľudia · Základná výbava</p>
+      <h2 class="h2" data-a="up" style="--d:1">Čo musí vedieť <em>každý</em> zamestnanec</h2>
+    </header>
+    <div class="bd center">
+      <div class="s13">
+        <div data-a="up" style="--d:2">
+          <p class="kicker">Ako napísať dobré zadanie (prompt)</p>
+          <div class="formula" aria-label="Rola, kontext, úloha, formát, kontrola">
+            <span>Rola</span><i>+</i><span>Kontext</span><i>+</i><span>Úloha</span><i>+</i><span>Formát</span><i>+</i><span>Kontrola</span>
+          </div>
+          <div class="prompt-box weak" data-a="fade" style="--d:4">
+            <div class="pb-h"><span>Slabé zadanie</span></div>
+            <p class="pb-t">„Napíš e-mail klientovi.“</p>
+          </div>
+          <div class="prompt-box strong" data-a="fade" style="--d:6">
+            <div class="pb-h"><span class="ok">Silné zadanie</span></div>
+            <p class="pb-t"><span class="type" data-type><span class="ghost">„Si account manažér. Klientovi meškáme s&nbsp;dodávkou o&nbsp;5 dní. Napíš krátky ospravedlňujúci e-mail, ponúkni dve riešenia, max. 120 slov, profesionálny tón. Na záver uveď, čo si predpokladal.“</span><span class="typed" aria-hidden="true"></span></span></p>
+          </div>
+        </div>
+        <div class="rules">
+          <div class="rule" data-a="right" style="--d:3"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg><div><h3>Overuj výstupy</h3><p>AI sa mýli presvedčivo. Fakty, čísla a&nbsp;citácie vždy skontroluj.</p><span class="chip"><b>−19 p.&nbsp;b.</b> správnych riešení, keď ľudia slepo verili AI mimo jej možností</span></div></div>
+          <div class="rule" data-a="right" style="--d:4"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><div><h3>Chráň citlivé dáta</h3><p>Osobné údaje, zmluvy a&nbsp;interné čísla len do firemne schválených nástrojov.</p></div></div>
+          <div class="rule" data-a="right" style="--d:5"><svg class="ico" aria-hidden="true"><use href="#i-alert"/></svg><div><h3>Poznaj limity</h3><p>Vymyslené fakty, neaktuálne informácie, skreslenia a&nbsp;slabšie počítanie.</p></div></div>
+          <div class="rule" data-a="right" style="--d:6"><svg class="ico" aria-hidden="true"><use href="#i-window"/></svg><div><h3>Používaj ju denne</h3><p>E-maily a&nbsp;dokumenty, zhrnutia porád, analýza tabuliek, rešerš so zdrojmi, preklady.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zdroj: Dell’Acqua a&nbsp;kol., Navigating the Jagged Technological Frontier, Harvard Business School Working Paper 24-013 (2023), terénny experiment so 758 konzultantmi.</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Čo musí vedieť každý zamestnanec, od asistentky po člena predstavenstva? Päť vecí.</p>
+    <p><b>1. Dobré zadanie.</b> Výsledok je len taký dobrý ako zadanie. Jednoduchá formula: <b>rola</b> (kto má AI byť), <b>kontext</b> (situácia, publikum), <b>úloha</b> (čo presne chcem), <b>formát</b> (dĺžka, štruktúra, tón) a&nbsp;<b>kontrola</b> (nech AI uvedie predpoklady alebo zdroje). Porovnajte slabé a&nbsp;silné zadanie na slide. Rozdiel vo výsledku je obrovský.</p>
+    <p><b>2. Overovanie.</b> Terénny experiment Harvard Business School s&nbsp;758 konzultantmi (Dell’Acqua a&nbsp;kol., 2023): pri úlohách, ktoré AI zvláda, konzultanti s&nbsp;AI splnili o&nbsp;12,2&nbsp;% viac úloh, o&nbsp;25,1&nbsp;% rýchlejšie a&nbsp;s&nbsp;viac ako 40&nbsp;% vyššou kvalitou. Pri úlohe mimo schopností AI však boli o&nbsp;<b>19 percentuálnych bodov</b> menej úspešní ako kolegovia bez AI, pretože jej slepo verili. Autori to volajú „zubatá hranica“: AI je výborná v&nbsp;niečom a&nbsp;zlyhá v&nbsp;niečom na pohľad podobnom.</p>
+    <p><b>3. Ochrana dát.</b> Verejné bezplatné nástroje môžu vstupy použiť na ďalší tréning. Osobné údaje (GDPR), zmluvy, finančné čísla a&nbsp;know-how patria len do firemne schválených nástrojov s&nbsp;podnikovou licenciou.</p>
+    <p><b>4. Limity.</b> AI si vie vymyslieť fakty aj zdroje (tzv. halucinácie), nemusí mať aktuálne informácie, preberá skreslenia z&nbsp;dát a&nbsp;môže sa pomýliť vo výpočtoch, pričom znie sebaisto.</p>
+    <p><b>5. Denné používanie.</b> Kategórie nástrojov: AI asistent na písanie a&nbsp;analýzu, AI v&nbsp;kancelárskom balíku, prepis a&nbsp;zhrnutie porád, vyhľadávanie so zdrojmi a&nbsp;preklad. Konkrétne nástroje vyberte podľa firemných licencií a&nbsp;IT politiky. Odporúčanie: 15 minút denne a&nbsp;zdieľaná knižnica osvedčených zadaní v&nbsp;tíme.</p>
+  </aside>
+</section>
+
+<!-- ===================== 14 · Čo musí vedieť firma ===================== -->
+<section class="slide" data-title="Čo musí vedieť každá veľká firma">
+  <div class="amb" style="--ax:92%;--ay:20%"></div>
+  <div class="frame">
+    <header class="hd">
+      <p class="eyebrow" data-a="fade" style="--d:0">Firmy · Výcuc pre vedenie</p>
+      <h2 class="h2" data-a="up" style="--d:1">Čo musí vedieť <em>každá</em> veľká firma</h2>
+    </header>
+    <div class="bd center">
+      <div class="g4c">
+        <article class="card" data-a="up" style="--d:2"><h3>Príležitosti</h3><ul class="list"><li>Produktivita a&nbsp;rýchlosť</li><li>Nové produkty a&nbsp;služby</li><li>Lepší zážitok zákazníka</li></ul></article>
+        <article class="card" data-a="up" style="--d:3"><h3>Riziká</h3><ul class="list"><li>Únik dát a&nbsp;tieňová AI</li><li>Chyby a&nbsp;vymyslené fakty</li><li>Reputácia, závislosť od dodávateľa</li></ul></article>
+        <article class="card" data-a="up" style="--d:4"><h3>Regulácia</h3><ul class="list"><li>AI Act už platí</li><li>Mapa AI systémov podľa rizika</li><li>Pokuty až 7&nbsp;% obratu</li></ul></article>
+        <article class="card" data-a="up" style="--d:5"><h3>Konkurenčná výhoda</h3><ul class="list"><li>Vlastné dáta</li><li>Ľudia so zručnosťami</li><li>Rýchlosť zavádzania</li></ul></article>
+      </div>
+      <div class="road">
+        <p class="kicker road-t" data-a="fade" style="--d:7">Prvé kroky · najbližších 90 dní</p>
+        <div class="steps">
+          <span class="road-line"><i></i></span>
+          <div class="step" data-a="up" style="--d:8"><span class="when">0 – 30 dní</span><h3>Pravidlá a&nbsp;prehľad</h3><p>AI politika, schválené nástroje a&nbsp;inventúra, kde už AI vo firme používame.</p></div>
+          <div class="step" data-a="up" style="--d:10"><span class="when">30 – 60 dní</span><h3>Ľudia a&nbsp;piloty</h3><p>AI gramotnosť pre všetkých, 3 – 5 pilotov s&nbsp;merateľným cieľom.</p></div>
+          <div class="step" data-a="up" style="--d:12"><span class="when">60 – 90 dní</span><h3>Vyhodnotiť a&nbsp;škálovať</h3><p>Zmerať prínos, rozšíriť úspešné piloty, určiť vlastníka AI vo vedení.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><span class="src">Zhrnutie prezentácie. Regulácia: Nariadenie (EÚ) 2024/1689 (AI Act).</span><span class="pg"></span></footer>
+  <aside class="notes">
+    <p>Ak si máte z&nbsp;dnešnej prezentácie zapamätať jediný slide, nech je to tento.</p>
+    <p><b>Príležitosti</b>: produktivita a&nbsp;rýchlosť, nové produkty a&nbsp;služby, lepší zážitok zákazníka. <b>Riziká</b>: únik dát cez neschválené nástroje, chyby a&nbsp;vymyslené fakty, reputačné riziko a&nbsp;závislosť od jedného dodávateľa. <b>Regulácia</b>: AI Act už platí. Treba zmapovať, kde AI používame, a&nbsp;zaradiť systémy podľa rizika. Najprísnejšie pokuty dosahujú 7&nbsp;% celosvetového obratu. <b>Konkurenčná výhoda</b>: samotný model si kúpi každý. Výhodou sú vlastné dáta, ľudia, ktorí s&nbsp;AI vedia pracovať, a&nbsp;rýchlosť, s&nbsp;akou firma zavádza a&nbsp;učí sa.</p>
+    <p><b>Prvých 90 dní</b>, konkrétne a&nbsp;realisticky:</p>
+    <p><b>0 – 30 dní</b>: prijať jednoduchú AI politiku (čo smieme, čo nie, s&nbsp;akými dátami), sprístupniť schválené nástroje a&nbsp;urobiť inventúru, kde už ľudia AI používajú, často aj bez vedomia IT.</p>
+    <p><b>30 – 60 dní</b>: spustiť program AI gramotnosti pre všetkých a&nbsp;vybrať 3 – 5 pilotov s&nbsp;jasným, merateľným cieľom, napríklad skrátenie času vybavenia požiadavky o&nbsp;30&nbsp;%.</p>
+    <p><b>60 – 90 dní</b>: vyhodnotiť piloty podľa čísel, úspešné rozšíriť, neúspešné ukončiť a&nbsp;určiť jedného vlastníka AI agendy na úrovni vedenia.</p>
+  </aside>
+</section>
+
+<!-- ===================== 15 · Záver ===================== -->
+<section class="slide s-end" data-title="Záver">
+  <div class="amb"></div>
+  <canvas class="globe" aria-hidden="true"></canvas>
+  <div class="end">
+    <p class="eyebrow" data-a="fade" style="--d:0">Záver</p>
+    <h2 class="end-h">
+      <span data-a="up" style="--d:1">AI nenahradí ľudí.</span>
+      <span class="sm" data-a="up" style="--d:3">Ľudia a&nbsp;firmy, ktoré s&nbsp;AI pracujú, <em>nahradia tých, ktorí nie.</em></span>
+    </h2>
+    <div class="cta">
+      <p class="kicker" data-a="fade" style="--d:6">Začnime ešte tento štvrťrok</p>
+      <span class="st" data-a="up" style="--d:7">Vzdelávajte ľudí</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true" data-a="fade" style="--d:8"><path d="M4 12h15M13.5 6.5 19 12l-5.5 5.5"/></svg>
+      <span class="st" data-a="up" style="--d:8">Spustite prvé piloty</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true" data-a="fade" style="--d:9"><path d="M4 12h15M13.5 6.5 19 12l-5.5 5.5"/></svg>
+      <span class="st" data-a="up" style="--d:9">Merajte a&nbsp;škálujte</span>
+    </div>
+  </div>
+  <p class="thanks" data-a="fade" style="--d:11">Ďakujem za pozornosť · Priestor na otázky</p>
+  <aside class="notes">
+    <p>Na záver jedna veta, ktorú si prosím zapamätajte: <b>AI nenahradí ľudí. Ľudia a&nbsp;firmy, ktoré s&nbsp;AI pracujú, nahradia tých, ktorí nie.</b></p>
+    <p>Táto myšlienka nadväzuje na známy výrok profesora Karima Lakhaniho z&nbsp;Harvard Business School (2023): AI nenahradí ľudí, no ľudia s&nbsp;AI nahradia ľudí bez nej. To isté platí pre firmy.</p>
+    <p>Nemusíte mať hotovú dokonalú stratégiu. Rozhodujúce je začať, učiť sa rýchlejšie ako konkurencia a&nbsp;merať výsledky. Výzva na tento štvrťrok má tri kroky: <b>vzdelávajte ľudí</b>, <b>spustite prvé piloty</b>, <b>merajte a&nbsp;škálujte</b>.</p>
+    <p>Ďakujem za pozornosť. Rád odpoviem na vaše otázky.</p>
+  </aside>
+</section>
+
+</div>
+</div>
+
+<div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+
+<nav class="ctrl" id="ctrl" aria-label="Ovládanie prezentácie">
+  <button type="button" data-act="prev" aria-label="Predchádzajúci slide" title="Predchádzajúci (←)"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <span class="count" id="count">01 / 15</span>
+  <button type="button" data-act="next" aria-label="Ďalší slide" title="Ďalší (→)"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <span class="sep"></span>
+  <button type="button" data-act="notes" aria-label="Poznámky pre rečníka" aria-pressed="false" title="Poznámky (N)"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8.5 9h7M8.5 12.5h7M8.5 16h4"/></svg></button>
+  <button type="button" data-act="presenter" aria-label="Režim rečníka" aria-pressed="false" title="Režim rečníka (P)"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="12" height="9" rx="1.5"/><path d="M17.5 4h4v9h-4M2.5 17h19M2.5 20.5h12"/></svg></button>
+  <button type="button" data-act="overview" aria-label="Prehľad slidov" title="Prehľad (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3.5" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="3.5" width="7.5" height="7.5" rx="1.2"/><rect x="3" y="13" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="13" width="7.5" height="7.5" rx="1.2"/></svg></button>
+  <button type="button" data-act="full" aria-label="Celá obrazovka" title="Celá obrazovka (F)"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button type="button" data-act="help" aria-label="Klávesové skratky" title="Pomoc (?)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6"/><path d="M12 17.2v.3"/></svg></button>
+</nav>
+
+<div class="np" id="np" role="region" aria-label="Poznámky pre rečníka" hidden>
+  <div class="np-h"><span class="np-t" id="npTitle">Poznámky</span><button type="button" class="btn" id="npClose">Zavrieť</button></div>
+  <div class="np-b" id="npBody"></div>
+</div>
+
+<div class="pv" id="pv" hidden>
+  <div class="pv-top">
+    <span class="pv-time" id="pvTime">00:00</span>
+    <span class="pv-meta"><span id="pvCount">01 / 15</span><span id="pvClock">--:--</span></span>
+  </div>
+  <p class="pv-l">Nasleduje</p>
+  <div class="pv-next" id="pvNext"></div>
+  <p class="pv-nt" id="pvNextTitle"></p>
+  <div class="pv-btns">
+    <button type="button" class="btn" data-act="prev">← Späť</button>
+    <button type="button" class="btn primary" data-act="next">Ďalej →</button>
+    <button type="button" class="btn" id="pvReset">Vynulovať čas</button>
+    <button type="button" class="btn" id="pvAudience">Okno pre publikum</button>
+    <button type="button" class="btn" data-act="presenter">Zavrieť režim</button>
+  </div>
+  <p class="pv-msg" id="pvMsg">Okno pre publikum presuňte na projektor. Obe okná sa prepínajú spolu.</p>
+</div>
+<div class="pv-notes" id="pvNotes" hidden></div>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-label="Prehľad slidov" hidden>
+  <div class="ov-in">
+    <div class="ov-h"><p>Prehľad slidov</p><button type="button" class="btn" id="ovClose">Zavrieť</button></div>
+    <div class="ov-grid" id="ovGrid"></div>
+  </div>
+</div>
+
+<div class="help" id="help" role="dialog" aria-modal="true" aria-label="Ovládanie prezentácie" hidden>
+  <div class="help-card">
+    <h2>Ovládanie prezentácie</h2>
+    <dl>
+      <dt><kbd>→</kbd> <kbd>Medzerník</kbd> <kbd>PgDn</kbd></dt><dd>Ďalší slide (aj klik do slidu)</dd>
+      <dt><kbd>←</kbd> <kbd>PgUp</kbd></dt><dd>Predchádzajúci slide</dd>
+      <dt><kbd>N</kbd></dt><dd>Poznámky pre rečníka</dd>
+      <dt><kbd>P</kbd></dt><dd>Režim rečníka: aktuálny a&nbsp;nasledujúci slide, poznámky, čas</dd>
+      <dt><kbd>O</kbd></dt><dd>Prehľad všetkých slidov</dd>
+      <dt><kbd>F</kbd></dt><dd>Celá obrazovka</dd>
+      <dt><kbd>B</kbd></dt><dd>Stmaviť obrazovku</dd>
+      <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>Prvý a&nbsp;posledný slide</dd>
+    </dl>
+    <p>Dve obrazovky: v&nbsp;režime rečníka otvorte okno pre publikum a&nbsp;presuňte ho na projektor. Ak sa okno neotvorí, otvorte prezentáciu v&nbsp;druhom okne prehliadača. Okná sa prepínajú spolu.</p>
+    <button type="button" class="btn primary" id="helpClose">Rozumiem</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><kbd>→</kbd> ďalší slide · <kbd>N</kbd> poznámky · <kbd>P</kbd> režim rečníka · <kbd>F</kbd> celá obrazovka · <kbd>?</kbd> pomoc</div>
+<div class="black" id="black" hidden></div>
+
+<script>
+(function(){
+'use strict';
+var root = document.documentElement;
+root.lang = 'sk';
+root.classList.add('js');
+
+var vp = document.getElementById('viewport');
+var stage = document.getElementById('stage');
+var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
+var N = slides.length;
+var cur = -1, scale = 1, coarse = false;
+var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches:false };
+var $ = function(id){ return document.getElementById(id); };
+var pad = function(n){ return (n < 10 ? '0' : '') + n; };
+
+try { coarse = window.matchMedia('(pointer: coarse)').matches; } catch(e){}
+if (coarse) document.body.classList.add('coarse');
+
+slides.forEach(function(s, i){
+  var pg = s.querySelector('.pg');
+  if (pg) pg.textContent = pad(i + 1) + ' / ' + pad(N);
+});
+
+/* ---------- number formatting ---------- */
+function fmt(v, dec, plain){
+  if (plain) return String(Math.round(v));
+  try { return v.toLocaleString('sk-SK', { minimumFractionDigits: dec, maximumFractionDigits: dec }); }
+  catch(e){ return v.toFixed(dec).replace('.', ','); }
+}
+function delayOf(el){
+  var host = el.closest('[data-a]');
+  if (!host) return 0;
+  var d = parseFloat(getComputedStyle(host).getPropertyValue('--d')) || 0;
+  return d * 120 + 260;
+}
+function runCounters(slide){
+  slide.querySelectorAll('[data-count]').forEach(function(el){
+    var to = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0), plain = !!el.dataset.plain;
+    var from = parseFloat(el.dataset.from || 0);
+    cancelAnimationFrame(el._raf);
+    if (reduce.matches){ el.textContent = fmt(to, dec, plain); return; }
+    el.textContent = fmt(from, dec, plain);
+    var t0 = performance.now() + delayOf(el) + 250, dur = 2000;
+    var step = function(now){
+      var p = Math.min(1, Math.max(0, (now - t0) / dur));
+      var e = 1 - Math.pow(1 - p, 4);
+      el.textContent = fmt(from + (to - from) * e, dec, plain);
+      if (p < 1) el._raf = requestAnimationFrame(step);
+    };
+    el._raf = requestAnimationFrame(step);
+  });
+}
+function finishCounters(scope){
+  scope.querySelectorAll('[data-count]').forEach(function(el){
+    cancelAnimationFrame(el._raf);
+    el.textContent = fmt(parseFloat(el.dataset.count), +(el.dataset.dec || 0), !!el.dataset.plain);
+  });
+}
+
+/* ---------- typing ---------- */
+function runTyping(slide){
+  slide.querySelectorAll('[data-type]').forEach(function(box){
+    var ghost = box.querySelector('.ghost'), out = box.querySelector('.typed');
+    var text = ghost.textContent;
+    clearTimeout(box._t);
+    if (reduce.matches){ box.classList.remove('typing'); return; }
+    box.classList.add('typing');
+    out.textContent = '';
+    var caret = document.createElement('span'); caret.className = 'caret';
+    var i = 0;
+    var tick = function(){
+      i++;
+      out.textContent = text.slice(0, i);
+      out.appendChild(caret);
+      if (i < text.length) box._t = setTimeout(tick, text.charAt(i) === ' ' ? 18 : 26);
+    };
+    box._t = setTimeout(tick, delayOf(box) + 700);
+  });
+}
+function resetTyping(slide){
+  slide.querySelectorAll('[data-type]').forEach(function(box){ clearTimeout(box._t); box.classList.remove('typing'); });
+}
+
+/* ---------- globe (canvas) ---------- */
+function Globe(cv){
+  var ctx = cv.getContext('2d');
+  var pts = [], n = 1300, ga = Math.PI * (3 - Math.sqrt(5));
+  for (var i = 0; i < n; i++){
+    var y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = ga * i;
+    pts.push([Math.cos(th) * r, y, Math.sin(th) * r, Math.random() < .16]);
+  }
+  var W = 0, H = 0, k = 1, raf = 0, on = false, t0 = performance.now();
+  function size(){
+    k = Math.min(2, window.devicePixelRatio || 1) * scale;
+    W = cv.width = Math.max(1, Math.round(cv.offsetWidth * k));
+    H = cv.height = Math.max(1, Math.round(cv.offsetHeight * k));
+    draw(performance.now());
+  }
+  function draw(now){
+    var t = (now - t0) / 1000, ry = t * .07, tilt = -.42;
+    var R = Math.min(W, H) * .36, cx = W * .5, cy = H * .5;
+    var cr = Math.cos(ry), sr = Math.sin(ry), ct = Math.cos(tilt), st = Math.sin(tilt);
+    ctx.clearRect(0, 0, W, H);
+    // orbit ring
+    ctx.save();
+    ctx.translate(cx, cy); ctx.rotate(-.32);
+    ctx.strokeStyle = 'rgba(226,0,116,.32)'; ctx.lineWidth = 1.2 * k;
+    ctx.beginPath(); ctx.ellipse(0, 0, R * 1.32, R * .3, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,.08)';
+    ctx.beginPath(); ctx.ellipse(0, 0, R * 1.18, R * .44, .5, 0, Math.PI * 2); ctx.stroke();
+    var a = t * .35, ox = Math.cos(a) * R * 1.32, oy = Math.sin(a) * R * .3;
+    var g = ctx.createRadialGradient(ox, oy, 0, ox, oy, 16 * k);
+    g.addColorStop(0, 'rgba(255,90,170,1)'); g.addColorStop(1, 'rgba(226,0,116,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(ox, oy, 16 * k, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    for (var i = 0; i < pts.length; i++){
+      var p = pts[i];
+      var x = p[0] * cr - p[2] * sr, z = p[0] * sr + p[2] * cr, y = p[1];
+      var y2 = y * ct - z * st, z2 = y * st + z * ct;
+      var d = (z2 + 1) / 2, al = .05 + d * d * .85, s = (.7 + d * 1.6) * k;
+      ctx.fillStyle = p[3] ? 'rgba(255,40,150,' + Math.min(1, al * 1.1) + ')' : 'rgba(246,243,246,' + (al * .7) + ')';
+      ctx.beginPath(); ctx.arc(cx + x * R, cy + y2 * R, s, 0, 6.2832); ctx.fill();
+    }
+  }
+  function loop(now){ draw(now); if (on) raf = requestAnimationFrame(loop); }
+  return {
+    resize: size,
+    start: function(){ if (on) return; if (reduce.matches){ draw(performance.now()); return; } on = true; raf = requestAnimationFrame(loop); },
+    stop: function(){ on = false; cancelAnimationFrame(raf); },
+    frame: function(){ draw(performance.now()); }
+  };
+}
+var globes = [];
+slides.forEach(function(s){
+  var cv = s.querySelector('canvas.globe');
+  if (cv && cv.getContext) { s._globe = Globe(cv); globes.push(s._globe); }
+});
+
+/* ---------- layout ---------- */
+function fit(){
+  var w = vp.clientWidth, h = vp.clientHeight;
+  scale = Math.min(w / 1920, h / 1080);
+  var x = (w - 1920 * scale) / 2, y = (h - 1080 * scale) / 2;
+  stage.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + scale + ')';
+  globes.forEach(function(g){ g.resize(); });
+  fitMinis();
+}
+function fitMinis(){
+  document.querySelectorAll('.mini').forEach(function(m){
+    var box = m.parentNode;
+    if (box && box.clientWidth) m.style.transform = 'scale(' + (box.clientWidth / 1920) + ')';
+  });
+}
+function staticClone(i){
+  var c = slides[i].cloneNode(true);
+  c.classList.remove('is-active', 'is-leaving', 'is-built');
+  c.classList.add('is-static');
+  c.removeAttribute('id');
+  var notes = c.querySelector('.notes'); if (notes) notes.remove();
+  finishCounters(c);
+  c.querySelectorAll('[data-type]').forEach(function(b){ b.classList.remove('typing'); });
+  var m = document.createElement('div'); m.className = 'mini'; m.appendChild(c);
+  return m;
+}
+
+/* ---------- navigation ---------- */
+var bc = null, silentMsg = false;
+try { bc = new BroadcastChannel('ai-prezentacia-2026'); } catch(e){}
+if (bc) bc.onmessage = function(e){
+  if (e.data && typeof e.data.i === 'number' && e.data.i !== cur){ silentMsg = true; go(e.data.i); silentMsg = false; }
+};
+
+function go(i){
+  i = Math.max(0, Math.min(N - 1, i));
+  if (i === cur) return;
+  var prev = slides[cur], next = slides[i];
+  if (prev){
+    prev.classList.remove('is-active');
+    prev.classList.add('is-leaving');
+    if (prev._globe) setTimeout(function(){ if (!prev.classList.contains('is-active')) prev._globe.stop(); }, 1000);
+    clearTimeout(prev._reset);
+    prev._reset = setTimeout(function(){
+      if (!prev.classList.contains('is-active')){ prev.classList.remove('is-built', 'is-leaving'); resetTyping(prev); }
+    }, 1000);
+  }
+  clearTimeout(next._reset);
+  next.classList.remove('is-leaving', 'is-built');
+  resetTyping(next);
+  void next.offsetWidth;
+  next.classList.add('is-active');
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    if (!next.classList.contains('is-active')) return;
+    next.classList.add('is-built');
+    runCounters(next);
+    runTyping(next);
+  }); });
+  if (next._globe) next._globe.start();
+  cur = i;
+  updateChrome();
+  if (bc && !silentMsg) { try { bc.postMessage({ i: cur }); } catch(e){} }
+  if (!presenterHash) { try { history.replaceState(null, '', '#' + (cur + 1)); } catch(e){} }
+}
+function next(){ go(cur + 1); }
+function prev(){ go(cur - 1); }
+
+function updateChrome(){
+  $('progBar').style.setProperty('--p', N > 1 ? cur / (N - 1) : 1);
+  $('count').textContent = pad(cur + 1) + ' / ' + pad(N);
+  var notes = slides[cur].querySelector('.notes');
+  var title = slides[cur].getAttribute('data-title') || '';
+  $('npTitle').textContent = pad(cur + 1) + ' · ' + title;
+  $('npBody').innerHTML = notes ? notes.innerHTML : '';
+  if (document.body.classList.contains('presenting')) updatePresenter();
+}
+
+/* ---------- notes panel ---------- */
+function toggleNotes(force){
+  var np = $('np'), show = typeof force === 'boolean' ? force : np.hidden;
+  np.hidden = !show;
+  document.querySelector('[data-act="notes"]').setAttribute('aria-pressed', String(show));
+}
+
+/* ---------- presenter ---------- */
+var presenterHash = false, pvStart = 0, pvTimer = 0;
+function updatePresenter(){
+  var notes = slides[cur].querySelector('.notes');
+  $('pvNotes').innerHTML = '<h2>' + pad(cur + 1) + ' · ' + (slides[cur].getAttribute('data-title') || '') + '</h2>' + (notes ? notes.innerHTML : '');
+  $('pvNotes').scrollTop = 0;
+  $('pvCount').textContent = pad(cur + 1) + ' / ' + pad(N);
+  var box = $('pvNext'); box.innerHTML = '';
+  if (cur + 1 < N){
+    box.appendChild(staticClone(cur + 1));
+    $('pvNextTitle').textContent = pad(cur + 2) + ' · ' + (slides[cur + 1].getAttribute('data-title') || '');
+  } else {
+    var e = document.createElement('div'); e.className = 'end-note'; e.textContent = 'Koniec prezentácie'; box.appendChild(e);
+    $('pvNextTitle').textContent = '';
+  }
+  fitMinis();
+}
+function tickClock(){
+  var s = Math.floor((Date.now() - pvStart) / 1000);
+  $('pvTime').textContent = pad(Math.floor(s / 60)) + ':' + pad(s % 60);
+  var d = new Date();
+  $('pvClock').textContent = pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+function togglePresenter(force){
+  var on = typeof force === 'boolean' ? force : !document.body.classList.contains('presenting');
+  document.body.classList.toggle('presenting', on);
+  $('pv').hidden = !on; $('pvNotes').hidden = !on;
+  document.querySelector('.ctrl [data-act="presenter"]').setAttribute('aria-pressed', String(on));
+  if (on){
+    toggleNotes(false);
+    pvStart = Date.now(); tickClock();
+    clearInterval(pvTimer); pvTimer = setInterval(tickClock, 1000);
+    updatePresenter();
+  } else {
+    clearInterval(pvTimer);
+    $('pvNext').innerHTML = '';
+  }
+  fit();
+}
+$('pvReset').addEventListener('click', function(){ pvStart = Date.now(); tickClock(); });
+$('pvAudience').addEventListener('click', function(){
+  var w = null;
+  try { w = window.open(location.href.split('#')[0] + '#' + (cur + 1), 'ai-prezentacia-publikum', 'width=1280,height=720'); } catch(e){}
+  $('pvMsg').textContent = w ? 'Okno pre publikum je otvorené. Presuňte ho na projektor a stlačte F.' :
+    'Nové okno sa nepodarilo otvoriť. Otvorte prezentáciu v druhom okne prehliadača a presuňte ho na projektor. Okná sa prepínajú spolu.';
+});
+
+/* ---------- overview ---------- */
+function toggleOverview(force){
+  var ov = $('ov'), show = typeof force === 'boolean' ? force : ov.hidden;
+  if (show){
+    var grid = $('ovGrid');
+    if (!grid.childNodes.length){
+      slides.forEach(function(s, i){
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'ov-item';
+        var th = document.createElement('div'); th.className = 'ov-thumb';
+        th.appendChild(staticClone(i));
+        var cap = document.createElement('span'); cap.className = 'ov-cap';
+        cap.innerHTML = '<b>' + pad(i + 1) + '</b>';
+        cap.appendChild(document.createTextNode(s.getAttribute('data-title') || ''));
+        b.appendChild(th); b.appendChild(cap);
+        b.addEventListener('click', function(){ toggleOverview(false); go(i); });
+        grid.appendChild(b);
+      });
+    }
+    Array.prototype.forEach.call(grid.children, function(b, i){ b.classList.toggle('cur', i === cur); });
+    ov.hidden = false;
+    fitMinis();
+    var c = grid.children[cur]; if (c) c.focus();
+  } else {
+    ov.hidden = true;
+  }
+}
+$('ovClose').addEventListener('click', function(){ toggleOverview(false); });
+
+/* ---------- help, blackout, fullscreen ---------- */
+function toggleHelp(force){
+  var h = $('help'), show = typeof force === 'boolean' ? force : h.hidden;
+  h.hidden = !show;
+  if (show) $('helpClose').focus();
+}
+$('helpClose').addEventListener('click', function(){ toggleHelp(false); });
+$('npClose').addEventListener('click', function(){ toggleNotes(false); });
+function toggleBlack(){ $('black').hidden = !$('black').hidden; }
+$('black').addEventListener('click', toggleBlack);
+function toggleFull(){
+  try {
+    if (document.fullscreenElement || document.webkitFullscreenElement){
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      var el = document.documentElement, rq = el.requestFullscreen || el.webkitRequestFullscreen;
+      if (rq){ var p = rq.call(el); if (p && p.catch) p.catch(function(){}); }
+    }
+  } catch(e){}
+}
+
+/* ---------- controls ---------- */
+var actions = {
+  prev: prev, next: next,
+  notes: function(){ toggleNotes(); },
+  presenter: function(){ togglePresenter(); },
+  overview: function(){ toggleOverview(); },
+  full: toggleFull,
+  help: function(){ toggleHelp(); }
+};
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-act]');
+  if (b && actions[b.getAttribute('data-act')]){ e.stopPropagation(); actions[b.getAttribute('data-act')](); }
+});
+vp.addEventListener('click', function(e){
+  if (coarse || e.target.closest('button, a')) return;
+  var r = vp.getBoundingClientRect();
+  if (e.clientX - r.left < r.width * .28) prev(); else next();
+});
+var tx = 0, ty = 0;
+vp.addEventListener('touchstart', function(e){ var t = e.changedTouches[0]; tx = t.clientX; ty = t.clientY; }, { passive: true });
+vp.addEventListener('touchend', function(e){
+  var t = e.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty;
+  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { dx < 0 ? next() : prev(); }
+}, { passive: true });
+
+var ctrl = $('ctrl'), idle = 0;
+function showCtrl(){ ctrl.classList.add('show'); clearTimeout(idle); idle = setTimeout(function(){ ctrl.classList.remove('show'); }, 2600); }
+document.addEventListener('mousemove', showCtrl, { passive: true });
+
+document.addEventListener('keydown', function(e){
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  var k = e.key;
+  if (!$('help').hidden){ if (k === 'Escape' || k === '?' || k === 'Enter') { e.preventDefault(); toggleHelp(false); } return; }
+  if (!$('ov').hidden){
+    if (k === 'Escape' || k === 'o' || k === 'O'){ e.preventDefault(); toggleOverview(false); }
+    return;
+  }
+  if (e.target.closest && e.target.closest('button') && (k === ' ' || k === 'Enter')) return;
+  switch (k){
+    case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter': e.preventDefault(); next(); break;
+    case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': e.preventDefault(); prev(); break;
+    case 'Home': e.preventDefault(); go(0); break;
+    case 'End': e.preventDefault(); go(N - 1); break;
+    case 'n': case 'N': toggleNotes(); break;
+    case 'p': case 'P': togglePresenter(); break;
+    case 'o': case 'O': toggleOverview(); break;
+    case 'f': case 'F': toggleFull(); break;
+    case 'b': case 'B': case '.': toggleBlack(); break;
+    case '?': case 'h': case 'H': toggleHelp(); break;
+    case 'Escape':
+      if (!$('black').hidden) toggleBlack();
+      else if (!$('np').hidden) toggleNotes(false);
+      break;
+  }
+  wake();
+});
+
+/* keep the screen awake while presenting */
+var lock = null;
+function wake(){
+  if (lock || !navigator.wakeLock) return;
+  navigator.wakeLock.request('screen').then(function(l){ lock = l; l.addEventListener('release', function(){ lock = null; }); }).catch(function(){});
+}
+document.addEventListener('click', wake);
+document.addEventListener('visibilitychange', function(){
+  var g = slides[cur] && slides[cur]._globe;
+  if (document.hidden){ if (g) g.stop(); }
+  else { if (g) g.start(); }
+});
+
+window.addEventListener('resize', fit);
+window.addEventListener('hashchange', function(){
+  var m = /^#(\d+)$/.exec(location.hash || '');
+  if (m) go(parseInt(m[1], 10) - 1);
+});
+document.addEventListener('fullscreenchange', fit);
+window.addEventListener('beforeprint', function(){
+  finishCounters(document);
+  slides.forEach(resetTyping);
+  globes.forEach(function(g){ g.frame(); });
+});
+
+/* ---------- start ---------- */
+var h = (location.hash || '').replace('#', '');
+var start = 0;
+if (h === 'presenter') presenterHash = true;
+else if (/^\d+$/.test(h)) start = Math.max(0, Math.min(N - 1, parseInt(h, 10) - 1));
+fit();
+go(start);
+if (presenterHash) togglePresenter(true);
+var toast = $('toast');
+setTimeout(function(){ toast.classList.add('show'); }, 900);
+setTimeout(function(){ toast.classList.remove('show'); }, 6500);
+window.__deckReady = true;
+})();
+</script>
+</body>
+</html>
