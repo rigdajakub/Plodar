@@ -1,0 +1,1148 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI pre vedenie 2026</title>
+<meta name="description" content="Päť slidov pre vedenie firiem: ako umelá inteligencia zmení prácu, firmy a svet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&family=Instrument+Sans:wght@400..700&family=Newsreader:opsz,wght@6..72,300..600&display=swap">
+<style>
+/* Layout: 1920×1080 stage scaled to the screen. Pure black ground, #0F0F0F panels with hairline borders,
+   centered serif headlines with a grey-to-white text gradient, magenta as the only accent. */
+:root{
+  --bg:#000000;
+  --panel:#0F0F0F;
+  --panel-2:#141414;
+  --line:rgba(255,255,255,.10);
+  --line-2:rgba(255,255,255,.16);
+  --fg:#FAFAFA;
+  --fg-2:rgba(255,255,255,.72);
+  --fg-3:rgba(255,255,255,.52);
+  --mag:#E20074;
+  --mag-hi:#FF4DA6;
+  --mag-lite:#FF9ACD;
+  --mag-glow:rgba(226,0,116,.5);
+  --f-serif:"Tiempos Headline Light","Tiempos Headline","Newsreader",Georgia,"Times New Roman",serif;
+  --f-sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --f-ui:"Instrument Sans","Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--fg)}
+body{font-family:var(--f-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--mag-hi);outline-offset:3px}
+
+/* ============ Stage ============ */
+.viewport{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px);overflow:hidden;background:var(--bg)}
+.stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.slide{position:absolute;inset:0;overflow:hidden;background:var(--bg);opacity:0;visibility:hidden;
+  transition:opacity .9s var(--ease),visibility 0s linear .9s}
+.slide.is-active{opacity:1;visibility:visible;transition:opacity 1s var(--ease) .1s,visibility 0s}
+.slide .notes{display:none}
+
+/* ============ Reveal: blur-in ============ */
+.js .slide [data-a]{opacity:0;filter:blur(14px);transform:translate3d(0,26px,0);
+  transition:opacity .6s var(--ease),filter .6s var(--ease),transform .8s var(--ease-out)}
+.js .slide [data-a="fade"]{transform:none}
+.js .slide [data-a="scale"]{transform:scale(.96)}
+.js .slide.is-built [data-a]{opacity:1;filter:blur(0);transform:none;
+  transition:opacity 1.1s var(--ease) calc(var(--d,0) * 110ms + 200ms),filter 1.1s var(--ease) calc(var(--d,0) * 110ms + 200ms),transform 1.3s var(--ease-out) calc(var(--d,0) * 110ms + 200ms)}
+.js .slide.is-static [data-a]{opacity:1;filter:none;transform:none;transition:none}
+
+/* ============ Header (persistent navigation) ============ */
+.top{position:absolute;left:0;right:0;top:0;height:92px;display:flex;align-items:center;justify-content:space-between;padding:0 160px;background:var(--panel);border-bottom:1px solid rgba(255,255,255,.05);z-index:3}
+.mark{font:400 30px/1 var(--f-serif);letter-spacing:-.01em;color:var(--fg);white-space:nowrap}
+.mark small{margin-left:3px;font-size:15px;letter-spacing:0;color:var(--fg-2)}
+.nav{display:flex;gap:34px;margin:0;padding:0;list-style:none;font:400 19px/1 var(--f-sans);letter-spacing:-.02em;color:var(--fg)}
+.nav li.on{color:var(--mag-hi)}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:16px 30px;border-radius:12px;white-space:nowrap;
+  font:600 19px/1 var(--f-sans);letter-spacing:-.01em;color:#fff;
+  background:linear-gradient(100deg,#C30064 0%,#E20074 30%,#FF4DA6 62%,#FF8CC6 82%,#E20074 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.18),0 10px 34px rgba(226,0,116,.32)}
+.pill.sm{padding:13px 22px;font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.pill.lg{padding:22px 44px;font-size:24px;border-radius:14px}
+.slide.is-built .pill.shine{background-size:220% 100%;animation:pillShine 7s ease-in-out 1.6s infinite}
+@keyframes pillShine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+/* ============ Type ============ */
+.gt{background:linear-gradient(100deg,transparent 42%,rgba(255,150,205,.95) 50%,transparent 58%) no-repeat,
+    linear-gradient(90deg,#8E8E8E 0%,#FAFAFA 24%,#FAFAFA 76%,#8E8E8E 100%);
+  background-size:260% 100%,100% 100%;background-position:160% 0,0 0;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.slide.is-built .gt{animation:sweep 2.6s var(--ease) calc(var(--d,0) * 110ms + 700ms) 1 both}
+@keyframes sweep{from{background-position:160% 0,0 0}to{background-position:-60% 0,0 0}}
+.h1{margin:0;font:400 116px/1.04 var(--f-serif);letter-spacing:-.022em;text-align:center;text-wrap:balance}
+.h2{margin:0;font:400 76px/1.08 var(--f-serif);letter-spacing:-.018em;text-align:center;text-wrap:balance}
+.sub{margin:0;font:400 25px/1.5 var(--f-sans);letter-spacing:-.01em;color:var(--fg-2);text-align:center}
+.head{position:absolute;left:160px;right:160px;top:132px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.foot{position:absolute;left:160px;right:160px;bottom:34px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px;font:400 15px/1.45 var(--f-sans);color:var(--fg-3)}
+.foot .src{max-width:1300px}
+.foot .end{color:var(--fg-2);white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ============ Cards ============ */
+.card{position:relative;isolation:isolate;overflow:hidden;border-radius:18px;border:1px solid var(--line);background:var(--panel)}
+.card::before{content:"";position:absolute;left:40px;top:-1px;width:30px;height:2px;border-radius:2px;background:var(--mag);box-shadow:0 0 12px var(--mag-glow)}
+.card::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(260px 200px at 0% 0%,rgba(255,255,255,.045),transparent 70%),radial-gradient(320px 260px at 100% 0%,rgba(226,0,116,.07),transparent 70%)}
+.card.nt::before{display:none}
+.ct{margin:0;font:700 30px/1.2 var(--f-sans);letter-spacing:-.04em;color:var(--fg)}
+.cd{margin:0;font:400 21px/1.5 var(--f-sans);letter-spacing:-.01em;color:var(--fg-2)}
+.cd b{color:var(--fg);font-weight:600}
+.kick{margin:0;font:500 15px/1.2 var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
+
+/* glass stat tile (dashboard look) */
+.tile{position:relative;padding:20px 24px 22px;border-radius:14px;border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.035))}
+.tile-h{display:flex;align-items:center;justify-content:space-between;gap:12px;font:400 19px/1.2 var(--f-ui);letter-spacing:-.01em;color:var(--fg-2)}
+.tile-h .lbl{display:flex;align-items:center;gap:10px}
+.tile-h .lbl i{width:9px;height:9px;border-radius:50%;background:var(--fg-2)}
+.tile-h .lbl i.m{background:var(--mag-hi);box-shadow:0 0 10px var(--mag-glow)}
+.dots3{font:700 18px/1 var(--f-ui);letter-spacing:.12em;color:var(--fg-3)}
+.tile-v{display:flex;align-items:center;gap:16px;margin-top:12px}
+.big{font:600 46px/1 var(--f-ui);letter-spacing:-.02em;color:var(--fg)}
+.big small{margin-left:4px;font-size:.6em;font-weight:500;color:var(--fg-2)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:6px;border:1px solid rgba(255,77,166,.45);background:rgba(226,0,116,.14);
+  font:400 16px/1 var(--f-ui);color:var(--mag-lite);white-space:nowrap}
+.chip svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* icons */
+.ico{width:46px;height:46px;flex:none;fill:none;stroke:url(#gm);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 10px rgba(226,0,116,.35))}
+
+/* ============ 01 Hero ============ */
+.silk{position:absolute;inset:0;width:100%;height:100%;display:block}
+.silk-fallback{position:absolute;inset:0;background:radial-gradient(60% 50% at 30% 40%,rgba(255,255,255,.10),transparent 70%),radial-gradient(50% 45% at 75% 70%,rgba(226,0,116,.16),transparent 70%)}
+.veil{position:absolute;inset:0;pointer-events:none;background:radial-gradient(52% 46% at 50% 52%,rgba(0,0,0,.72),rgba(0,0,0,.25) 70%,rgba(0,0,0,0) 100%),linear-gradient(180deg,rgba(0,0,0,.35),transparent 30%,transparent 75%,rgba(0,0,0,.6))}
+.hero{position:absolute;left:160px;right:160px;top:92px;bottom:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px}
+.hero .h1 span{display:block}
+.stats-line{display:flex;align-items:center;gap:22px;font:400 25px/1.4 var(--f-sans);letter-spacing:-.01em;color:var(--fg)}
+.stats-line .sep{width:1px;height:26px;background:rgba(255,255,255,.55)}
+.stats-line b{font-weight:600}
+
+/* ============ 02 Technology ============ */
+.row{position:absolute;left:160px;right:160px;display:grid;gap:24px}
+.s2-top{top:312px;height:428px;grid-template-columns:1.62fr 1fr}
+.dash{display:flex;flex-direction:column;padding:30px 36px 30px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dash .txt{margin-top:auto;padding-top:20px;display:flex;flex-direction:column;gap:6px}
+.chart{display:flex;flex-direction:column;padding:28px 32px 30px}
+.funnel{position:relative;height:206px;margin:14px 0 0 44px}
+.funnel .grid{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.1)}
+.funnel .grid span{position:absolute;left:-44px;top:-9px;width:36px;text-align:right;font:400 14px/1 var(--f-ui);color:var(--fg-3)}
+.funnel .bars{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);gap:22px;align-items:end;padding:0 6px}
+.fb{position:relative;height:100%;display:flex;align-items:flex-end}
+.fb i{display:block;width:100%;height:calc(var(--v) * 100%);border-radius:8px 8px 2px 2px;transform-origin:50% 100%;
+  background:linear-gradient(180deg,var(--mag-hi),rgba(226,0,116,.35));box-shadow:0 0 22px rgba(226,0,116,.28)}
+.fb .fv{position:absolute;left:0;right:0;bottom:calc(var(--v) * 100% + 8px);text-align:center;font:600 22px/1 var(--f-ui);color:var(--fg)}
+.flabels{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin:10px 0 0 50px;font:400 15px/1.25 var(--f-ui);color:var(--fg-2);text-align:center}
+.chart .txt{margin-top:auto;display:flex;flex-direction:column;gap:6px}
+.js .slide .fb i{transform:scaleY(0)}
+.js .slide .fb .fv{opacity:0}
+.js .slide.is-built .fb i{transform:scaleY(1);transition:transform 1.6s var(--ease-out) calc(var(--d,0) * 110ms + 700ms)}
+.js .slide.is-built .fb .fv{opacity:1;transition:opacity .8s var(--ease) calc(var(--d,0) * 110ms + 1500ms)}
+.js .slide.is-static .fb i{transform:none;transition:none}
+.js .slide.is-static .fb .fv{opacity:1;transition:none}
+.s2-bottom{top:764px;height:190px;grid-template-columns:repeat(4,1fr)}
+.prod{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px 26px;text-align:center}
+.prod h3{margin:0;font:400 30px/1.15 var(--f-serif);letter-spacing:-.01em;color:var(--fg)}
+.prod p{margin:0;font:400 19px/1.45 var(--f-sans);color:var(--fg-2)}
+
+/* ============ 03 Work ============ */
+.s3-top{top:312px;height:318px;grid-template-columns:1.9fr 1fr}
+.wef{display:grid;grid-template-columns:1fr 330px;gap:30px;padding:24px 34px 22px}
+.wef-l{display:flex;flex-direction:column;gap:14px}
+.hb{display:grid;grid-template-columns:150px 1fr;align-items:center;gap:20px}
+.wef-l .kick{margin-bottom:4px}
+.hb .v{font:600 34px/1 var(--f-ui);letter-spacing:-.02em}
+.hb .v small{margin-left:4px;font-size:.55em;font-weight:500;color:var(--fg-2)}
+.hb .b{display:flex;flex-direction:column;gap:8px}
+.hb .b span{font:400 17px/1.2 var(--f-ui);color:var(--fg-2)}
+.track{display:block;height:10px;border-radius:10px;background:rgba(255,255,255,.07);overflow:hidden}
+.track i{display:block;height:100%;width:100%;border-radius:inherit;transform-origin:0 50%;transform:scaleX(var(--v));
+  background:linear-gradient(90deg,rgba(226,0,116,.35),var(--mag-hi));box-shadow:0 0 16px rgba(226,0,116,.4)}
+.track i.grey{background:linear-gradient(90deg,rgba(255,255,255,.12),rgba(255,255,255,.55));box-shadow:none}
+.js .slide .track i{transform:scaleX(0)}
+.js .slide.is-built .track i{transform:scaleX(var(--v));transition:transform 1.8s var(--ease-out) calc(var(--d,0) * 110ms + 600ms)}
+.js .slide.is-static .track i{transform:scaleX(var(--v));transition:none}
+.wef-l .txt{margin-top:auto;display:flex;flex-direction:column;gap:4px}
+.wef-r{display:flex;flex-direction:column;gap:12px}
+.mini{display:grid;grid-template-columns:96px 1fr;align-items:center;gap:14px;padding:11px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03))}
+.mini .v{font:600 30px/1 var(--f-ui);letter-spacing:-.02em}
+.mini .t{font:400 16px/1.35 var(--f-ui);color:var(--fg-2)}
+.mini .t b{color:var(--fg);font-weight:600}
+.sig{display:flex;flex-direction:column;padding:28px 32px 26px}
+.sig .txt{margin-top:auto;display:flex;flex-direction:column;gap:6px}
+.s3-bottom{top:654px;height:312px;grid-template-columns:1fr 1fr}
+.lst{display:flex;flex-direction:column;padding:26px 34px 24px}
+.lst h3{margin:0;font:400 34px/1.1 var(--f-serif);letter-spacing:-.01em;color:var(--mag-hi)}
+.lst .lsub{margin:6px 0 14px;font:400 18px/1.4 var(--f-sans);color:var(--fg-2)}
+.items{display:grid;grid-template-columns:1fr 1fr;gap:14px 30px}
+.it{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start}
+.it .ico{width:30px;height:30px;margin-top:2px;filter:none}
+.it b{display:block;font:600 20px/1.25 var(--f-sans);letter-spacing:-.02em;color:var(--fg)}
+.it span{display:block;font:400 17px/1.35 var(--f-sans);color:var(--fg-2)}
+
+/* ============ 04 Governance ============ */
+.gov{position:absolute;left:160px;right:160px;top:312px;height:642px;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:1fr 1fr;gap:24px}
+.gx{display:flex;flex-direction:column;padding:26px 30px 24px}
+.gx.w7{grid-column:span 7}
+.gx.w5{grid-column:span 5}
+.gx.w4{grid-column:span 4}
+.gx.w3{grid-column:span 3}
+.gx .txt{margin-top:auto;display:flex;flex-direction:column;gap:6px}
+.gx .ct{font-size:27px}
+.gx .cd{font-size:19px}
+.vis{position:relative;height:126px;flex:none}
+.docs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.doc{position:relative;display:flex;flex-direction:column;gap:8px;padding:18px 18px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.025));clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,0 100%)}
+.doc::after{content:"";position:absolute;right:0;top:0;width:22px;height:22px;background:linear-gradient(225deg,transparent 50%,rgba(255,255,255,.2) 50%)}
+.doc .ico{width:34px;height:34px;margin-bottom:4px}
+.doc b{font:600 20px/1.25 var(--f-sans);letter-spacing:-.02em;color:var(--fg);white-space:nowrap}
+.doc span{font:400 16px/1.4 var(--f-sans);color:var(--fg-2)}
+.chain .st{padding:0 0 12px}
+.chain .st::before{top:4px}
+.chain .st b{display:inline;margin:0;font-size:20px}
+.chain .st span{display:inline;margin-left:10px;font-size:17px}
+.tiles2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tiles2 .tile{padding:16px 20px 18px}
+.tiles2 .big{font-size:42px}
+.eth .ck{grid-template-columns:24px 1fr;gap:12px;padding:8px 0}
+.eth .ck:first-child{border-top:0;padding-top:0}
+.eth .ck svg{width:22px;height:22px}
+.eth .ck b{font-size:19px}
+/* timeline */
+.tl{position:absolute;left:8px;right:8px;top:0;bottom:0}
+.tl .ln{position:absolute;left:0;right:0;top:74px;height:2px;background:rgba(255,255,255,.12)}
+.tl .ln i{position:absolute;inset:0;transform-origin:0 50%;background:linear-gradient(90deg,var(--mag),var(--mag-hi));box-shadow:0 0 12px var(--mag-glow);transform:scaleX(1)}
+.js .slide .tl .ln i{transform:scaleX(0)}
+.js .slide.is-built .tl .ln i{transform:scaleX(1);transition:transform 2.4s var(--ease-out) .7s}
+.js .slide.is-static .tl .ln i{transform:scaleX(1);transition:none}
+.tl .pt{position:absolute;top:0;bottom:0;width:0}
+.tl .pt::before{content:"";position:absolute;left:-7px;top:67px;width:14px;height:14px;border-radius:50%;background:#000;border:2px solid var(--mag-hi)}
+.tl .pt.past::before{background:var(--mag-hi);box-shadow:0 0 12px var(--mag-glow)}
+.tl .pt .dt{position:absolute;top:34px;font:600 17px/1 var(--f-ui);color:var(--fg);white-space:nowrap;transform:translateX(-50%)}
+.tl .pt .ds{position:absolute;top:96px;font:400 15px/1.25 var(--f-ui);color:var(--fg-2);white-space:nowrap;transform:translateX(-50%)}
+.tl .pt.first .dt,.tl .pt.first .ds{transform:none;left:-7px}
+.tl .pt.last .dt,.tl .pt.last .ds{transform:none;right:-7px}
+.tl .now{position:absolute;top:0;bottom:0;width:0}
+.tl .now::before{content:"";position:absolute;left:-1px;top:18px;height:56px;width:2px;background:linear-gradient(180deg,rgba(255,77,166,0),var(--mag-hi) 30%,rgba(255,77,166,0))}
+.tl .now span{position:absolute;top:0;left:0;transform:translateX(-50%);font:700 13px/1 var(--f-ui);letter-spacing:.16em;color:var(--mag-hi)}
+.slide.is-built .tl .now::before{animation:nowPulse 2.8s ease-in-out 2s infinite}
+@keyframes nowPulse{0%,100%{opacity:.6}50%{opacity:1}}
+/* ============ 05 Next steps ============ */
+.cta{position:absolute;left:160px;right:160px;top:118px;height:372px;border-radius:40px;overflow:hidden;background:#0A0A0A;border:1px solid rgba(255,255,255,.06)}
+.cta .veil{background:radial-gradient(60% 70% at 50% 50%,rgba(0,0,0,.62),rgba(0,0,0,.2) 75%,rgba(0,0,0,0) 100%)}
+.cta-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:0 120px}
+.cta .h2{font-size:74px}
+.cta .h2 .sm{display:block;margin-top:6px;font-size:50px;line-height:1.14}
+.s5-bottom{top:514px;height:440px;grid-template-columns:1fr 1fr 1fr}
+.col{display:flex;flex-direction:column;padding:26px 32px 24px}
+.col h3{margin:0 0 14px;font:400 34px/1.1 var(--f-serif);letter-spacing:-.01em;color:var(--mag-hi)}
+.ck{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,.07)}
+.ck svg{width:24px;height:24px;margin-top:1px;fill:none;stroke:var(--mag-hi);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ck b{display:block;font:600 20px/1.25 var(--f-sans);letter-spacing:-.02em;color:var(--fg)}
+.ck span{display:block;font:400 17px/1.4 var(--f-sans);color:var(--fg-2)}
+.steps{position:relative;display:flex;flex-direction:column;gap:0;padding-left:30px}
+.steps .rail{position:absolute;left:7px;top:10px;bottom:12px;width:2px;background:rgba(255,255,255,.1)}
+.steps .rail i{position:absolute;inset:0;transform-origin:50% 0;background:linear-gradient(180deg,var(--mag-hi),rgba(226,0,116,.3));box-shadow:0 0 12px var(--mag-glow);transform:scaleY(1)}
+.js .slide .steps .rail i{transform:scaleY(0)}
+.js .slide.is-built .steps .rail i{transform:scaleY(1);transition:transform 2.2s var(--ease-out) 1.4s}
+.js .slide.is-static .steps .rail i{transform:none;transition:none}
+.st{position:relative;padding:4px 0 28px}
+.st::before{content:"";position:absolute;left:-30px;top:7px;width:16px;height:16px;border-radius:50%;background:var(--mag-hi);box-shadow:0 0 0 5px rgba(226,0,116,.16),0 0 16px var(--mag-glow)}
+.st .w{font:600 15px/1 var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mag-lite)}
+.st b{display:block;margin-top:8px;font:600 21px/1.25 var(--f-sans);letter-spacing:-.02em;color:var(--fg)}
+.st span{display:block;font:400 17px/1.4 var(--f-sans);color:var(--fg-2)}
+
+/* ============ HUD, controls, panels ============ */
+.prog{position:fixed;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);height:3px;background:rgba(255,255,255,.06);z-index:5;pointer-events:none}
+.prog i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#7A003F,var(--mag),var(--mag-hi));box-shadow:0 0 12px var(--mag-glow);transform-origin:0 50%;transform:scaleX(var(--p,0));transition:transform .9s var(--ease-out)}
+.ctrl{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:6;display:flex;align-items:center;gap:4px;padding:6px;border-radius:14px;
+  background:rgba(15,15,15,.88);border:1px solid var(--line);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);opacity:0;transform:translateY(8px);transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.ctrl.show,.ctrl:focus-within,.coarse .ctrl{opacity:1;transform:none}
+.ctrl button{display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:10px;background:transparent;color:var(--fg-2);cursor:pointer}
+.ctrl button:hover{background:rgba(255,255,255,.08);color:var(--fg)}
+.ctrl button[aria-pressed="true"]{color:var(--mag-hi);background:rgba(226,0,116,.14)}
+.ctrl svg,.pv svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ctrl .sep{width:1px;height:22px;margin:0 4px;background:var(--line-2)}
+.ctrl .count{min-width:56px;padding:0 6px;text-align:center;font:600 13px/1 var(--f-ui);letter-spacing:.1em;font-variant-numeric:tabular-nums;color:var(--fg-3)}
+
+.np{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:7;width:min(920px,calc(100vw - 32px));max-height:44vh;display:flex;flex-direction:column;transform:translateX(-50%);
+  border-radius:16px;background:rgba(15,15,15,.96);border:1px solid var(--line-2);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.np-h{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px 12px 22px;border-bottom:1px solid var(--line)}
+.np-t{font:600 13px/1.2 var(--f-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--mag-hi)}
+.np-b{padding:16px 22px 20px;overflow:auto;font:400 17px/1.6 var(--f-sans);color:var(--fg-2)}
+.np-b p,.pv-notes p{margin:0 0 .8em}
+.np-b p:last-child{margin:0}
+.np-b b,.pv-notes b{color:var(--fg)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);font:600 14px/1 var(--f-sans);color:var(--fg);cursor:pointer}
+.btn:hover{background:rgba(255,255,255,.09)}
+.btn.primary{border-color:rgba(255,77,166,.6);background:rgba(226,0,116,.18)}
+.toast{position:fixed;left:50%;bottom:calc(14% + env(safe-area-inset-bottom,0px));z-index:6;max-width:calc(100vw - 32px);padding:12px 18px;border-radius:12px;transform:translateX(-50%);
+  background:rgba(15,15,15,.92);border:1px solid var(--line);font:500 14px/1.4 var(--f-sans);color:var(--fg-2);text-align:center;opacity:0;transition:opacity .8s var(--ease);pointer-events:none}
+.toast.show{opacity:1}
+.toast kbd,.help kbd{display:inline-block;min-width:22px;padding:2px 6px;border-radius:6px;border:1px solid var(--line-2);background:rgba(255,255,255,.05);font:600 12px/1.4 var(--f-ui);color:var(--fg);text-align:center}
+.help,.ov{position:fixed;inset:0;z-index:9;display:grid;place-items:center;padding:24px 16px;background:rgba(0,0,0,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.help-card{width:min(560px,100%);padding:28px 30px;border-radius:18px;background:var(--panel);border:1px solid var(--line-2)}
+.help-card h2{margin:0 0 18px;font:400 30px/1.1 var(--f-serif)}
+.help-card dl{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;margin:0 0 22px;font:400 15px/1.5 var(--f-sans);color:var(--fg-2)}
+.help-card dt{white-space:nowrap}
+.help-card dd{margin:0}
+.help-card p{margin:0 0 20px;font:400 14px/1.55 var(--f-sans);color:var(--fg-3)}
+.ov{place-items:start center;overflow:auto}
+.ov-in{width:min(1500px,100%)}
+.ov-h{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:8px 0 18px}
+.ov-h p{margin:0;font:600 13px/1 var(--f-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--mag-hi)}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.ov-item{display:flex;flex-direction:column;gap:8px;padding:0;border:0;background:none;text-align:left;cursor:pointer}
+.ov-thumb{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;overflow:hidden;border-radius:10px;border:1px solid var(--line);background:#000}
+.ov-item:hover .ov-thumb,.ov-item.cur .ov-thumb{border-color:var(--mag);box-shadow:0 0 0 1px var(--mag),0 0 24px rgba(226,0,116,.35)}
+.ov-cap{font:500 13px/1.3 var(--f-sans);color:var(--fg-2)}
+.ov-cap b{margin-right:8px;color:var(--mag-hi);font-variant-numeric:tabular-nums}
+.minic{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;pointer-events:none}
+.minic .slide{opacity:1;visibility:visible;transition:none}
+.minic canvas{display:none}
+.minic .silk-fallback{display:block!important}
+.black{position:fixed;inset:0;z-index:8;background:#000}
+.pv{position:fixed;top:24px;right:24px;bottom:24px;left:calc(62vw + 12px);z-index:4;display:flex;flex-direction:column;gap:16px;min-width:0}
+.pv-notes{position:fixed;left:24px;width:calc(62vw - 36px);top:calc(24px + (62vw - 36px) * .5625 + 18px);bottom:24px;z-index:4;overflow:auto;padding:20px 26px;border-radius:14px;
+  background:var(--panel);border:1px solid var(--line);font:400 20px/1.6 var(--f-sans);color:var(--fg-2)}
+.pv-notes h2{margin:0 0 12px;font:600 13px/1.2 var(--f-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--mag-hi)}
+body.presenting .viewport{left:24px;top:24px;right:auto;bottom:auto;width:calc(62vw - 36px);height:calc((62vw - 36px) * .5625);border-radius:14px;box-shadow:0 0 0 1px var(--line-2)}
+body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
+.pv-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pv-time{font:400 64px/1 var(--f-ui);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pv-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font:600 14px/1.2 var(--f-ui);letter-spacing:.12em;color:var(--fg-3);font-variant-numeric:tabular-nums}
+.pv-l{margin:6px 0 0;font:600 12px/1 var(--f-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--fg-3)}
+.pv-next{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;overflow:hidden;border-radius:12px;border:1px solid var(--line);background:#000}
+.pv-next .end-note{position:absolute;inset:0;display:grid;place-items:center;font:500 16px/1 var(--f-sans);color:var(--fg-3)}
+.pv-nt{margin:0;font:600 18px/1.35 var(--f-sans);color:var(--fg)}
+.pv-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto}
+.pv-msg{margin:0;font:400 13px/1.5 var(--f-sans);color:var(--fg-3)}
+
+@media (max-width:700px){
+  .viewport{left:16px;right:16px}
+  .ctrl{right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+  .ctrl .count,.ctrl .sep,.ctrl [data-act="presenter"],.ctrl [data-act="help"]{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .slide,.slide *,.slide *::before,.slide *::after{transition:none!important;animation:none!important}
+  .js .slide [data-a]{opacity:1;filter:none;transform:none}
+  .js .slide .track i{transform:scaleX(var(--v))}
+  .js .slide .fb i,.js .slide .steps .rail i{transform:none}
+  .js .slide .fb .fv{opacity:1}
+  .js .slide .tl .ln i{transform:none}
+}
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{height:auto;overflow:visible}
+  .viewport{position:static}
+  .stage{position:static;transform:none!important;width:1920px;height:auto}
+  .slide{position:relative;width:1920px;height:1080px;opacity:1!important;visibility:visible!important;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .slide [data-a]{opacity:1!important;filter:none!important;transform:none!important;transition:none!important}
+  .slide .track i{transform:scaleX(var(--v))!important}
+  .slide .fb i,.slide .steps .rail i,.slide .tl .ln i{transform:none!important}
+  .slide .fb .fv{opacity:1!important}
+  .prog,.ctrl,.np,.toast,.help,.ov,.pv,.pv-notes,.black{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF9ACD"/><stop offset=".5" stop-color="#FF4DA6"/><stop offset="1" stop-color="#E20074"/>
+    </linearGradient>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M11 3.5c.6 4 2.6 6 6.5 6.5-3.9.6-5.9 2.6-6.5 6.5-.6-3.9-2.6-5.9-6.5-6.5 3.9-.5 5.9-2.5 6.5-6.5z"/><path d="M18.5 15c.3 1.7 1.1 2.5 2.7 2.7-1.6.3-2.4 1.1-2.7 2.8-.3-1.7-1.1-2.5-2.7-2.8 1.6-.2 2.4-1 2.7-2.7z"/></symbol>
+    <symbol id="i-agent" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="12" cy="20.5" r="2"/><path d="M6.5 6.5l3.4 3.4M17.5 6.5l-3.4 3.4M12 15v3.5"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3.5V8h4.5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20.5V16h-4.5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3.5 3.5v17h17"/><path d="M7 15.5l4-4.5 3 3 5.5-6.5"/><path d="M15.5 7.5h4v4"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/><path d="M14 2.5V8h5.5"/><path d="M8.5 13h7M8.5 17h5"/></symbol>
+    <symbol id="i-headset" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2.5" y="13.5" width="4" height="6" rx="1.5"/><rect x="17.5" y="13.5" width="4" height="6" rx="1.5"/><path d="M19.5 19.5c0 1.4-1.4 2-3.5 2h-2"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24"><rect x="4.5" y="2.5" width="15" height="19" rx="2"/><path d="M8 7h8M8 11.5h2M14 11.5h2M8 15h2M14 15h2M8 18.5h2M14 18.5h2"/></symbol>
+    <symbol id="i-lang" viewBox="0 0 24 24"><path d="M3 5.5h9M7.5 3v2.5M10 5.5c-.8 3.3-3 6-6.5 7.5M5.2 8.5c1 1.8 2.6 3.2 4.8 4.2"/><path d="M12.5 21l4-10 4 10M14 17.5h5"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="M8.5 7 3.5 12l5 5M15.5 7l5 5-5 5M13.5 4.5l-3 15"/></symbol>
+    <symbol id="i-mega" viewBox="0 0 24 24"><path d="M3.5 10v4a1 1 0 0 0 1 1H7l6 4.5v-15L7 9H4.5a1 1 0 0 0-1 1z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.4 5.6a5 5 0 0 0-7.1 0L12 6.9l-1.3-1.3a5 5 0 0 0-7.1 7.1L12 21l8.4-8.3a5 5 0 0 0 0-7.1z"/><path d="M6.5 12h3l1.3-2.2 2.2 4.4 1.3-2.2h3.2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5M16 4.8a3.5 3.5 0 0 1 0 6.4M18 13.8c2 .9 3.5 3 3.5 6.2"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2 5.2-5.2 2 2-5.2z"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20.5h8.5M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+    <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V11M21.5 9v5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><rect x="3.5" y="3" width="17" height="18" rx="2"/><path d="M8 8h8.5M8 12h8.5M8 16h5"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3.5v17M7.5 20.5h9M4.5 7h15"/><path d="M4.5 7 2 13a2.5 2.5 0 0 0 5 0z"/><path d="M19.5 7 17 13a2.5 2.5 0 0 0 5 0z"/></symbol>
+  </defs>
+</svg>
+
+<div class="viewport" id="viewport">
+<div class="stage" id="stage">
+
+<!-- ===================== 01 · Úvod ===================== -->
+<section class="slide s-hero" data-title="Úvod">
+  <canvas class="silk" data-silk="hero" aria-hidden="true"></canvas>
+  <div class="silk-fallback" hidden></div>
+  <div class="veil"></div>
+  <header class="top">
+    <span class="mark">Umelá inteligencia<small>.2026</small></span>
+    <ul class="nav"><li class="on">Úvod</li><li>Technológia</li><li>Práca</li><li>Pravidlá</li><li>Prvé kroky</li></ul>
+    <span class="pill sm"><span class="pg"></span></span>
+  </header>
+  <div class="hero">
+    <h1 class="h1 gt" data-a="up" style="--d:1"><span>Umelá inteligencia:</span><span>ako zmení prácu, firmy a&nbsp;svet</span></h1>
+    <p class="stats-line" data-a="up" style="--d:4"><span><b class="num"><span data-count="88">88</span>&nbsp;%</b> opýtaných firiem už AI používa</span><span class="sep"></span><span>len <b class="num"><span data-count="6">6</span>&nbsp;%</b> z&nbsp;nej výrazne profituje</span></p>
+    <span class="pill lg shine" data-a="up" style="--d:6">Čo musí vedieť každá veľká firma</span>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: McKinsey, The State of AI in 2025 (11/2025); Stanford HAI, AI Index Report 2026.</span><span class="end">Strategický prehľad pre vedenie · október 2026</span></footer>
+  <aside class="notes">
+    <p>Dobrý deň. Za nasledujúcich pár minút prejdeme päť tém: <b>čo je dnes AI a&nbsp;kde sú firmy</b>, <b>ako zmení prácu</b>, <b>ako pripraviť firmu</b> (interné dokumenty, etika, kontrola a&nbsp;AI Act) a&nbsp;<b>čo z&nbsp;toho vyplýva pre každého zamestnanca a&nbsp;každú veľkú firmu</b>.</p>
+    <p>Úvodné čísla: podľa globálneho prieskumu McKinsey (november 2025, potvrdené aj v&nbsp;Stanford AI Index 2026) <b>88&nbsp;%</b> organizácií pravidelne používa AI aspoň v&nbsp;jednej oblasti. No iba približne <b>6&nbsp;%</b> patrí medzi tzv. AI lídrov, ktorým AI prináša výrazný a&nbsp;merateľný prínos k&nbsp;prevádzkovému zisku. Rozdiel medzi týmito dvoma číslami je hlavná téma dneška: AI už nie je otázka technológie, ale riadenia.</p>
+    <p>Všetky čísla v&nbsp;prezentácii sú z&nbsp;verejných primárnych zdrojov (Eurostat, WEF, MMF, ILO, Stanford, McKinsey, KPMG a&nbsp;University of Melbourne, EUR-Lex, ISO, NIST). Zdroj je vždy uvedený malým písmom dole na slide.</p>
+  </aside>
+</section>
+
+<!-- ===================== 02 · Technológia ===================== -->
+<section class="slide" data-title="AI už nie je experiment">
+  <header class="top">
+    <span class="mark">Umelá inteligencia<small>.2026</small></span>
+    <ul class="nav"><li>Úvod</li><li class="on">Technológia</li><li>Práca</li><li>Pravidlá</li><li>Prvé kroky</li></ul>
+    <span class="pill sm"><span class="pg"></span></span>
+  </header>
+  <div class="head">
+    <h2 class="h2 gt" data-a="up" style="--d:0">AI už nie je experiment</h2>
+    <p class="sub" data-a="up" style="--d:2">Firmy ju zavádzajú rýchlo. Hodnotu z&nbsp;nej zatiaľ získava menšina.</p>
+  </div>
+  <div class="row s2-top">
+    <article class="card dash" data-a="up" style="--d:3">
+      <div class="tiles">
+        <div class="tile"><div class="tile-h"><span class="lbl"><i></i>Veľké firmy v&nbsp;EÚ</span><span class="dots3">···</span></div>
+          <div class="tile-v"><span class="big num"><span data-count="55.0" data-dec="1">55,0</span><small>%</small></span><span class="chip"><svg viewBox="0 0 12 12"><path d="M3 9l6-6M4.5 3H9v4.5"/></svg>+13,9 p.&nbsp;b.</span></div></div>
+        <div class="tile"><div class="tile-h"><span class="lbl"><i class="m"></i>Veľké firmy na Slovensku</span><span class="dots3">···</span></div>
+          <div class="tile-v"><span class="big num"><span data-count="43.7" data-dec="1">43,7</span><small>%</small></span><span class="chip"><svg viewBox="0 0 12 12"><path d="M3 9l6-6M4.5 3H9v4.5"/></svg>+14,6 p.&nbsp;b.</span></div></div>
+        <div class="tile"><div class="tile-h"><span class="lbl"><i></i>Všetky firmy v&nbsp;EÚ</span><span class="dots3">···</span></div>
+          <div class="tile-v"><span class="big num"><span data-count="20.0" data-dec="1">20,0</span><small>%</small></span><span class="chip"><svg viewBox="0 0 12 12"><path d="M3 9l6-6M4.5 3H9v4.5"/></svg>+6,5 p.&nbsp;b.</span></div></div>
+        <div class="tile"><div class="tile-h"><span class="lbl"><i class="m"></i>Všetky firmy na Slovensku</span><span class="dots3">···</span></div>
+          <div class="tile-v"><span class="big num"><span data-count="18.0" data-dec="1">18,0</span><small>%</small></span><span class="chip"><svg viewBox="0 0 12 12"><path d="M3 9l6-6M4.5 3H9v4.5"/></svg>+7,2 p.&nbsp;b.</span></div></div>
+      </div>
+      <div class="txt">
+        <h3 class="ct">Európa zrýchľuje, Slovensko dobieha</h3>
+        <p class="cd">Podiel firiem s&nbsp;AI v&nbsp;roku 2025 a&nbsp;zmena oproti 2024 (veľké = 250+ zamestnancov).</p>
+      </div>
+    </article>
+    <article class="card nt chart" data-a="up" style="--d:5">
+      <p class="kick">Od používania k&nbsp;hodnote · globálny prieskum</p>
+      <div class="funnel">
+        <span class="grid" style="top:0"><span>100</span></span>
+        <span class="grid" style="top:50%"><span>50</span></span>
+        <span class="grid" style="top:100%"><span>0 %</span></span>
+        <div class="bars">
+          <div class="fb" style="--v:.88"><span class="fv num">88&nbsp;%</span><i></i></div>
+          <div class="fb" style="--v:.39"><span class="fv num">39&nbsp;%</span><i></i></div>
+          <div class="fb" style="--v:.3333"><span class="fv num">≈&nbsp;1/3</span><i></i></div>
+          <div class="fb" style="--v:.06"><span class="fv num">6&nbsp;%</span><i></i></div>
+        </div>
+      </div>
+      <div class="flabels"><span>používa AI</span><span>vplyv na EBIT</span><span>škáluje</span><span>AI lídri</span></div>
+      <div class="txt">
+        <h3 class="ct">Hodnotu získava menšina</h3>
+        <p class="cd">Iba 6&nbsp;% opýtaných firiem má z&nbsp;AI výrazný prínos k&nbsp;zisku.</p>
+      </div>
+    </article>
+  </div>
+  <div class="row s2-bottom">
+    <article class="card prod" data-a="up" style="--d:7"><svg class="ico" aria-hidden="true"><use href="#i-spark"/></svg><h3>Generatívna AI</h3><p>Píše, sumarizuje a&nbsp;analyzuje.</p></article>
+    <article class="card prod" data-a="up" style="--d:8"><svg class="ico" aria-hidden="true"><use href="#i-agent"/></svg><h3>AI agenti</h3><p>Samostatne vykonávajú úlohy.</p></article>
+    <article class="card prod" data-a="up" style="--d:9"><svg class="ico" aria-hidden="true"><use href="#i-flow"/></svg><h3>Automatizácia</h3><p>Číta dokumenty a&nbsp;riadi procesy.</p></article>
+    <article class="card prod" data-a="up" style="--d:10"><svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg><h3>Prediktívna AI</h3><p>Predpovedá dopyt, riziká a&nbsp;poruchy.</p></article>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: Eurostat, Artificial intelligence by size class of enterprise, isoc_eb_ai (aktualizované 06/2026); McKinsey, The State of AI in 2025 (11/2025).</span></footer>
+  <aside class="notes">
+    <p><b>Čo je dnes AI.</b> Štyri skupiny technológií, ktoré sa kombinujú. <b>Generatívna AI</b> píše, sumarizuje, analyzuje a&nbsp;tvorí obsah podľa zadania v&nbsp;bežnom jazyku. <b>AI agenti</b> idú ďalej: dostanú cieľ a&nbsp;samostatne vykonajú viac krokov v&nbsp;systémoch firmy, napríklad od e-mailu s&nbsp;objednávkou až po zápis do ERP. <b>Automatizácia</b> číta faktúry, triedi reklamácie a&nbsp;riadi procesy. <b>Prediktívna AI</b> predpovedá dopyt, poruchy či podvody.</p>
+    <p><b>Európa a&nbsp;Slovensko (Eurostat, dáta za rok 2025, aktualizované v&nbsp;júni 2026).</b> AI používa 55,0&nbsp;% veľkých firiem v&nbsp;EÚ (2024: 41,2&nbsp;%, 2023: 30,5&nbsp;%). Na Slovensku 43,7&nbsp;% veľkých firiem (2024: 29,1&nbsp;%). Slovenské veľké firmy teda rastú rýchlo, no stále zaostávajú za priemerom EÚ asi o&nbsp;11 percentuálnych bodov. Pri všetkých firmách s&nbsp;10 a&nbsp;viac zamestnancami je to 20,0&nbsp;% v&nbsp;EÚ a&nbsp;18,0&nbsp;% na Slovensku. Lídrom je Dánsko s&nbsp;42&nbsp;%.</p>
+    <p><b>Od používania k&nbsp;hodnote (McKinsey, november 2025).</b> 88&nbsp;% organizácií používa AI aspoň v&nbsp;jednej oblasti (rok predtým 78&nbsp;%). Len 39&nbsp;% pripisuje AI akýkoľvek vplyv na EBIT, a&nbsp;väčšina z&nbsp;nich menej ako 5&nbsp;%. Takmer dve tretiny firiem ešte nezačali AI škálovať naprieč organizáciou, škáluje teda približne tretina. AI lídrov, ktorí majú z&nbsp;AI výrazný prínos k&nbsp;zisku, je okolo 6&nbsp;%.</p>
+    <p>Pointa: rozdiel medzi firmami nerobí to, či AI majú, ale to, či ju dokážu premeniť na výsledky.</p>
+  </aside>
+</section>
+
+<!-- ===================== 03 · Práca ===================== -->
+<section class="slide" data-title="AI zmení každú pozíciu">
+  <header class="top">
+    <span class="mark">Umelá inteligencia<small>.2026</small></span>
+    <ul class="nav"><li>Úvod</li><li>Technológia</li><li class="on">Práca</li><li>Pravidlá</li><li>Prvé kroky</li></ul>
+    <span class="pill sm"><span class="pg"></span></span>
+  </header>
+  <div class="head">
+    <h2 class="h2 gt" data-a="up" style="--d:0">AI zmení každú pracovnú pozíciu</h2>
+    <p class="sub" data-a="up" style="--d:2">Do roku 2030 vznikne viac miest, ako zanikne. Budú však vyžadovať iné zručnosti.</p>
+  </div>
+  <div class="row s3-top">
+    <article class="card wef" data-a="up" style="--d:3">
+      <div class="wef-l">
+        <p class="kick">Pracovné miesta 2025 – 2030 · svet</p>
+        <div class="hb"><span class="v num"><span data-count="170">170</span><small>mil.</small></span><span class="b"><span>vznikne</span><span class="track"><i style="--v:1"></i></span></span></div>
+        <div class="hb"><span class="v num"><span data-count="92">92</span><small>mil.</small></span><span class="b"><span>zanikne</span><span class="track"><i class="grey" style="--v:.5412"></i></span></span></div>
+        <div class="hb"><span class="v num">+<span data-count="78">78</span><small>mil.</small></span><span class="b"><span>čistý rast</span><span class="track"><i style="--v:.4588"></i></span></span></div>
+        <div class="txt">
+          <h3 class="ct">Čistý rast, ale s&nbsp;inými zručnosťami</h3>
+          <p class="cd">Zmena sa dotkne 22&nbsp;% dnešných pracovných miest.</p>
+        </div>
+      </div>
+      <div class="wef-r">
+        <div class="mini"><span class="v num"><span data-count="39">39</span>&nbsp;%</span><span class="t"><b>kľúčových zručností</b> sa do roku 2030 zmení</span></div>
+        <div class="mini"><span class="v num"><span data-count="40">40</span>&nbsp;%</span><span class="t"><b>miest</b> je vystavených AI, vo vyspelých krajinách 60&nbsp;%</span></div>
+        <div class="mini"><span class="v num"><span data-count="85">85</span>&nbsp;%</span><span class="t"><b>zamestnávateľov</b> stavia na preškoľovaní</span></div>
+      </div>
+    </article>
+    <article class="card nt sig" data-a="up" style="--d:5">
+      <div class="tile"><div class="tile-h"><span class="lbl"><i class="m"></i>Zamestnanosť 22&nbsp;–&nbsp;25-ročných</span><span class="dots3">···</span></div>
+        <div class="tile-v"><span class="big num">−<span data-count="16">16</span><small>%</small></span><span class="chip"><svg viewBox="0 0 12 12"><path d="M3 3l6 6M9 4.5V9H4.5"/></svg>od konca 2022</span></div></div>
+      <div class="txt">
+        <h3 class="ct">Tlak na vstupné pozície</h3>
+        <p class="cd">V&nbsp;profesiách najviac vystavených AI (USA). Starší kolegovia prácu nestrácajú.</p>
+      </div>
+    </article>
+  </div>
+  <div class="row s3-bottom">
+    <article class="card lst" data-a="up" style="--d:7">
+      <h3>Najvyššie riziko</h3>
+      <p class="lsub">Veľa rutinných, digitálnych a&nbsp;textových úloh</p>
+      <div class="items">
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><div><b>Administratíva</b><span>dáta, evidencia, korešpondencia</span></div></div>
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-headset"/></svg><div><b>Zákaznícka podpora</b><span>opakované otázky nonstop</span></div></div>
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-calc"/></svg><div><b>Účtovníctvo a&nbsp;mzdy</b><span>párovanie, zaúčtovanie, reporty</span></div></div>
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-lang"/></svg><div><b>Preklady</b><span>bežné texty zvládne stroj</span></div></div>
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-code"/></svg><div><b>Časť IT</b><span>rutinný kód a&nbsp;testovanie</span></div></div>
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-mega"/></svg><div><b>Časť marketingu</b><span>texty, vizuály, varianty kampaní</span></div></div>
+      </div>
+    </article>
+    <article class="card lst" data-a="up" style="--d:8">
+      <h3>AI skôr posilní</h3>
+      <p class="lsub">Fyzická zručnosť, empatia, zodpovednosť a&nbsp;úsudok</p>
+      <div class="items">
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-wrench"/></svg><div><b>Remeslá a&nbsp;technici</b><span>fyzická práca v&nbsp;teréne</span></div></div>
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg><div><b>Zdravotníctvo</b><span>dôvera a&nbsp;ľudský kontakt</span></div></div>
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg><div><b>Vedenie ľudí</b><span>motivácia a&nbsp;zodpovednosť</span></div></div>
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-compass"/></svg><div><b>Stratégia</b><span>úsudok, kontext a&nbsp;riziko</span></div></div>
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg><div><b>Kreatíva</b><span>originálna myšlienka a&nbsp;vkus</span></div></div>
+        <div class="it"><svg class="ico" aria-hidden="true"><use href="#i-cap"/></svg><div><b>Vzdelávanie</b><span>vzťah a&nbsp;individuálny prístup</span></div></div>
+      </div>
+    </article>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: World Economic Forum, Future of Jobs Report 2025; MMF, Gen-AI: Artificial Intelligence and the Future of Work, SDN/2024/001; Brynjolfsson, Chandar, Chen: Canaries in the Coal Mine?, Stanford Digital Economy Lab (11/2025); ILO, WP 140 (2025).</span></footer>
+  <aside class="notes">
+    <p><b>Celkový obraz (World Economic Forum, Future of Jobs Report 2025, prieskum medzi viac ako 1&nbsp;000 zamestnávateľmi v&nbsp;55 ekonomikách).</b> Do roku 2030 vznikne 170 miliónov pracovných miest a&nbsp;92 miliónov zanikne, čistý rast je 78 miliónov. Štrukturálna zmena sa dotkne 22&nbsp;% dnešných miest. 39&nbsp;% kľúčových zručností sa zmení alebo zastará. Pre 85&nbsp;% zamestnávateľov je preškoľovanie hlavnou stratégiou.</p>
+    <p><b>Medzinárodný menový fond (2024):</b> približne 40&nbsp;% pracovných miest vo svete je vystavených AI, vo vyspelých ekonomikách 60&nbsp;%. Zhruba polovici z&nbsp;nich AI pomôže, druhá polovica čelí tlaku na dopyt a&nbsp;mzdy. Dôležité: AI mení prácu po úlohách. V&nbsp;každej pozícii sa časť úloh automatizuje, časť zrýchli a&nbsp;časť zostane ľudská. Štúdia NBER (2023) s&nbsp;5&nbsp;179 pracovníkmi podpory ukázala, že s&nbsp;AI asistentom vyriešili o&nbsp;14&nbsp;% viac požiadaviek za hodinu, nováčikovia až o&nbsp;34&nbsp;%.</p>
+    <p><b>Najvyššie riziko</b> majú profesie s&nbsp;veľa rutinnými, digitálnymi a&nbsp;textovými úlohami. WEF medzi najrýchlejšie ubúdajúcimi uvádza úradníkov na zadávanie dát, administratívnych asistentov, účtovných a&nbsp;mzdových referentov či pokladníkov. ILO (2025): AI je vystavené každé štvrté pracovné miesto na svete, administratívne profesie najviac. Pravdepodobnejšia je však transformácia ako úplné nahradenie.</p>
+    <p><b>AI skôr posilní</b> profesie, kde rozhoduje fyzická zručnosť, dôvera, zodpovednosť a&nbsp;úsudok. Podľa WEF porastie najviac počet miest v&nbsp;stavebníctve, doručovaní, predaji, ošetrovateľstve a&nbsp;sociálnej starostlivosti. Bezpečnejšie však neznamená nedotknuté.</p>
+    <p><b>Signál z&nbsp;trhu práce:</b> Stanford Digital Economy Lab (november 2025, mzdové dáta z&nbsp;USA) zistil, že zamestnanosť 22 – 25-ročných v&nbsp;profesiách najviac vystavených AI klesla relatívne o&nbsp;16&nbsp;% od konca roka 2022. Starší kolegovia v&nbsp;tých istých profesiách prácu nestrácajú. Stanford AI Index 2026 dodáva, že zamestnanosť vývojárov vo veku 22 – 25 rokov klesla od roku 2024 takmer o&nbsp;20&nbsp;%. Otázka pre vedenie: ak zrušíme juniorské pozície, odkiaľ budú o&nbsp;päť rokov naši seniori?</p>
+  </aside>
+</section>
+
+<!-- ===================== 04 · Pravidlá ===================== -->
+<section class="slide" data-title="Ako pripraviť firmu na AI">
+  <header class="top">
+    <span class="mark">Umelá inteligencia<small>.2026</small></span>
+    <ul class="nav"><li>Úvod</li><li>Technológia</li><li>Práca</li><li class="on">Pravidlá</li><li>Prvé kroky</li></ul>
+    <span class="pill sm"><span class="pg"></span></span>
+  </header>
+  <div class="head">
+    <h2 class="h2 gt" data-a="up" style="--d:0">Ako pripraviť firmu na AI</h2>
+    <p class="sub" data-a="up" style="--d:2">Interné dokumenty, etika a&nbsp;kontrola, ktoré musí mať každá firma.</p>
+  </div>
+  <div class="gov">
+    <article class="card gx w7" data-a="up" style="--d:3">
+      <div class="docs">
+        <div class="doc" data-a="up" style="--d:4"><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><b>Smernica o&nbsp;AI</b><span>Povolené nástroje, dáta a&nbsp;použitia.</span></div>
+        <div class="doc" data-a="up" style="--d:5"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg><b>Register AI</b><span>Kde AI používame, vlastník a&nbsp;riziko.</span></div>
+        <div class="doc" data-a="up" style="--d:6"><svg class="ico" aria-hidden="true"><use href="#i-scale"/></svg><b>Etický kódex</b><span>Hranice, ktoré neprekročíme.</span></div>
+        <div class="doc" data-a="up" style="--d:7"><svg class="ico" aria-hidden="true"><use href="#i-cap"/></svg><b>Plán školení</b><span>AI gramotnosť podľa rolí.</span></div>
+      </div>
+      <div class="txt">
+        <h3 class="ct">Štyri dokumenty ako základ</h3>
+        <p class="cd">Oporou sú normy ISO/IEC 42001 a&nbsp;NIST AI RMF.</p>
+      </div>
+    </article>
+    <article class="card gx w5" data-a="up" style="--d:5">
+      <div class="steps chain">
+        <span class="rail"><i></i></span>
+        <div class="st"><b>Predstavenstvo</b><span>dohľad a&nbsp;zodpovednosť</span></div>
+        <div class="st"><b>Vlastník AI a&nbsp;AI výbor</b><span>schvaľujú použitia a&nbsp;riziká</span></div>
+        <div class="st"><b>Útvary a&nbsp;IT</b><span>ľudský dohľad, záznamy</span></div>
+        <div class="st"><b>Interný audit</b><span>nezávislá kontrola</span></div>
+      </div>
+      <div class="txt">
+        <h3 class="ct">Kto za AI zodpovedá</h3>
+        <p class="cd">Dohľad CEO nad AI má len 28&nbsp;% firiem, hoci patrí k&nbsp;faktorom najviac spojeným so ziskom z&nbsp;AI.</p>
+      </div>
+    </article>
+    <article class="card gx w4" data-a="up" style="--d:7">
+      <div class="tiles2">
+        <div class="tile"><div class="tile-h"><span class="lbl"><i></i>Firma má pravidlá</span></div>
+          <div class="tile-v"><span class="big num"><span data-count="40">40</span><small>%</small></span></div></div>
+        <div class="tile"><div class="tile-h"><span class="lbl"><i class="m"></i>Skrýva AI</span></div>
+          <div class="tile-v"><span class="big num"><span data-count="57">57</span><small>%</small></span></div></div>
+      </div>
+      <div class="txt">
+        <h3 class="ct">Ľudia AI používajú aj bez pravidiel</h3>
+        <p class="cd">Takmer polovica zamestnancov porušuje firemné pravidlá, napríklad vkladá citlivé dáta do verejných nástrojov.</p>
+      </div>
+    </article>
+    <article class="card gx w3" data-a="up" style="--d:8">
+      <div class="eth">
+        <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><b>Človek rozhoduje o&nbsp;ľuďoch</b></div>
+        <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><b>Férovosť bez diskriminácie</b></div>
+        <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><b>Transparentnosť</b></div>
+        <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><b>Zodpovednosť za výsledok</b></div>
+      </div>
+      <div class="txt">
+        <h3 class="ct">Etika v&nbsp;praxi</h3>
+        <p class="cd">Podľa zásad EÚ pre dôveryhodnú AI.</p>
+      </div>
+    </article>
+    <article class="card gx w5" data-a="up" style="--d:9">
+      <div class="vis">
+        <div class="tl">
+          <span class="ln"><i></i></span>
+          <span class="pt past first" style="left:0%"><span class="dt">02/25</span><span class="ds">gramotnosť, zákazy</span></span>
+          <span class="pt past" style="left:52.94%"><span class="dt">08/26</span><span class="ds">označovanie</span></span>
+          <span class="now" style="left:58.82%"><span>DNES</span></span>
+          <span class="pt last" style="left:100%"><span class="dt">12/27</span><span class="ds">vysoké riziko</span></span>
+        </div>
+      </div>
+      <div class="txt">
+        <h3 class="ct">AI Act už platí</h3>
+        <p class="cd">Od 12/2027 pri AI v&nbsp;HR: informovať zamestnancov, ľudský dohľad, záznamy aspoň 6&nbsp;mesiacov. Pokuty až <b>7&nbsp;% obratu</b>.</p>
+      </div>
+    </article>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: nariadenia (EÚ) 2024/1689 a&nbsp;2026/1744; KPMG a&nbsp;University of Melbourne, Trust, attitudes and use of AI (2025, 48&nbsp;000 ľudí, 47 krajín); McKinsey, The State of AI (03/2025); ISO/IEC 42001:2023; NIST AI RMF 1.0 (2023); EÚ, Etické usmernenia pre dôveryhodnú AI (2019).</span></footer>
+  <aside class="notes">
+    <p><b>Ako pripraviť firmu na AI.</b> Technológiu si kúpi každý. Rozdiel robí to, či má firma jasné pravidlá, etiku a&nbsp;kontrolu. Bez nich ľudia AI používajú aj tak, len bez dohľadu.</p>
+    <p><b>Štyri dokumenty ako základ.</b> 1) <b>Smernica o&nbsp;používaní AI:</b> povolené a&nbsp;zakázané použitia, schválené nástroje, ktoré dáta do AI smú ísť a&nbsp;ktoré nie, povinnosť overovať výstupy, označovanie obsahu vytvoreného AI a&nbsp;hlásenie incidentov. Patria sem aj pravidlá pre dodávateľov: či smú naše dáta použiť na tréning, kde sú dáta uložené, autorské práva a&nbsp;zodpovednosť. 2) <b>Register AI systémov:</b> zoznam všetkých AI nástrojov a&nbsp;systémov vo firme s&nbsp;účelom, vlastníkom, dodávateľom, dátami a&nbsp;rizikovou kategóriou podľa AI Act. Bez registra nevieme, čo vlastne riadime. 3) <b>Etický kódex AI:</b> hranice, ktoré firma neprekročí, aj keď by to zákon dovoľoval. 4) <b>Plán AI gramotnosti</b> podľa rolí: vedenie, manažéri, bežní používatelia, špecialisti. Oporou sú medzinárodná norma <b>ISO/IEC 42001:2023</b> (systém riadenia AI, dobrovoľne certifikovateľná) a&nbsp;americký rámec <b>NIST AI RMF 1.0</b> (2023) so štyrmi funkciami: riadiť, mapovať, merať, manažovať. Pri osobných údajoch nezabúdajte na GDPR a&nbsp;posúdenie vplyvu (DPIA).</p>
+    <p><b>Kto za AI zodpovedá.</b> Predstavenstvo nesie dohľad a&nbsp;zodpovednosť. Vlastník AI s&nbsp;AI výborom (IT, právo, compliance, HR, biznis) schvaľuje nové použitia a&nbsp;riziká. Útvary a&nbsp;IT zabezpečujú ľudský dohľad, záznamy a&nbsp;bezpečnosť. Interný audit nezávisle overuje, či sa pravidlá dodržiavajú. Podľa McKinsey (marec 2025) má dohľad CEO nad riadením AI len 28&nbsp;% firiem, a&nbsp;práve tento faktor patrí k&nbsp;tým, ktoré najviac súvisia s&nbsp;prínosom AI k&nbsp;zisku.</p>
+    <p><b>Ľudia AI používajú aj bez pravidiel.</b> Globálna štúdia KPMG a&nbsp;University of Melbourne (2025, viac ako 48&nbsp;000 ľudí v&nbsp;47 krajinách): 58&nbsp;% zamestnancov zámerne používa AI v&nbsp;práci, no len 40&nbsp;% hovorí, že ich firma má pravidlá pre generatívnu AI, a&nbsp;len 47&nbsp;% absolvovalo školenie. Takmer polovica priznáva, že AI používa v&nbsp;rozpore s&nbsp;firemnými pravidlami, napríklad vkladá citlivé firemné údaje do verejných nástrojov. 57&nbsp;% svoje používanie AI skrýva a&nbsp;prezentuje výstupy AI ako vlastné. 66&nbsp;% sa spolieha na výstupy bez overenia presnosti a&nbsp;56&nbsp;% kvôli AI urobilo chybu v&nbsp;práci.</p>
+    <p><b>Etika v&nbsp;praxi</b> vychádza z&nbsp;etických usmernení EÚ pre dôveryhodnú AI (2019): ľudský dohľad, technická spoľahlivosť, ochrana súkromia a&nbsp;dát, transparentnosť, férovosť bez diskriminácie, spoločenský prínos a&nbsp;zodpovednosť. Prakticky: o&nbsp;prijatí, prepustení či úvere nerozhoduje AI sama, ľudia vedia, kedy komunikujú s&nbsp;AI, a&nbsp;za každý výsledok je zodpovedný konkrétny človek.</p>
+    <p><b>AI Act už platí.</b> Od februára 2025 platia zákazy (napr. rozpoznávanie emócií na pracovisku) a&nbsp;povinnosť podporovať AI gramotnosť. Nariadenie 2026/1744 ju upravilo na povinnosť prijať opatrenia na podporu AI gramotnosti, bez záruky konkrétnej úrovne. Od augusta 2026 platí transparentnosť: označovanie chatbotov a&nbsp;deepfake obsahu. Od 2. decembra 2027 platia povinnosti pre vysokorizikové systémy, kam patrí aj AI pri nábore a&nbsp;hodnotení zamestnancov: používať ju podľa návodu, prideliť ľudský dohľad kompetentným ľuďom, uchovávať záznamy aspoň 6 mesiacov a&nbsp;vopred informovať zástupcov zamestnancov aj dotknutých zamestnancov. Pokuty dosahujú až 35 miliónov eur alebo 7&nbsp;% celosvetového obratu pri zakázaných praktikách, pri ostatných povinnostiach až 15 miliónov eur alebo 3&nbsp;%.</p>
+  </aside>
+</section>
+
+<!-- ===================== 05 · Prvé kroky ===================== -->
+<section class="slide s-end" data-title="Prvé kroky a záver">
+  <header class="top">
+    <span class="mark">Umelá inteligencia<small>.2026</small></span>
+    <ul class="nav"><li>Úvod</li><li>Technológia</li><li>Práca</li><li>Pravidlá</li><li class="on">Prvé kroky</li></ul>
+    <span class="pill sm"><span class="pg"></span></span>
+  </header>
+  <div class="cta" data-a="scale" style="--d:0">
+    <canvas class="silk" data-silk="cta" aria-hidden="true"></canvas>
+    <div class="silk-fallback" hidden></div>
+    <div class="veil"></div>
+    <div class="cta-in">
+      <h2 class="h2 gt" data-a="up" style="--d:2">AI nenahradí ľudí.<span class="sm">Ľudia a&nbsp;firmy, ktoré s&nbsp;AI pracujú, nahradia tých, ktorí nie.</span></h2>
+      <span class="pill shine" data-a="up" style="--d:5">Začnime ešte tento štvrťrok</span>
+    </div>
+  </div>
+  <div class="row s5-bottom">
+    <article class="card col" data-a="up" style="--d:6">
+      <h3>Každý zamestnanec</h3>
+      <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><div><b>Píše presné zadania</b><span>Rola, kontext, úloha a&nbsp;formát.</span></div></div>
+      <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><div><b>Overuje výstupy</b><span>Slepá dôvera: o&nbsp;19 p.&nbsp;b. menej správnych riešení.</span></div></div>
+      <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><div><b>Chráni citlivé dáta</b><span>Len vo firemne schválených nástrojoch.</span></div></div>
+      <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><div><b>Pozná limity AI</b><span>Vymyslené fakty, neaktuálnosť, skreslenia.</span></div></div>
+    </article>
+    <article class="card col" data-a="up" style="--d:7">
+      <h3>Každá firma</h3>
+      <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><div><b>Vzdeláva ľudí</b><span>AI Act vyžaduje podporu AI gramotnosti.</span></div></div>
+      <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><div><b>Prepracuje procesy</b><span>AI lídri to robia 2,8-krát častejšie.</span></div></div>
+      <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><div><b>Stráži dáta a&nbsp;bezpečnosť</b><span>Schválené nástroje namiesto tieňovej AI.</span></div></div>
+      <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><div><b>Má AI stratégiu</b><span>Vlastník vo vedení a&nbsp;merateľné ciele.</span></div></div>
+    </article>
+    <article class="card col" data-a="up" style="--d:8">
+      <h3>Prvých 90 dní</h3>
+      <div class="steps">
+        <span class="rail"><i></i></span>
+        <div class="st"><span class="w">0 – 30 dní</span><b>Pravidlá a&nbsp;nástroje</b><span>AI politika, schválené nástroje, inventúra.</span></div>
+        <div class="st"><span class="w">30 – 60 dní</span><b>Ľudia a&nbsp;piloty</b><span>Školenie pre všetkých, 3&nbsp;–&nbsp;5 pilotov.</span></div>
+        <div class="st"><span class="w">60 – 90 dní</span><b>Merať a&nbsp;škálovať</b><span>Rozšíriť úspešné, určiť vlastníka AI.</span></div>
+      </div>
+    </article>
+  </div>
+  <footer class="foot"><span class="src">Zdroje: Dell’Acqua a&nbsp;kol., Harvard Business School WP 24-013 (2023); McKinsey, The State of AI in 2025 (11/2025); nariadenie (EÚ) 2024/1689, čl. 4.</span><span class="end">Ďakujem za pozornosť · Otázky</span></footer>
+  <aside class="notes">
+    <p>Na záver jedna veta: <b>AI nenahradí ľudí. Ľudia a&nbsp;firmy, ktoré s&nbsp;AI pracujú, nahradia tých, ktorí nie.</b> Myšlienka nadväzuje na známy výrok profesora Karima Lakhaniho z&nbsp;Harvard Business School (2023).</p>
+    <p><b>Každý zamestnanec</b> potrebuje štyri základy. 1) <b>Presné zadania:</b> rola (kým má AI byť), kontext (situácia, publikum), úloha (čo presne chcem) a&nbsp;formát (dĺžka, štruktúra, tón). 2) <b>Overovanie:</b> terénny experiment Harvard Business School a&nbsp;BCG so 758 konzultantmi (2023) ukázal, že pri úlohách, ktoré AI zvláda, boli konzultanti s&nbsp;AI o&nbsp;25&nbsp;% rýchlejší a&nbsp;o&nbsp;viac ako 40&nbsp;% kvalitnejší. Pri úlohe mimo možností AI však mali o&nbsp;19 percentuálnych bodov menej správnych riešení, pretože jej slepo verili. 3) <b>Ochrana dát:</b> osobné údaje, zmluvy a&nbsp;interné čísla patria len do firemne schválených nástrojov. 4) <b>Limity:</b> AI si vie vymyslieť fakty aj zdroje, nemusí mať aktuálne informácie a&nbsp;znie sebaisto aj vtedy, keď sa mýli.</p>
+    <p><b>Každá firma.</b> Vzdelávanie: AI Act od februára 2025 vyžaduje opatrenia na podporu AI gramotnosti ľudí, ktorí s&nbsp;AI pracujú. Procesy: podľa McKinsey (november 2025) AI lídri 2,8-krát častejšie zásadne prepracovali svoje procesy (55&nbsp;% oproti 20&nbsp;%). Dáta a&nbsp;bezpečnosť: tieňová AI vzniká tam, kde ľudia nemajú schválené nástroje. Stratégia: jeden vlastník vo vedení, portfólio prípadov použitia a&nbsp;merateľné ciele.</p>
+    <p><b>Prvých 90 dní.</b> 0 – 30 dní: jednoduchá AI politika, schválené nástroje a&nbsp;inventúra, kde už ľudia AI používajú. 30 – 60 dní: AI gramotnosť pre všetkých a&nbsp;3 – 5 pilotov s&nbsp;merateľným cieľom. 60 – 90 dní: vyhodnotiť piloty podľa čísel, úspešné rozšíriť a&nbsp;určiť vlastníka AI agendy vo vedení.</p>
+    <p>Ďakujem za pozornosť. Rád odpoviem na vaše otázky.</p>
+  </aside>
+</section>
+
+</div>
+</div>
+
+<div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+
+<nav class="ctrl" id="ctrl" aria-label="Ovládanie prezentácie">
+  <button type="button" data-act="prev" aria-label="Predchádzajúci slide" title="Predchádzajúci (←)"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <span class="count" id="count">01 / 05</span>
+  <button type="button" data-act="next" aria-label="Ďalší slide" title="Ďalší (→)"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <span class="sep"></span>
+  <button type="button" data-act="notes" aria-label="Poznámky pre rečníka" aria-pressed="false" title="Poznámky (N)"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8.5 9h7M8.5 12.5h7M8.5 16h4"/></svg></button>
+  <button type="button" data-act="presenter" aria-label="Režim rečníka" aria-pressed="false" title="Režim rečníka (P)"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="12" height="9" rx="1.5"/><path d="M17.5 4h4v9h-4M2.5 17h19M2.5 20.5h12"/></svg></button>
+  <button type="button" data-act="overview" aria-label="Prehľad slidov" title="Prehľad (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3.5" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="3.5" width="7.5" height="7.5" rx="1.2"/><rect x="3" y="13" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="13" width="7.5" height="7.5" rx="1.2"/></svg></button>
+  <button type="button" data-act="full" aria-label="Celá obrazovka" title="Celá obrazovka (F)"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button type="button" data-act="help" aria-label="Klávesové skratky" title="Pomoc (?)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6"/><path d="M12 17.2v.3"/></svg></button>
+</nav>
+
+<div class="np" id="np" role="region" aria-label="Poznámky pre rečníka" hidden>
+  <div class="np-h"><span class="np-t" id="npTitle">Poznámky</span><button type="button" class="btn" id="npClose">Zavrieť</button></div>
+  <div class="np-b" id="npBody"></div>
+</div>
+
+<div class="pv" id="pv" hidden>
+  <div class="pv-top">
+    <span class="pv-time" id="pvTime">00:00</span>
+    <span class="pv-meta"><span id="pvCount">01 / 05</span><span id="pvClock">--:--</span></span>
+  </div>
+  <p class="pv-l">Nasleduje</p>
+  <div class="pv-next" id="pvNext"></div>
+  <p class="pv-nt" id="pvNextTitle"></p>
+  <div class="pv-btns">
+    <button type="button" class="btn" data-act="prev">← Späť</button>
+    <button type="button" class="btn primary" data-act="next">Ďalej →</button>
+    <button type="button" class="btn" id="pvReset">Vynulovať čas</button>
+    <button type="button" class="btn" id="pvAudience">Okno pre publikum</button>
+    <button type="button" class="btn" data-act="presenter">Zavrieť režim</button>
+  </div>
+  <p class="pv-msg" id="pvMsg">Okno pre publikum presuňte na projektor. Obe okná sa prepínajú spolu.</p>
+</div>
+<div class="pv-notes" id="pvNotes" hidden></div>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-label="Prehľad slidov" hidden>
+  <div class="ov-in">
+    <div class="ov-h"><p>Prehľad slidov</p><button type="button" class="btn" id="ovClose">Zavrieť</button></div>
+    <div class="ov-grid" id="ovGrid"></div>
+  </div>
+</div>
+
+<div class="help" id="help" role="dialog" aria-modal="true" aria-label="Ovládanie prezentácie" hidden>
+  <div class="help-card">
+    <h2>Ovládanie</h2>
+    <dl>
+      <dt><kbd>→</kbd> <kbd>Medzerník</kbd> <kbd>PgDn</kbd></dt><dd>Ďalší slide (aj klik do slidu)</dd>
+      <dt><kbd>←</kbd> <kbd>PgUp</kbd></dt><dd>Predchádzajúci slide</dd>
+      <dt><kbd>N</kbd></dt><dd>Poznámky pre rečníka</dd>
+      <dt><kbd>P</kbd></dt><dd>Režim rečníka: aktuálny a&nbsp;nasledujúci slide, poznámky, čas</dd>
+      <dt><kbd>O</kbd></dt><dd>Prehľad všetkých slidov</dd>
+      <dt><kbd>F</kbd></dt><dd>Celá obrazovka</dd>
+      <dt><kbd>B</kbd></dt><dd>Stmaviť obrazovku</dd>
+      <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>Prvý a&nbsp;posledný slide</dd>
+    </dl>
+    <p>Dve obrazovky: v&nbsp;režime rečníka otvorte okno pre publikum a&nbsp;presuňte ho na projektor. Ak sa okno neotvorí, otvorte prezentáciu v&nbsp;druhom okne prehliadača. Okná sa prepínajú spolu.</p>
+    <button type="button" class="btn primary" id="helpClose">Rozumiem</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><kbd>→</kbd> ďalší slide · <kbd>N</kbd> poznámky · <kbd>P</kbd> režim rečníka · <kbd>F</kbd> celá obrazovka · <kbd>?</kbd> pomoc</div>
+<div class="black" id="black" hidden></div>
+
+<script>
+(function(){
+'use strict';
+var root = document.documentElement;
+root.lang = 'sk';
+root.classList.add('js');
+
+var vp = document.getElementById('viewport');
+var stage = document.getElementById('stage');
+var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
+var N = slides.length;
+var cur = -1, scale = 1, coarse = false;
+var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches:false };
+var $ = function(id){ return document.getElementById(id); };
+var pad = function(n){ return (n < 10 ? '0' : '') + n; };
+
+try { coarse = window.matchMedia('(pointer: coarse)').matches; } catch(e){}
+if (coarse) document.body.classList.add('coarse');
+
+slides.forEach(function(s, i){
+  s.querySelectorAll('.pg').forEach(function(pg){ pg.textContent = pad(i + 1) + ' / ' + pad(N); });
+});
+
+/* ---------- numbers ---------- */
+function fmt(v, dec){
+  try { return v.toLocaleString('sk-SK', { minimumFractionDigits: dec, maximumFractionDigits: dec }); }
+  catch(e){ return v.toFixed(dec).replace('.', ','); }
+}
+function delayOf(el){
+  var host = el.closest('[data-a]');
+  if (!host) return 0;
+  var d = parseFloat(getComputedStyle(host).getPropertyValue('--d')) || 0;
+  return d * 110 + 200;
+}
+function runCounters(slide){
+  slide.querySelectorAll('[data-count]').forEach(function(el){
+    var to = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0);
+    cancelAnimationFrame(el._raf);
+    if (reduce.matches){ el.textContent = fmt(to, dec); return; }
+    el.textContent = fmt(0, dec);
+    var t0 = performance.now() + delayOf(el) + 300, dur = 2000;
+    var step = function(now){
+      var p = Math.min(1, Math.max(0, (now - t0) / dur));
+      var e = 1 - Math.pow(1 - p, 4);
+      el.textContent = fmt(to * e, dec);
+      if (p < 1) el._raf = requestAnimationFrame(step);
+    };
+    el._raf = requestAnimationFrame(step);
+  });
+}
+function finishCounters(scope){
+  scope.querySelectorAll('[data-count]').forEach(function(el){
+    cancelAnimationFrame(el._raf);
+    el.textContent = fmt(parseFloat(el.dataset.count), +(el.dataset.dec || 0));
+  });
+}
+
+/* ---------- silk (WebGL) ---------- */
+var VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+var FS = [
+  'precision mediump float;',
+  'uniform vec2 R;uniform float T;uniform float S;uniform float M;',
+  'void main(){',
+  '  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;',
+  '  vec2 p=uv*2.1+vec2(S,S*.7);',
+  '  float t=T*.055;',
+  '  for(int i=1;i<7;i++){',
+  '    float f=float(i);',
+  '    p.x+=.62/f*sin(f*1.1*p.y+t*1.4+.8*f+S);',
+  '    p.y+=.48/f*cos(f*.85*p.x+t+1.3*f);',
+  '  }',
+  '  float s=.5+.5*sin(p.x*1.15+p.y*.55+t);',
+  '  float sheen=pow(s,11.);',
+  '  float body=pow(s,3.)*.15;',
+  '  float v=(sheen*.8+body);',
+  '  float r=length(uv*vec2(.85,1.15));',
+  '  v*=smoothstep(1.4,.3,r);',
+  '  float m=smoothstep(.35,.95,.5+.5*sin(p.y*.8-p.x*.35+t*.6+S))*M;',
+  '  vec3 col=mix(vec3(v)*.94,vec3(1.,0.,.52)*v*1.35,m);',
+  '  gl_FragColor=vec4(col,1.);',
+  '}'
+].join('\n');
+function Silk(cv, seed, tint){
+  var gl = null;
+  try { gl = cv.getContext('webgl', { antialias: false, premultipliedAlpha: false }) || cv.getContext('experimental-webgl'); } catch(e){}
+  if (!gl) return null;
+  function sh(type, src){ var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; }
+  var vs = sh(gl.VERTEX_SHADER, VS), fs = sh(gl.FRAGMENT_SHADER, FS);
+  if (!vs || !fs) return null;
+  var pr = gl.createProgram(); gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return null;
+  gl.useProgram(pr);
+  var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  var uR = gl.getUniformLocation(pr, 'R'), uT = gl.getUniformLocation(pr, 'T'), uS = gl.getUniformLocation(pr, 'S'), uM = gl.getUniformLocation(pr, 'M');
+  gl.uniform1f(uS, seed); gl.uniform1f(uM, tint);
+  var raf = 0, on = false, t0 = performance.now() - seed * 20000;
+  function size(){
+    var k = Math.min(1.5, window.devicePixelRatio || 1) * scale * .55;
+    cv.width = Math.max(2, Math.round(cv.offsetWidth * k));
+    cv.height = Math.max(2, Math.round(cv.offsetHeight * k));
+    gl.viewport(0, 0, cv.width, cv.height);
+    draw(performance.now());
+  }
+  function draw(now){
+    gl.uniform2f(uR, cv.width, cv.height);
+    gl.uniform1f(uT, (now - t0) / 1000);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }
+  function loop(now){ draw(now); if (on) raf = requestAnimationFrame(loop); }
+  return {
+    resize: size,
+    start: function(){ if (on) return; if (reduce.matches){ draw(performance.now()); return; } on = true; raf = requestAnimationFrame(loop); },
+    stop: function(){ on = false; cancelAnimationFrame(raf); },
+    frame: function(){ draw(performance.now()); }
+  };
+}
+var silks = [];
+slides.forEach(function(s){
+  s._silks = [];
+  s.querySelectorAll('canvas.silk').forEach(function(cv){
+    var kind = cv.getAttribute('data-silk');
+    var sk = Silk(cv, kind === 'hero' ? 0.0 : 3.7, kind === 'hero' ? .45 : .6);
+    if (sk){ s._silks.push(sk); silks.push(sk); }
+    else { cv.hidden = true; var fb = cv.parentNode.querySelector('.silk-fallback'); if (fb) fb.hidden = false; }
+  });
+});
+
+/* ---------- layout ---------- */
+function fit(){
+  var w = vp.clientWidth, h = vp.clientHeight;
+  scale = Math.min(w / 1920, h / 1080);
+  var x = (w - 1920 * scale) / 2, y = (h - 1080 * scale) / 2;
+  stage.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + scale + ')';
+  silks.forEach(function(g){ g.resize(); });
+  fitMinis();
+}
+function fitMinis(){
+  document.querySelectorAll('.minic').forEach(function(m){
+    var box = m.parentNode;
+    if (box && box.clientWidth) m.style.transform = 'scale(' + (box.clientWidth / 1920) + ')';
+  });
+}
+function staticClone(i){
+  var c = slides[i].cloneNode(true);
+  c.classList.remove('is-active', 'is-built');
+  c.classList.add('is-static');
+  var notes = c.querySelector('.notes'); if (notes) notes.remove();
+  finishCounters(c);
+  var m = document.createElement('div'); m.className = 'minic'; m.appendChild(c);
+  return m;
+}
+
+/* ---------- navigation ---------- */
+var bc = null, silentMsg = false, presenterHash = false;
+try { bc = new BroadcastChannel('ai-prezentacia-5-2026'); } catch(e){}
+if (bc) bc.onmessage = function(e){
+  if (e.data && typeof e.data.i === 'number' && e.data.i !== cur){ silentMsg = true; go(e.data.i); silentMsg = false; }
+};
+
+function go(i){
+  i = Math.max(0, Math.min(N - 1, i));
+  if (i === cur) return;
+  var prev = slides[cur], next = slides[i];
+  if (prev){
+    prev.classList.remove('is-active');
+    clearTimeout(prev._reset);
+    prev._reset = setTimeout(function(){
+      if (!prev.classList.contains('is-active')){ prev.classList.remove('is-built'); prev._silks.forEach(function(g){ g.stop(); }); }
+    }, 1000);
+  }
+  clearTimeout(next._reset);
+  next.classList.remove('is-built');
+  void next.offsetWidth;
+  next.classList.add('is-active');
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    if (!next.classList.contains('is-active')) return;
+    next.classList.add('is-built');
+    runCounters(next);
+  }); });
+  next._silks.forEach(function(g){ g.start(); });
+  cur = i;
+  updateChrome();
+  if (bc && !silentMsg) { try { bc.postMessage({ i: cur }); } catch(e){} }
+  if (!presenterHash) { try { history.replaceState(null, '', '#' + (cur + 1)); } catch(e){} }
+}
+function next(){ go(cur + 1); }
+function prev(){ go(cur - 1); }
+
+function updateChrome(){
+  $('progBar').style.setProperty('--p', N > 1 ? cur / (N - 1) : 1);
+  $('count').textContent = pad(cur + 1) + ' / ' + pad(N);
+  var notes = slides[cur].querySelector('.notes');
+  $('npTitle').textContent = pad(cur + 1) + ' · ' + (slides[cur].getAttribute('data-title') || '');
+  $('npBody').innerHTML = notes ? notes.innerHTML : '';
+  if (document.body.classList.contains('presenting')) updatePresenter();
+}
+
+function toggleNotes(force){
+  var np = $('np'), show = typeof force === 'boolean' ? force : np.hidden;
+  np.hidden = !show;
+  document.querySelector('[data-act="notes"]').setAttribute('aria-pressed', String(show));
+}
+
+/* ---------- presenter ---------- */
+var pvStart = 0, pvTimer = 0;
+function updatePresenter(){
+  var notes = slides[cur].querySelector('.notes');
+  $('pvNotes').innerHTML = '<h2>' + pad(cur + 1) + ' · ' + (slides[cur].getAttribute('data-title') || '') + '</h2>' + (notes ? notes.innerHTML : '');
+  $('pvNotes').scrollTop = 0;
+  $('pvCount').textContent = pad(cur + 1) + ' / ' + pad(N);
+  var box = $('pvNext'); box.innerHTML = '';
+  if (cur + 1 < N){
+    box.appendChild(staticClone(cur + 1));
+    $('pvNextTitle').textContent = pad(cur + 2) + ' · ' + (slides[cur + 1].getAttribute('data-title') || '');
+  } else {
+    var e = document.createElement('div'); e.className = 'end-note'; e.textContent = 'Koniec prezentácie'; box.appendChild(e);
+    $('pvNextTitle').textContent = '';
+  }
+  fitMinis();
+}
+function tickClock(){
+  var s = Math.floor((Date.now() - pvStart) / 1000);
+  $('pvTime').textContent = pad(Math.floor(s / 60)) + ':' + pad(s % 60);
+  var d = new Date();
+  $('pvClock').textContent = pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+function togglePresenter(force){
+  var on = typeof force === 'boolean' ? force : !document.body.classList.contains('presenting');
+  document.body.classList.toggle('presenting', on);
+  $('pv').hidden = !on; $('pvNotes').hidden = !on;
+  document.querySelector('.ctrl [data-act="presenter"]').setAttribute('aria-pressed', String(on));
+  if (on){
+    toggleNotes(false);
+    pvStart = Date.now(); tickClock();
+    clearInterval(pvTimer); pvTimer = setInterval(tickClock, 1000);
+    updatePresenter();
+  } else {
+    clearInterval(pvTimer);
+    $('pvNext').innerHTML = '';
+  }
+  fit();
+}
+$('pvReset').addEventListener('click', function(){ pvStart = Date.now(); tickClock(); });
+$('pvAudience').addEventListener('click', function(){
+  var w = null;
+  try { w = window.open(location.href.split('#')[0] + '#' + (cur + 1), 'ai-prezentacia-5-publikum', 'width=1280,height=720'); } catch(e){}
+  $('pvMsg').textContent = w ? 'Okno pre publikum je otvorené. Presuňte ho na projektor a stlačte F.' :
+    'Nové okno sa nepodarilo otvoriť. Otvorte prezentáciu v druhom okne prehliadača a presuňte ho na projektor. Okná sa prepínajú spolu.';
+});
+
+/* ---------- overview ---------- */
+function toggleOverview(force){
+  var ov = $('ov'), show = typeof force === 'boolean' ? force : ov.hidden;
+  if (show){
+    var grid = $('ovGrid');
+    if (!grid.childNodes.length){
+      slides.forEach(function(s, i){
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'ov-item';
+        var th = document.createElement('div'); th.className = 'ov-thumb';
+        th.appendChild(staticClone(i));
+        var cap = document.createElement('span'); cap.className = 'ov-cap';
+        cap.innerHTML = '<b>' + pad(i + 1) + '</b>';
+        cap.appendChild(document.createTextNode(s.getAttribute('data-title') || ''));
+        b.appendChild(th); b.appendChild(cap);
+        b.addEventListener('click', function(){ toggleOverview(false); go(i); });
+        grid.appendChild(b);
+      });
+    }
+    Array.prototype.forEach.call(grid.children, function(b, i){ b.classList.toggle('cur', i === cur); });
+    ov.hidden = false;
+    fitMinis();
+    var c = grid.children[cur]; if (c) c.focus();
+  } else {
+    ov.hidden = true;
+  }
+}
+$('ovClose').addEventListener('click', function(){ toggleOverview(false); });
+
+function toggleHelp(force){
+  var h = $('help'), show = typeof force === 'boolean' ? force : h.hidden;
+  h.hidden = !show;
+  if (show) $('helpClose').focus();
+}
+$('helpClose').addEventListener('click', function(){ toggleHelp(false); });
+$('npClose').addEventListener('click', function(){ toggleNotes(false); });
+function toggleBlack(){ $('black').hidden = !$('black').hidden; }
+$('black').addEventListener('click', toggleBlack);
+function toggleFull(){
+  try {
+    if (document.fullscreenElement || document.webkitFullscreenElement){
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      var el = document.documentElement, rq = el.requestFullscreen || el.webkitRequestFullscreen;
+      if (rq){ var p = rq.call(el); if (p && p.catch) p.catch(function(){}); }
+    }
+  } catch(e){}
+}
+
+var actions = {
+  prev: prev, next: next,
+  notes: function(){ toggleNotes(); },
+  presenter: function(){ togglePresenter(); },
+  overview: function(){ toggleOverview(); },
+  full: toggleFull,
+  help: function(){ toggleHelp(); }
+};
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-act]');
+  if (b && actions[b.getAttribute('data-act')]) actions[b.getAttribute('data-act')]();
+});
+vp.addEventListener('click', function(e){
+  if (coarse || e.target.closest('button, a')) return;
+  var r = vp.getBoundingClientRect();
+  if (e.clientX - r.left < r.width * .28) prev(); else next();
+});
+var tx = 0, ty = 0;
+vp.addEventListener('touchstart', function(e){ var t = e.changedTouches[0]; tx = t.clientX; ty = t.clientY; }, { passive: true });
+vp.addEventListener('touchend', function(e){
+  var t = e.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty;
+  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) next(); else prev(); }
+}, { passive: true });
+
+var ctrl = $('ctrl'), idle = 0;
+function showCtrl(){ ctrl.classList.add('show'); clearTimeout(idle); idle = setTimeout(function(){ ctrl.classList.remove('show'); }, 2600); }
+document.addEventListener('mousemove', showCtrl, { passive: true });
+
+document.addEventListener('keydown', function(e){
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  var k = e.key;
+  if (!$('help').hidden){ if (k === 'Escape' || k === '?' || k === 'Enter') { e.preventDefault(); toggleHelp(false); } return; }
+  if (!$('ov').hidden){ if (k === 'Escape' || k === 'o' || k === 'O'){ e.preventDefault(); toggleOverview(false); } return; }
+  if (e.target.closest && e.target.closest('button') && (k === ' ' || k === 'Enter')) return;
+  switch (k){
+    case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter': e.preventDefault(); next(); break;
+    case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': e.preventDefault(); prev(); break;
+    case 'Home': e.preventDefault(); go(0); break;
+    case 'End': e.preventDefault(); go(N - 1); break;
+    case 'n': case 'N': toggleNotes(); break;
+    case 'p': case 'P': togglePresenter(); break;
+    case 'o': case 'O': toggleOverview(); break;
+    case 'f': case 'F': toggleFull(); break;
+    case 'b': case 'B': case '.': toggleBlack(); break;
+    case '?': case 'h': case 'H': toggleHelp(); break;
+    case 'Escape':
+      if (!$('black').hidden) toggleBlack();
+      else if (!$('np').hidden) toggleNotes(false);
+      break;
+  }
+  wake();
+});
+
+var lock = null;
+function wake(){
+  if (lock || !navigator.wakeLock) return;
+  navigator.wakeLock.request('screen').then(function(l){ lock = l; l.addEventListener('release', function(){ lock = null; }); }).catch(function(){});
+}
+document.addEventListener('click', wake);
+document.addEventListener('visibilitychange', function(){
+  var s = slides[cur]; if (!s) return;
+  s._silks.forEach(function(g){ if (document.hidden) g.stop(); else g.start(); });
+});
+
+window.addEventListener('resize', fit);
+document.addEventListener('fullscreenchange', fit);
+window.addEventListener('hashchange', function(){
+  var m = /^#(\d+)$/.exec(location.hash || '');
+  if (m) go(parseInt(m[1], 10) - 1);
+});
+window.addEventListener('beforeprint', function(){
+  finishCounters(document);
+  silks.forEach(function(g){ g.frame(); });
+});
+
+var h = (location.hash || '').replace('#', '');
+var start = 0;
+if (h === 'presenter') presenterHash = true;
+else if (/^\d+$/.test(h)) start = Math.max(0, Math.min(N - 1, parseInt(h, 10) - 1));
+fit();
+go(start);
+if (presenterHash) togglePresenter(true);
+var toast = $('toast');
+if (start === 0 && !presenterHash){
+  setTimeout(function(){ toast.classList.add('show'); }, 2600);
+  setTimeout(function(){ toast.classList.remove('show'); }, 8000);
+}
+})();
+</script>
+</body>
+</html>
