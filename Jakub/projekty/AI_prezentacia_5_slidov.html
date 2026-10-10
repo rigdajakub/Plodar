@@ -188,15 +188,35 @@ button{font:inherit;color:inherit}
 .it b{display:block;font:600 20px/1.25 var(--f-sans);letter-spacing:-.02em;color:var(--fg)}
 .it span{display:block;font:400 17px/1.35 var(--f-sans);color:var(--fg-2)}
 
-/* ============ 04 World (bento) ============ */
-.bento{position:absolute;left:160px;right:160px;top:318px;height:636px;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:1fr 1fr;gap:24px}
-.bx{display:flex;flex-direction:column;padding:26px 30px 26px}
-.bx.w6{grid-column:span 6}
-.bx.w3{grid-column:span 3}
-.vis{position:relative;height:138px;flex:none}
-.bx .txt{margin-top:auto;display:flex;flex-direction:column;gap:6px}
-.bx .ct{font-size:27px}
-.bx .cd{font-size:19px}
+/* ============ 04 Governance ============ */
+.gov{position:absolute;left:160px;right:160px;top:312px;height:642px;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:1fr 1fr;gap:24px}
+.gx{display:flex;flex-direction:column;padding:26px 30px 24px}
+.gx.w7{grid-column:span 7}
+.gx.w5{grid-column:span 5}
+.gx.w4{grid-column:span 4}
+.gx.w3{grid-column:span 3}
+.gx .txt{margin-top:auto;display:flex;flex-direction:column;gap:6px}
+.gx .ct{font-size:27px}
+.gx .cd{font-size:19px}
+.vis{position:relative;height:126px;flex:none}
+.docs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.doc{position:relative;display:flex;flex-direction:column;gap:8px;padding:18px 18px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.025));clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,0 100%)}
+.doc::after{content:"";position:absolute;right:0;top:0;width:22px;height:22px;background:linear-gradient(225deg,transparent 50%,rgba(255,255,255,.2) 50%)}
+.doc .ico{width:34px;height:34px;margin-bottom:4px}
+.doc b{font:600 20px/1.25 var(--f-sans);letter-spacing:-.02em;color:var(--fg);white-space:nowrap}
+.doc span{font:400 16px/1.4 var(--f-sans);color:var(--fg-2)}
+.chain .st{padding:0 0 12px}
+.chain .st::before{top:4px}
+.chain .st b{display:inline;margin:0;font-size:20px}
+.chain .st span{display:inline;margin-left:10px;font-size:17px}
+.tiles2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tiles2 .tile{padding:16px 20px 18px}
+.tiles2 .big{font-size:42px}
+.eth .ck{grid-template-columns:24px 1fr;gap:12px;padding:8px 0}
+.eth .ck:first-child{border-top:0;padding-top:0}
+.eth .ck svg{width:22px;height:22px}
+.eth .ck b{font-size:19px}
 /* timeline */
 .tl{position:absolute;left:8px;right:8px;top:0;bottom:0}
 .tl .ln{position:absolute;left:0;right:0;top:74px;height:2px;background:rgba(255,255,255,.12)}
@@ -216,34 +236,6 @@ button{font:inherit;color:inherit}
 .tl .now span{position:absolute;top:0;left:0;transform:translateX(-50%);font:700 13px/1 var(--f-ui);letter-spacing:.16em;color:var(--mag-hi)}
 .slide.is-built .tl .now::before{animation:nowPulse 2.8s ease-in-out 2s infinite}
 @keyframes nowPulse{0%,100%{opacity:.6}50%{opacity:1}}
-/* vertical bars */
-.vb{position:absolute;left:0;right:0;top:6px;bottom:0;display:flex;align-items:flex-end;gap:26px;padding:0 6px}
-.vb .c{position:relative;flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
-.vb .c i{display:block;width:100%;height:calc(var(--v) * (100% - 52px));min-height:3px;border-radius:8px 8px 2px 2px;transform-origin:50% 100%;
-  background:linear-gradient(180deg,var(--mag-hi),rgba(226,0,116,.3));box-shadow:0 0 18px rgba(226,0,116,.25)}
-.vb .c i.grey{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.12));box-shadow:none}
-.vb .c .v{margin-bottom:8px;font:600 19px/1 var(--f-ui);color:var(--fg);white-space:nowrap}
-.vb .c .l{position:absolute;bottom:-24px;font:400 15px/1 var(--f-ui);color:var(--fg-2);white-space:nowrap}
-.vb.lab{bottom:24px}
-.js .slide .vb .c i{transform:scaleY(0)}
-.js .slide.is-built .vb .c i{transform:scaleY(1);transition:transform 1.6s var(--ease-out) calc(var(--d,0) * 110ms + 700ms)}
-.js .slide.is-static .vb .c i{transform:none;transition:none}
-/* unit chart */
-.dots{position:absolute;left:0;top:4px;display:block}
-.js .slide .dots{clip-path:inset(0 100% 0 0)}
-.js .slide.is-built .dots{clip-path:inset(0 0 0 0);transition:clip-path 2.6s var(--ease) .9s}
-.js .slide.is-static .dots{clip-path:none;transition:none}
-.dots-cap{position:absolute;right:0;top:0;font:400 15px/1.3 var(--f-ui);color:var(--fg-3);text-align:right}
-/* waveform */
-.wave{position:absolute;left:0;right:0;top:40px;bottom:0;display:flex;align-items:center;gap:5px}
-.wave i{flex:1;height:calc(var(--h) * 1%);min-height:4px;border-radius:4px;background:linear-gradient(180deg,var(--mag-hi),rgba(226,0,116,.35))}
-.slide.is-built .wave i{animation:wv 1.9s ease-in-out calc(var(--k) * -0.11s) infinite alternate}
-@keyframes wv{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
-.wave .fake{position:absolute;right:0;top:-40px;padding:6px 10px;border-radius:6px;border:1px solid rgba(255,77,166,.5);background:rgba(0,0,0,.6);font:600 13px/1 var(--f-ui);letter-spacing:.14em;color:var(--mag-lite)}
-/* stat in bento */
-.bstat{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center}
-.bstat .tile{padding:18px 22px}
-
 /* ============ 05 Next steps ============ */
 .cta{position:absolute;left:160px;right:160px;top:118px;height:372px;border-radius:40px;overflow:hidden;background:#0A0A0A;border:1px solid rgba(255,255,255,.06)}
 .cta .veil{background:radial-gradient(60% 70% at 50% 50%,rgba(0,0,0,.62),rgba(0,0,0,.2) 75%,rgba(0,0,0,0) 100%)}
@@ -344,10 +336,9 @@ body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
   .slide,.slide *,.slide *::before,.slide *::after{transition:none!important;animation:none!important}
   .js .slide [data-a]{opacity:1;filter:none;transform:none}
   .js .slide .track i{transform:scaleX(var(--v))}
-  .js .slide .fb i,.js .slide .vb .c i,.js .slide .steps .rail i{transform:none}
+  .js .slide .fb i,.js .slide .steps .rail i{transform:none}
   .js .slide .fb .fv{opacity:1}
   .js .slide .tl .ln i{transform:none}
-  .js .slide .dots{clip-path:none}
 }
 @media print{
   @page{size:1920px 1080px;margin:0}
@@ -357,9 +348,8 @@ body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
   .slide{position:relative;width:1920px;height:1080px;opacity:1!important;visibility:visible!important;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .slide [data-a]{opacity:1!important;filter:none!important;transform:none!important;transition:none!important}
   .slide .track i{transform:scaleX(var(--v))!important}
-  .slide .fb i,.slide .vb .c i,.slide .steps .rail i,.slide .tl .ln i{transform:none!important}
+  .slide .fb i,.slide .steps .rail i,.slide .tl .ln i{transform:none!important}
   .slide .fb .fv{opacity:1!important}
-  .slide .dots{clip-path:none!important}
   .prog,.ctrl,.np,.toast,.help,.ov,.pv,.pv-notes,.black{display:none!important}
 }
 </style>
@@ -370,9 +360,6 @@ body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
   <defs>
     <linearGradient id="gm" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#FF9ACD"/><stop offset=".5" stop-color="#FF4DA6"/><stop offset="1" stop-color="#E20074"/>
-    </linearGradient>
-    <linearGradient id="gdots" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#E20074"/><stop offset="1" stop-color="#FF8CC6"/>
     </linearGradient>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="M11 3.5c.6 4 2.6 6 6.5 6.5-3.9.6-5.9 2.6-6.5 6.5-.6-3.9-2.6-5.9-6.5-6.5 3.9-.5 5.9-2.5 6.5-6.5z"/><path d="M18.5 15c.3 1.7 1.1 2.5 2.7 2.7-1.6.3-2.4 1.1-2.7 2.8-.3-1.7-1.1-2.5-2.7-2.8 1.6-.2 2.4-1 2.7-2.7z"/></symbol>
     <symbol id="i-agent" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="12" cy="20.5" r="2"/><path d="M6.5 6.5l3.4 3.4M17.5 6.5l-3.4 3.4M12 15v3.5"/></symbol>
@@ -391,6 +378,8 @@ body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
     <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20.5h8.5M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
     <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V11M21.5 9v5"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><rect x="3.5" y="3" width="17" height="18" rx="2"/><path d="M8 8h8.5M8 12h8.5M8 16h5"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3.5v17M7.5 20.5h9M4.5 7h15"/><path d="M4.5 7 2 13a2.5 2.5 0 0 0 5 0z"/><path d="M19.5 7 17 13a2.5 2.5 0 0 0 5 0z"/></symbol>
   </defs>
 </svg>
 
@@ -404,7 +393,7 @@ body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
   <div class="veil"></div>
   <header class="top">
     <span class="mark">Umelá inteligencia<small>.2026</small></span>
-    <ul class="nav"><li class="on">Úvod</li><li>Technológia</li><li>Práca</li><li>Svet</li><li>Prvé kroky</li></ul>
+    <ul class="nav"><li class="on">Úvod</li><li>Technológia</li><li>Práca</li><li>Pravidlá</li><li>Prvé kroky</li></ul>
     <span class="pill sm"><span class="pg"></span></span>
   </header>
   <div class="hero">
@@ -414,9 +403,9 @@ body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
   </div>
   <footer class="foot"><span class="src">Zdroje: McKinsey, The State of AI in 2025 (11/2025); Stanford HAI, AI Index Report 2026.</span><span class="end">Strategický prehľad pre vedenie · október 2026</span></footer>
   <aside class="notes">
-    <p>Dobrý deň. Za nasledujúcich pár minút prejdeme päť tém: <b>čo je dnes AI a&nbsp;kde sú firmy</b>, <b>ako zmení prácu</b>, <b>ako mení svet</b> (regulácia, geopolitika, kapitál, medicína, energetika) a&nbsp;<b>čo z&nbsp;toho vyplýva pre každého zamestnanca a&nbsp;každú veľkú firmu</b>.</p>
+    <p>Dobrý deň. Za nasledujúcich pár minút prejdeme päť tém: <b>čo je dnes AI a&nbsp;kde sú firmy</b>, <b>ako zmení prácu</b>, <b>ako pripraviť firmu</b> (interné dokumenty, etika, kontrola a&nbsp;AI Act) a&nbsp;<b>čo z&nbsp;toho vyplýva pre každého zamestnanca a&nbsp;každú veľkú firmu</b>.</p>
     <p>Úvodné čísla: podľa globálneho prieskumu McKinsey (november 2025, potvrdené aj v&nbsp;Stanford AI Index 2026) <b>88&nbsp;%</b> organizácií pravidelne používa AI aspoň v&nbsp;jednej oblasti. No iba približne <b>6&nbsp;%</b> patrí medzi tzv. AI lídrov, ktorým AI prináša výrazný a&nbsp;merateľný prínos k&nbsp;prevádzkovému zisku. Rozdiel medzi týmito dvoma číslami je hlavná téma dneška: AI už nie je otázka technológie, ale riadenia.</p>
-    <p>Všetky čísla v&nbsp;prezentácii sú z&nbsp;verejných primárnych zdrojov (Eurostat, WEF, MMF, ILO, OECD, Stanford, McKinsey, IEA, FDA, EUR-Lex). Zdroj je vždy uvedený malým písmom dole na slide.</p>
+    <p>Všetky čísla v&nbsp;prezentácii sú z&nbsp;verejných primárnych zdrojov (Eurostat, WEF, MMF, ILO, Stanford, McKinsey, KPMG a&nbsp;University of Melbourne, EUR-Lex, ISO, NIST). Zdroj je vždy uvedený malým písmom dole na slide.</p>
   </aside>
 </section>
 
@@ -424,7 +413,7 @@ body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
 <section class="slide" data-title="AI už nie je experiment">
   <header class="top">
     <span class="mark">Umelá inteligencia<small>.2026</small></span>
-    <ul class="nav"><li>Úvod</li><li class="on">Technológia</li><li>Práca</li><li>Svet</li><li>Prvé kroky</li></ul>
+    <ul class="nav"><li>Úvod</li><li class="on">Technológia</li><li>Práca</li><li>Pravidlá</li><li>Prvé kroky</li></ul>
     <span class="pill sm"><span class="pg"></span></span>
   </header>
   <div class="head">
@@ -487,7 +476,7 @@ body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
 <section class="slide" data-title="AI zmení každú pozíciu">
   <header class="top">
     <span class="mark">Umelá inteligencia<small>.2026</small></span>
-    <ul class="nav"><li>Úvod</li><li>Technológia</li><li class="on">Práca</li><li>Svet</li><li>Prvé kroky</li></ul>
+    <ul class="nav"><li>Úvod</li><li>Technológia</li><li class="on">Práca</li><li>Pravidlá</li><li>Prvé kroky</li></ul>
     <span class="pill sm"><span class="pg"></span></span>
   </header>
   <div class="head">
@@ -557,90 +546,91 @@ body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
   </aside>
 </section>
 
-<!-- ===================== 04 · Svet ===================== -->
-<section class="slide" data-title="AI mení pravidlá sveta">
+<!-- ===================== 04 · Pravidlá ===================== -->
+<section class="slide" data-title="Ako pripraviť firmu na AI">
   <header class="top">
     <span class="mark">Umelá inteligencia<small>.2026</small></span>
-    <ul class="nav"><li>Úvod</li><li>Technológia</li><li>Práca</li><li class="on">Svet</li><li>Prvé kroky</li></ul>
+    <ul class="nav"><li>Úvod</li><li>Technológia</li><li>Práca</li><li class="on">Pravidlá</li><li>Prvé kroky</li></ul>
     <span class="pill sm"><span class="pg"></span></span>
   </header>
   <div class="head">
-    <h2 class="h2 gt" data-a="up" style="--d:0">AI mení aj pravidlá sveta</h2>
-    <p class="sub" data-a="up" style="--d:2">Regulácia, geopolitika, kapitál, medicína a&nbsp;energetika v&nbsp;roku 2026.</p>
+    <h2 class="h2 gt" data-a="up" style="--d:0">Ako pripraviť firmu na AI</h2>
+    <p class="sub" data-a="up" style="--d:2">Interné dokumenty, etika a&nbsp;kontrola, ktoré musí mať každá firma.</p>
   </div>
-  <div class="bento">
-    <article class="card bx w6" data-a="up" style="--d:3">
+  <div class="gov">
+    <article class="card gx w7" data-a="up" style="--d:3">
+      <div class="docs">
+        <div class="doc" data-a="up" style="--d:4"><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><b>Smernica o&nbsp;AI</b><span>Povolené nástroje, dáta a&nbsp;použitia.</span></div>
+        <div class="doc" data-a="up" style="--d:5"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg><b>Register AI</b><span>Kde AI používame, vlastník a&nbsp;riziko.</span></div>
+        <div class="doc" data-a="up" style="--d:6"><svg class="ico" aria-hidden="true"><use href="#i-scale"/></svg><b>Etický kódex</b><span>Hranice, ktoré neprekročíme.</span></div>
+        <div class="doc" data-a="up" style="--d:7"><svg class="ico" aria-hidden="true"><use href="#i-cap"/></svg><b>Plán školení</b><span>AI gramotnosť podľa rolí.</span></div>
+      </div>
+      <div class="txt">
+        <h3 class="ct">Štyri dokumenty ako základ</h3>
+        <p class="cd">Oporou sú normy ISO/IEC 42001 a&nbsp;NIST AI RMF.</p>
+      </div>
+    </article>
+    <article class="card gx w5" data-a="up" style="--d:5">
+      <div class="steps chain">
+        <span class="rail"><i></i></span>
+        <div class="st"><b>Predstavenstvo</b><span>dohľad a&nbsp;zodpovednosť</span></div>
+        <div class="st"><b>Vlastník AI a&nbsp;AI výbor</b><span>schvaľujú použitia a&nbsp;riziká</span></div>
+        <div class="st"><b>Útvary a&nbsp;IT</b><span>ľudský dohľad, záznamy</span></div>
+        <div class="st"><b>Interný audit</b><span>nezávislá kontrola</span></div>
+      </div>
+      <div class="txt">
+        <h3 class="ct">Kto za AI zodpovedá</h3>
+        <p class="cd">Dohľad CEO nad AI má len 28&nbsp;% firiem, hoci patrí k&nbsp;faktorom najviac spojeným so ziskom z&nbsp;AI.</p>
+      </div>
+    </article>
+    <article class="card gx w4" data-a="up" style="--d:7">
+      <div class="tiles2">
+        <div class="tile"><div class="tile-h"><span class="lbl"><i></i>Firma má pravidlá</span></div>
+          <div class="tile-v"><span class="big num"><span data-count="40">40</span><small>%</small></span></div></div>
+        <div class="tile"><div class="tile-h"><span class="lbl"><i class="m"></i>Skrýva AI</span></div>
+          <div class="tile-v"><span class="big num"><span data-count="57">57</span><small>%</small></span></div></div>
+      </div>
+      <div class="txt">
+        <h3 class="ct">Ľudia AI používajú aj bez pravidiel</h3>
+        <p class="cd">Takmer polovica zamestnancov porušuje firemné pravidlá, napríklad vkladá citlivé dáta do verejných nástrojov.</p>
+      </div>
+    </article>
+    <article class="card gx w3" data-a="up" style="--d:8">
+      <div class="eth">
+        <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><b>Človek rozhoduje o&nbsp;ľuďoch</b></div>
+        <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><b>Férovosť bez diskriminácie</b></div>
+        <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><b>Transparentnosť</b></div>
+        <div class="ck"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg><b>Zodpovednosť za výsledok</b></div>
+      </div>
+      <div class="txt">
+        <h3 class="ct">Etika v&nbsp;praxi</h3>
+        <p class="cd">Podľa zásad EÚ pre dôveryhodnú AI.</p>
+      </div>
+    </article>
+    <article class="card gx w5" data-a="up" style="--d:9">
       <div class="vis">
         <div class="tl">
           <span class="ln"><i></i></span>
-          <span class="pt past first" style="left:0%"><span class="dt">08/24</span><span class="ds">platnosť</span></span>
-          <span class="pt past" style="left:12.5%"><span class="dt">02/25</span><span class="ds">zákazy</span></span>
-          <span class="pt past" style="left:25%"><span class="dt">08/25</span><span class="ds">AI modely</span></span>
-          <span class="pt past" style="left:50%"><span class="dt">08/26</span><span class="ds">označovanie</span></span>
-          <span class="now" style="left:54.17%"><span>DNES</span></span>
-          <span class="pt" style="left:83.33%"><span class="dt">12/27</span><span class="ds">vysoké riziko</span></span>
-          <span class="pt last" style="left:100%"><span class="dt">08/28</span><span class="ds">produkty</span></span>
+          <span class="pt past first" style="left:0%"><span class="dt">02/25</span><span class="ds">gramotnosť, zákazy</span></span>
+          <span class="pt past" style="left:52.94%"><span class="dt">08/26</span><span class="ds">označovanie</span></span>
+          <span class="now" style="left:58.82%"><span>DNES</span></span>
+          <span class="pt last" style="left:100%"><span class="dt">12/27</span><span class="ds">vysoké riziko</span></span>
         </div>
       </div>
       <div class="txt">
         <h3 class="ct">AI Act už platí</h3>
-        <p class="cd">Vysoké riziko (napr. HR či úvery) od 12/2027. Pokuty až <b>7&nbsp;% obratu</b> alebo 35&nbsp;mil.&nbsp;€.</p>
-      </div>
-    </article>
-    <article class="card bx w3" data-a="up" style="--d:4">
-      <div class="vis"><div class="bstat"><div class="tile"><div class="tile-h"><span class="lbl"><i class="m"></i>Investície 2025</span><span class="dots3">···</span></div>
-        <div class="tile-v"><span class="big num" style="font-size:40px"><span data-count="581.7" data-dec="1">581,7</span><small>mld.&nbsp;$</small></span></div>
-        <div style="margin-top:12px"><span class="chip"><svg viewBox="0 0 12 12"><path d="M3 9l6-6M4.5 3H9v4.5"/></svg>+130&nbsp;%</span></div></div></div></div>
-      <div class="txt">
-        <h3 class="ct">Kapitál prúdi do AI</h3>
-        <p class="cd">Firemné investície do AI vo svete, medziročne viac ako dvojnásobok.</p>
-      </div>
-    </article>
-    <article class="card bx w3" data-a="up" style="--d:5">
-      <div class="vis"><div class="vb lab">
-        <div class="c"><span class="v num">285,9 mld.&nbsp;$</span><i style="--v:1"></i><span class="l">USA</span></div>
-        <div class="c"><span class="v num">12,4 mld.&nbsp;$</span><i class="grey" style="--v:.0434"></i><span class="l">Čína*</span></div>
-      </div></div>
-      <div class="txt">
-        <h3 class="ct">Súboj USA a&nbsp;Číny</h3>
-        <p class="cd">Súkromné investície 2025. *Čína investuje aj cez štátne fondy.</p>
-      </div>
-    </article>
-    <article class="card bx w6" data-a="up" style="--d:6">
-      <div class="vis">
-        <svg class="dots" data-dots="1614" data-cols="90" aria-label="1 614 bodiek, každá predstavuje jednu AI zdravotnícku pomôcku"></svg>
-        <span class="dots-cap">1 bodka =<br>1 pomôcka</span>
-      </div>
-      <div class="txt">
-        <h3 class="ct"><span class="num" data-count="1614">1&nbsp;614</span> AI pomôcok v&nbsp;medicíne</h3>
-        <p class="cd">Eviduje ich americký úrad FDA. Nobelova cena 2024 ocenila AI v&nbsp;predpovedi štruktúry proteínov.</p>
-      </div>
-    </article>
-    <article class="card bx w3" data-a="up" style="--d:7">
-      <div class="vis"><div class="vb lab">
-        <div class="c"><span class="v num">415 TWh</span><i class="grey" style="--v:.4392"></i><span class="l">2024</span></div>
-        <div class="c"><span class="v num">≈&nbsp;945 TWh</span><i style="--v:1"></i><span class="l">2030</span></div>
-      </div></div>
-      <div class="txt">
-        <h3 class="ct">Energia ako brzda</h3>
-        <p class="cd">Spotreba dátových centier sa do roku 2030 viac ako zdvojnásobí.</p>
-      </div>
-    </article>
-    <article class="card bx w3" data-a="up" style="--d:8">
-      <div class="vis"><div class="wave" data-wave="34"><span class="fake">DEEPFAKE</span></div></div>
-      <div class="txt">
-        <h3 class="ct">Deepfakes a&nbsp;dôvera</h3>
-        <p class="cd">Slovensko 2023: falošná AI nahrávka počas moratória pred voľbami.</p>
+        <p class="cd">Od 12/2027 pri AI v&nbsp;HR: informovať zamestnancov, ľudský dohľad, záznamy aspoň 6&nbsp;mesiacov. Pokuty až <b>7&nbsp;% obratu</b>.</p>
       </div>
     </article>
   </div>
-  <footer class="foot"><span class="src">Zdroje: nariadenia (EÚ) 2024/1689 a&nbsp;2026/1744; Stanford HAI, AI Index Report 2026; U.S. FDA, AI-Enabled Medical Device List (stav 10/2026); IEA, Energy and AI (2025); AI Incident Database, incident č.&nbsp;573.</span></footer>
+  <footer class="foot"><span class="src">Zdroje: nariadenia (EÚ) 2024/1689 a&nbsp;2026/1744; KPMG a&nbsp;University of Melbourne, Trust, attitudes and use of AI (2025, 48&nbsp;000 ľudí, 47 krajín); McKinsey, The State of AI (03/2025); ISO/IEC 42001:2023; NIST AI RMF 1.0 (2023); EÚ, Etické usmernenia pre dôveryhodnú AI (2019).</span></footer>
   <aside class="notes">
-    <p><b>Regulácia.</b> EU AI Act (nariadenie 2024/1689) platí od augusta 2024 a&nbsp;zavádza sa postupne. Od februára 2025 platia zákazy (napr. sociálne skórovanie, manipulatívne techniky, rozpoznávanie emócií na pracovisku) a&nbsp;povinnosť podporovať AI gramotnosť zamestnancov. Od augusta 2025 pravidlá pre všeobecné AI modely. Od augusta 2026 povinnosti transparentnosti: ľudia musia vedieť, že komunikujú s&nbsp;AI, a&nbsp;deepfake obsah musí byť označený. Nariadenie <b>2026/1744 z&nbsp;8. júla 2026 (Digital Omnibus)</b> posunulo povinnosti pre vysokorizikové systémy na <b>2. decembra 2027</b> (napr. AI pri nábore a&nbsp;hodnotení zamestnancov, pri úveroch, vo vzdelávaní) a&nbsp;pre AI v&nbsp;regulovaných produktoch na 2. augusta 2028. Pokuty pri zakázaných praktikách dosahujú až 35 miliónov eur alebo 7&nbsp;% celosvetového obratu. USA (akčný plán z&nbsp;júla 2025) stavajú na tempe a&nbsp;deregulácii, Čína na štátnej kontrole a&nbsp;od septembra 2025 vyžaduje označovanie AI obsahu.</p>
-    <p><b>Kapitál a&nbsp;geopolitika (Stanford AI Index 2026).</b> Globálne firemné investície do AI dosiahli v&nbsp;roku 2025 <b>581,7 miliardy USD</b>, o&nbsp;130&nbsp;% viac ako rok predtým. Súkromné investície v&nbsp;USA boli 285,9 miliardy USD, viac ako 23-krát viac ako v&nbsp;Číne (12,4 miliardy). Čína však veľkú časť kapitálu smeruje cez štátne fondy. Pokračuje aj súboj o&nbsp;najvýkonnejšie čipy a&nbsp;exportné obmedzenia USA. EÚ odpovedá iniciatívou InvestAI s&nbsp;cieľom mobilizovať 200 miliárd eur.</p>
-    <p><b>Medicína.</b> Zoznam amerického úradu FDA obsahuje v&nbsp;októbri 2026 <b>1&nbsp;614</b> zdravotníckych pomôcok s&nbsp;AI, väčšinu v&nbsp;rádiológii. FDA upozorňuje, že zoznam nie je úplný. Nobelova cena za chémiu 2024 ocenila návrh proteínov a&nbsp;predpoveď ich štruktúry pomocou AI (Baker, Hassabis, Jumper). V&nbsp;roku 2025 vyšli v&nbsp;Nature Medicine prvé výsledky klinickej štúdie fázy IIa lieku, ktorého cieľ aj molekulu navrhla generatívna AI.</p>
-    <p><b>Energia (IEA, Energy and AI, 2025).</b> Dátové centrá spotrebovali v&nbsp;roku 2024 približne 415 TWh, asi 1,5&nbsp;% svetovej spotreby elektriny. Do roku 2030 to bude okolo 945 TWh. Dostupnosť elektriny rozhoduje, kde vzniknú nové AI kapacity.</p>
-    <p><b>Deepfakes.</b> Slovensko 2023: dva dni pred voľbami sa počas moratória šírila falošná AI audionahrávka o&nbsp;údajnej manipulácii volieb. Rovnakou technikou podvodníci napodobňujú hlasy riaditeľov a&nbsp;žiadajú platby. Odporúčanie: overovať platobné pokyny spätným volaním. Stanford AI Index 2026 eviduje 362 AI incidentov v&nbsp;roku 2025 oproti 233 v&nbsp;roku 2024.</p>
+    <p><b>Ako pripraviť firmu na AI.</b> Technológiu si kúpi každý. Rozdiel robí to, či má firma jasné pravidlá, etiku a&nbsp;kontrolu. Bez nich ľudia AI používajú aj tak, len bez dohľadu.</p>
+    <p><b>Štyri dokumenty ako základ.</b> 1) <b>Smernica o&nbsp;používaní AI:</b> povolené a&nbsp;zakázané použitia, schválené nástroje, ktoré dáta do AI smú ísť a&nbsp;ktoré nie, povinnosť overovať výstupy, označovanie obsahu vytvoreného AI a&nbsp;hlásenie incidentov. Patria sem aj pravidlá pre dodávateľov: či smú naše dáta použiť na tréning, kde sú dáta uložené, autorské práva a&nbsp;zodpovednosť. 2) <b>Register AI systémov:</b> zoznam všetkých AI nástrojov a&nbsp;systémov vo firme s&nbsp;účelom, vlastníkom, dodávateľom, dátami a&nbsp;rizikovou kategóriou podľa AI Act. Bez registra nevieme, čo vlastne riadime. 3) <b>Etický kódex AI:</b> hranice, ktoré firma neprekročí, aj keď by to zákon dovoľoval. 4) <b>Plán AI gramotnosti</b> podľa rolí: vedenie, manažéri, bežní používatelia, špecialisti. Oporou sú medzinárodná norma <b>ISO/IEC 42001:2023</b> (systém riadenia AI, dobrovoľne certifikovateľná) a&nbsp;americký rámec <b>NIST AI RMF 1.0</b> (2023) so štyrmi funkciami: riadiť, mapovať, merať, manažovať. Pri osobných údajoch nezabúdajte na GDPR a&nbsp;posúdenie vplyvu (DPIA).</p>
+    <p><b>Kto za AI zodpovedá.</b> Predstavenstvo nesie dohľad a&nbsp;zodpovednosť. Vlastník AI s&nbsp;AI výborom (IT, právo, compliance, HR, biznis) schvaľuje nové použitia a&nbsp;riziká. Útvary a&nbsp;IT zabezpečujú ľudský dohľad, záznamy a&nbsp;bezpečnosť. Interný audit nezávisle overuje, či sa pravidlá dodržiavajú. Podľa McKinsey (marec 2025) má dohľad CEO nad riadením AI len 28&nbsp;% firiem, a&nbsp;práve tento faktor patrí k&nbsp;tým, ktoré najviac súvisia s&nbsp;prínosom AI k&nbsp;zisku.</p>
+    <p><b>Ľudia AI používajú aj bez pravidiel.</b> Globálna štúdia KPMG a&nbsp;University of Melbourne (2025, viac ako 48&nbsp;000 ľudí v&nbsp;47 krajinách): 58&nbsp;% zamestnancov zámerne používa AI v&nbsp;práci, no len 40&nbsp;% hovorí, že ich firma má pravidlá pre generatívnu AI, a&nbsp;len 47&nbsp;% absolvovalo školenie. Takmer polovica priznáva, že AI používa v&nbsp;rozpore s&nbsp;firemnými pravidlami, napríklad vkladá citlivé firemné údaje do verejných nástrojov. 57&nbsp;% svoje používanie AI skrýva a&nbsp;prezentuje výstupy AI ako vlastné. 66&nbsp;% sa spolieha na výstupy bez overenia presnosti a&nbsp;56&nbsp;% kvôli AI urobilo chybu v&nbsp;práci.</p>
+    <p><b>Etika v&nbsp;praxi</b> vychádza z&nbsp;etických usmernení EÚ pre dôveryhodnú AI (2019): ľudský dohľad, technická spoľahlivosť, ochrana súkromia a&nbsp;dát, transparentnosť, férovosť bez diskriminácie, spoločenský prínos a&nbsp;zodpovednosť. Prakticky: o&nbsp;prijatí, prepustení či úvere nerozhoduje AI sama, ľudia vedia, kedy komunikujú s&nbsp;AI, a&nbsp;za každý výsledok je zodpovedný konkrétny človek.</p>
+    <p><b>AI Act už platí.</b> Od februára 2025 platia zákazy (napr. rozpoznávanie emócií na pracovisku) a&nbsp;povinnosť podporovať AI gramotnosť. Nariadenie 2026/1744 ju upravilo na povinnosť prijať opatrenia na podporu AI gramotnosti, bez záruky konkrétnej úrovne. Od augusta 2026 platí transparentnosť: označovanie chatbotov a&nbsp;deepfake obsahu. Od 2. decembra 2027 platia povinnosti pre vysokorizikové systémy, kam patrí aj AI pri nábore a&nbsp;hodnotení zamestnancov: používať ju podľa návodu, prideliť ľudský dohľad kompetentným ľuďom, uchovávať záznamy aspoň 6 mesiacov a&nbsp;vopred informovať zástupcov zamestnancov aj dotknutých zamestnancov. Pokuty dosahujú až 35 miliónov eur alebo 7&nbsp;% celosvetového obratu pri zakázaných praktikách, pri ostatných povinnostiach až 15 miliónov eur alebo 3&nbsp;%.</p>
   </aside>
 </section>
 
@@ -648,7 +638,7 @@ body.presenting .ctrl,body.presenting .prog,body.presenting .toast{display:none}
 <section class="slide s-end" data-title="Prvé kroky a záver">
   <header class="top">
     <span class="mark">Umelá inteligencia<small>.2026</small></span>
-    <ul class="nav"><li>Úvod</li><li>Technológia</li><li>Práca</li><li>Svet</li><li class="on">Prvé kroky</li></ul>
+    <ul class="nav"><li>Úvod</li><li>Technológia</li><li>Práca</li><li>Pravidlá</li><li class="on">Prvé kroky</li></ul>
     <span class="pill sm"><span class="pg"></span></span>
   </header>
   <div class="cta" data-a="scale" style="--d:0">
@@ -785,38 +775,6 @@ if (coarse) document.body.classList.add('coarse');
 
 slides.forEach(function(s, i){
   s.querySelectorAll('.pg').forEach(function(pg){ pg.textContent = pad(i + 1) + ' / ' + pad(N); });
-});
-
-/* ---------- generated graphics ---------- */
-var SVGNS = 'http://www.w3.org/2000/svg';
-document.querySelectorAll('svg.dots').forEach(function(svg){
-  var n = +svg.getAttribute('data-dots'), cols = +svg.getAttribute('data-cols');
-  var step = 6.8, r = 2.15, rows = Math.ceil(n / cols);
-  svg.setAttribute('width', String(Math.round(cols * step)));
-  svg.setAttribute('height', String(Math.round(rows * step)));
-  svg.setAttribute('viewBox', '0 0 ' + (cols * step) + ' ' + (rows * step));
-  var g = document.createElementNS(SVGNS, 'g');
-  g.setAttribute('fill', 'url(#gdots)');
-  for (var i = 0; i < n; i++){
-    var c = document.createElementNS(SVGNS, 'circle');
-    c.setAttribute('cx', ((i % cols) * step + step / 2).toFixed(1));
-    c.setAttribute('cy', (Math.floor(i / cols) * step + step / 2).toFixed(1));
-    c.setAttribute('r', r);
-    g.appendChild(c);
-  }
-  svg.appendChild(g);
-});
-document.querySelectorAll('[data-wave]').forEach(function(w){
-  var n = +w.getAttribute('data-wave'), seed = 7;
-  for (var i = 0; i < n; i++){
-    seed = (seed * 9301 + 49297) % 233280;
-    var env = Math.sin(Math.PI * (i + .5) / n);
-    var h = Math.round(18 + 78 * env * (0.45 + 0.55 * (seed / 233280)));
-    var b = document.createElement('i');
-    b.style.setProperty('--h', h);
-    b.style.setProperty('--k', i);
-    w.insertBefore(b, w.querySelector('.fake'));
-  }
 });
 
 /* ---------- numbers ---------- */
