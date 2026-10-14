@@ -4,8 +4,8 @@
   <g transform="translate(0 36)" fill="none" stroke-linecap="round" stroke-linejoin="round">
     <!-- lomený oblúk (kostolné okno) -->
     <path d="M124 340 V214 A170 170 0 0 1 256 56 A170 170 0 0 1 388 214 V340" stroke="#D9A5B0" stroke-width="5"/>
-    <!-- betlehemská hviezda s predĺženým dolným lúčom (kríž) -->
-    <path fill="#D9A5B0" d="M196 94 Q198.5 120.5 216 123 Q198.5 125.5 196 172 Q193.5 125.5 176 123 Q193.5 120.5 196 94 Z"/>
+    <!-- kríž -->
+    <path d="M196 96 V166 M182 116 H210" stroke="#D9A5B0" stroke-width="5"/>
     <!-- palma -->
     <path fill="#6B1E2E" d="M259 352 C265 302 261 254 250 207 C268 252 276 302 272 352 Z"/>
     <path fill="#6B1E2E" d="M250 207 Q194 160 142 216 Q196 182 250 207 Z"/>
