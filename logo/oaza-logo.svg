@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Oáza – logo</title>
+  <rect width="512" height="512" fill="#F7F4F5"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6">
+    <!-- slnko / mesiac -->
+    <circle cx="256" cy="236" r="116" stroke="#D9A5B0"/>
+    <!-- kmeň -->
+    <path d="M270 336 C274 290 264 244 244 206" stroke="#6B1E2E"/>
+    <!-- listy -->
+    <path d="M244 206 Q192 168 152 226 Q196 186 244 206 Z" stroke="#6B1E2E"/>
+    <path d="M244 206 Q306 166 346 220 Q300 184 244 206 Z" stroke="#6B1E2E"/>
+    <path d="M244 206 Q262 146 316 150 Q268 164 244 206 Z" stroke="#6B1E2E"/>
+    <!-- hladina -->
+    <path d="M146 340 Q201 326 256 336 T366 336" stroke="#6B1E2E"/>
+    <path d="M206 364 Q231 357 256 362 T306 362" stroke="#D9A5B0"/>
+  </g>
+</svg>
