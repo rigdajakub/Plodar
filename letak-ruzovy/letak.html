@@ -53,15 +53,6 @@ h1{position:absolute;left:52px;top:140px;font-weight:900;font-size:122px;line-he
 <div class="page">
   <svg class="bg" viewBox="0 0 794 1123" preserveAspectRatio="none" aria-hidden="true">
     <defs>
-      <linearGradient id="rib" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#E7799D"/><stop offset=".45" stop-color="#C8306A"/><stop offset="1" stop-color="#9C1248"/>
-      </linearGradient>
-      <linearGradient id="rib2" x1="1" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#F09AB5"/><stop offset=".5" stop-color="#D2477A"/><stop offset="1" stop-color="#A3164D"/>
-      </linearGradient>
-      <linearGradient id="tail" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color="#F2B4C7" stop-opacity=".2"/><stop offset=".5" stop-color="#DA5C88"/><stop offset="1" stop-color="#A8174E"/>
-      </linearGradient>
       <linearGradient id="foot" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0" stop-color="#C02A62"/><stop offset=".5" stop-color="#A8174E"/><stop offset="1" stop-color="#9A1347"/>
       </linearGradient>
@@ -72,9 +63,6 @@ h1{position:absolute;left:52px;top:140px;font-weight:900;font-size:122px;line-he
     <path d="M0 330 C180 300 300 420 470 380 S700 300 794 330 V1123 H0Z" fill="#F9E1E8"/>
     <path d="M300 560 C430 470 560 520 794 470 V1123 H300Z" fill="#F4CFDA" opacity=".8"/>
     <path d="M0 900 C200 840 420 900 794 820 V1123 H0Z" fill="#F2C9D5"/>
-    <!-- stuha: plynulý pás smerujúci doprava dole -->
-    <path d="M470 330 C560 330 560 470 650 520 C720 556 760 560 794 566 L794 620 C740 612 690 600 630 570 C540 520 540 390 470 330Z" fill="url(#tail)" opacity=".45"/>
-    <path d="M520 860 C640 820 720 760 794 700 V800 C720 850 640 880 520 860Z" fill="#C8306A" opacity=".55"/>
     <!-- vetvička s lístkami -->
     <g fill="#C74F7C" stroke="#C74F7C" stroke-linecap="round" transform="translate(6 -90)">
       <path d="M752 760 C748 680 740 600 722 520" fill="none" stroke-width="3.5"/>
@@ -83,15 +71,6 @@ h1{position:absolute;left:52px;top:140px;font-weight:900;font-size:122px;line-he
       <path d="M738 630 C706 616 692 590 692 566 C718 578 736 602 738 630Z"/>
       <path d="M744 676 C768 650 790 648 794 650 L794 668 C784 684 764 690 744 676Z"/>
       <path d="M746 714 C716 704 700 682 698 658 C724 668 744 690 746 714Z"/>
-    </g>
-    <!-- dve prepletené obrúčky zo stuhy -->
-    <g transform="translate(628 400) rotate(-16) scale(.92)">
-      <ellipse cx="-62" cy="0" rx="98" ry="76" fill="none" stroke="url(#rib)" stroke-width="30"/>
-      <ellipse cx="62" cy="0" rx="98" ry="76" fill="none" stroke="url(#rib2)" stroke-width="30"/>
-      <!-- prekrytie, aby sa obrúčky prepletali -->
-      <path d="M-62 -76 A98 76 0 0 1 34 -14" fill="none" stroke="url(#rib)" stroke-width="30"/>
-      <ellipse cx="-62" cy="0" rx="98" ry="76" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2" transform="scale(.86)" />
-      <ellipse cx="72" cy="0" rx="84" ry="65" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2"/>
     </g>
     <!-- spodný pás -->
     <path d="M0 925 C180 890 420 935 600 905 C690 890 750 880 794 884 V1123 H0Z" fill="url(#foot)"/>
