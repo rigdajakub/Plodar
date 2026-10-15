@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<title>Víkendová oáza – ružový leták</title>
+<style>
+@font-face{font-family:Figtree;font-weight:300 900;src:url(fonts/figtree-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Figtree;font-weight:300 900;src:url(fonts/figtree-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@page{size:210mm 297mm;margin:0}
+:root{--wine:#A8174E;--wine-2:#C02A62;--ink:#2A1420;--bg:#FCEBEF;--soft:#F7D7E0;--line:#EBC3CF}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:210mm;height:297mm;background:var(--bg)}
+html.bleed,html.bleed body{width:216mm;height:303mm}
+html.bleed .page{margin:3mm}
+html.bleed body{background:var(--bg)}
+body{font-family:Figtree,sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{position:relative;width:210mm;height:297mm;overflow:hidden;background:linear-gradient(180deg,#FDEFF2 0%,#FBE6EC 60%,#F6D5DF 100%)}
+.bg{position:absolute;inset:0;width:100%;height:100%}
+.logos{position:absolute;top:44px;left:56px;right:52px;display:flex;align-items:center}
+.logos .plodar{height:66px}
+.logos .forum{height:68px;margin-left:auto}
+.logos .talents{height:46px;margin-left:34px}
+h1{position:absolute;left:52px;top:140px;font-weight:900;font-size:122px;line-height:.9;letter-spacing:-3px;color:var(--wine)}
+.sub{position:absolute;left:58px;top:378px;font-size:31px;font-weight:500;color:var(--ink);letter-spacing:-.2px}
+.date{position:absolute;left:24px;top:438px;height:92px;width:500px;display:flex;align-items:center;gap:22px;padding:0 0 0 46px;border-radius:46px;background:linear-gradient(180deg,#B71E58,#9E1449);color:#fff;box-shadow:0 10px 22px rgba(130,10,60,.25)}
+.date svg{width:42px;height:42px;flex:none}
+.date .sep{width:1.5px;height:46px;background:rgba(255,255,255,.55)}
+.date b{font-size:56px;font-weight:800;letter-spacing:-.5px;white-space:nowrap}
+.talks{position:absolute;left:44px;right:40px;top:568px}
+.talk{display:flex;align-items:center;gap:26px;padding:16px 0}
+.talk+.talk{border-top:1.5px solid var(--line)}
+.ic{flex:none;width:88px;height:88px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#FBE3EA,#F5CFDA);display:grid;place-items:center}
+.ic svg{width:50px;height:50px;stroke:var(--wine);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.who{font-size:21px;color:#1E1218}
+.who b{font-weight:700}
+.what{margin-top:5px;font-size:26px;font-weight:700;color:var(--wine);letter-spacing:-.2px}
+.foot{position:absolute;left:0;right:0;bottom:0;height:218px;color:#fff}
+.place{position:absolute;left:62px;top:52px;display:flex;align-items:center;gap:26px}
+.place svg{width:40px;height:52px;flex:none}
+.place .sep,.mid-sep{width:1.5px;height:62px;background:rgba(255,255,255,.55)}
+.place p{font-size:23px;font-weight:700;line-height:1.3}
+.mid-sep{position:absolute;left:410px;top:52px}
+.price{position:absolute;right:28px;top:36px;height:94px;width:350px;border-radius:47px;background:#FBE8EE;display:flex;align-items:center;padding-left:28px;color:var(--wine)}
+.price svg{width:44px;height:44px;flex:none;stroke:var(--wine);fill:none;stroke-width:2.2}
+.price b{margin-left:14px;font-size:44px;font-weight:800;letter-spacing:-1px;white-space:nowrap}
+.price span{margin-left:10px;font-size:17px;font-weight:600;white-space:nowrap}
+.mail{position:absolute;left:52px;right:52px;bottom:24px;display:flex;align-items:center;gap:18px;font-size:21px}
+.mail::before,.mail::after{content:"";flex:1;height:1.5px;background:rgba(255,255,255,.5)}
+.mail svg{width:30px;height:24px}
+</style>
+</head>
+<body>
+<div class="page">
+  <svg class="bg" viewBox="0 0 794 1123" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="rib" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#E7799D"/><stop offset=".45" stop-color="#C8306A"/><stop offset="1" stop-color="#9C1248"/>
+      </linearGradient>
+      <linearGradient id="rib2" x1="1" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#F09AB5"/><stop offset=".5" stop-color="#D2477A"/><stop offset="1" stop-color="#A3164D"/>
+      </linearGradient>
+      <linearGradient id="tail" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#F2B4C7" stop-opacity=".2"/><stop offset=".5" stop-color="#DA5C88"/><stop offset="1" stop-color="#A8174E"/>
+      </linearGradient>
+      <linearGradient id="foot" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#C02A62"/><stop offset=".5" stop-color="#A8174E"/><stop offset="1" stop-color="#9A1347"/>
+      </linearGradient>
+    </defs>
+    <!-- slnko / kruh vpravo hore -->
+    <circle cx="690" cy="300" r="190" fill="#F8DCE4"/>
+    <!-- vlny v pozadí -->
+    <path d="M0 330 C180 300 300 420 470 380 S700 300 794 330 V1123 H0Z" fill="#F9E1E8"/>
+    <path d="M300 560 C430 470 560 520 794 470 V1123 H300Z" fill="#F4CFDA" opacity=".8"/>
+    <path d="M0 900 C200 840 420 900 794 820 V1123 H0Z" fill="#F2C9D5"/>
+    <!-- stuha: plynulý pás smerujúci doprava dole -->
+    <path d="M470 330 C560 330 560 470 650 520 C720 556 760 560 794 566 L794 620 C740 612 690 600 630 570 C540 520 540 390 470 330Z" fill="url(#tail)" opacity=".45"/>
+    <path d="M520 860 C640 820 720 760 794 700 V800 C720 850 640 880 520 860Z" fill="#C8306A" opacity=".55"/>
+    <!-- vetvička s lístkami -->
+    <g fill="#C74F7C" stroke="#C74F7C" stroke-linecap="round" transform="translate(6 -90)">
+      <path d="M752 760 C748 680 740 600 722 520" fill="none" stroke-width="3.5"/>
+      <path d="M728 548 C700 528 690 500 694 478 C716 492 730 518 728 548Z"/>
+      <path d="M734 590 C760 560 784 556 794 560 C784 588 762 600 734 590Z"/>
+      <path d="M738 630 C706 616 692 590 692 566 C718 578 736 602 738 630Z"/>
+      <path d="M744 676 C768 650 790 648 794 650 L794 668 C784 684 764 690 744 676Z"/>
+      <path d="M746 714 C716 704 700 682 698 658 C724 668 744 690 746 714Z"/>
+    </g>
+    <!-- dve prepletené obrúčky zo stuhy -->
+    <g transform="translate(628 400) rotate(-16) scale(.92)">
+      <ellipse cx="-62" cy="0" rx="98" ry="76" fill="none" stroke="url(#rib)" stroke-width="30"/>
+      <ellipse cx="62" cy="0" rx="98" ry="76" fill="none" stroke="url(#rib2)" stroke-width="30"/>
+      <!-- prekrytie, aby sa obrúčky prepletali -->
+      <path d="M-62 -76 A98 76 0 0 1 34 -14" fill="none" stroke="url(#rib)" stroke-width="30"/>
+      <ellipse cx="-62" cy="0" rx="98" ry="76" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2" transform="scale(.86)" />
+      <ellipse cx="72" cy="0" rx="84" ry="65" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2"/>
+    </g>
+    <!-- spodný pás -->
+    <path d="M0 925 C180 890 420 935 600 905 C690 890 750 880 794 884 V1123 H0Z" fill="url(#foot)"/>
+  </svg>
+
+  <div class="logos">
+    <img class="plodar" src="img/plodar.png" alt="PloDar – … lebo plodnosť je dar">
+    <img class="forum" src="img/forum.png" alt="Fórum kresťanských inštitúcií">
+    <img class="talents" src="img/talents.png" alt="use your talents">
+  </div>
+
+  <h1>Víkendová<br>oáza</h1>
+  <p class="sub">pre bezdetných manželov</p>
+
+  <div class="date">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.8v3.4M16 2.8v3.4"/></svg>
+    <span class="sep"></span>
+    <b>6.–8. 11. 2026</b>
+  </div>
+
+  <div class="talks">
+    <div class="talk">
+      <div class="ic"><svg viewBox="0 0 48 48"><path d="M30 42v-7h4a3 3 0 0 0 3-3v-5l3-1-3-6c0-9-6-15-15-15S8 11 8 20c0 5 2 8 5 11v11"/><path d="M23 26s-6-3.6-6-7.4a3.2 3.2 0 0 1 6-1.6 3.2 3.2 0 0 1 6 1.6c0 3.8-6 7.4-6 7.4z"/></svg></div>
+      <div><p class="who"><b>Mária Šelmeciová</b> (psychológ):</p><p class="what">Ako v tom ostať spolu a byť tu jeden pre druhého</p></div>
+    </div>
+    <div class="talk">
+      <div class="ic"><svg viewBox="0 0 48 48"><circle cx="17" cy="16" r="6"/><circle cx="32" cy="16" r="6"/><path d="M5 36c0-7 5-11 12-11 4 0 7 1.5 9 4M22 36c1-7 5-11 10-11 7 0 11 4 11 11"/></svg></div>
+      <div><p class="who"><b>Jozef a Barbora Palaščákovci</b> (Gallup kouči):</p><p class="what">Talenty v manželstve: návod na porozumenie</p></div>
+    </div>
+    <div class="talk">
+      <div class="ic"><svg viewBox="0 0 48 48"><path d="M24 6v13M18.5 11h11"/><path d="M22 42l-2-4-8-6-4-10a2 2 0 0 1 3.6-1.6L16 28"/><path d="M26 42l2-4 8-6 4-10a2 2 0 0 0-3.6-1.6L32 28"/><path d="M15 31l5 5M33 31l-5 5"/></svg></div>
+      <div><p class="who"><b>Pavol a Daniela Burdovci</b> (manželia):</p><p class="what">Boh nás previedol</p></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="place">
+      <svg viewBox="0 0 24 32"><path d="M12 1C6 1 1.5 5.6 1.5 11.5 1.5 19 12 31 12 31s10.5-12 10.5-19.5C22.5 5.6 18 1 12 1z" fill="#fff"/><circle cx="12" cy="11.5" r="4" fill="#A8174E"/></svg>
+      <span class="sep"></span>
+      <p>Penzión Augustineum,<br>Bardejovské Kúpele</p>
+    </div>
+    <span class="mid-sep"></span>
+    <div class="price">
+      <svg viewBox="0 0 32 32"><ellipse cx="12" cy="9" rx="8" ry="3.2"/><path d="M4 9v4c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V9M4 13v4c0 1.8 3.6 3.2 8 3.2M4 17v4c0 1.8 3.6 3.2 8 3.2"/><ellipse cx="21" cy="19" rx="8" ry="3.2"/><path d="M13 19v4c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2v-4M13 23v4c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2v-4"/></svg>
+      <b>235 €</b><span>/ manželský pár</span>
+    </div>
+    <div class="mail">
+      <svg viewBox="0 0 30 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="26" height="20" rx="3"/><path d="M3 4l12 9 12-9"/></svg>
+      <span>info: vikend.manzelia@gmail.com</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
